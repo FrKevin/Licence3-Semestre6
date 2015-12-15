@@ -1,4 +1,4 @@
-﻿# Licence3-Semestre5
+﻿# Licence3-Semestre6
 TP: Licence 3 informatique (semestre 6) université Lille 1
 
 ###Pour pull/push les submodules:
