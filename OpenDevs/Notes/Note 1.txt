@@ -1,0 +1,19 @@
+Premier cours :
+  Documents à editer :
+    - Journal de bord
+
+
+#Apprentissage de Pharo:
+============
+Entete d'une classe
+  Object subclass: #Toto
+
+Commentaire:
+  "C'est mon commentaire"
+
+Ouvrir une console permettant d'afficher la sortie standard : Tools -> Transcript
+
+Methode de print
+  Transcript show: 'sexe'; cr. (cr modelise le retour à la ligne, c'est une methode)
+
+A completer
