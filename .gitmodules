@@ -1,0 +1,3 @@
+[submodule "programmation_fonctionnelle/cours/pf"]
+	path = programmation_fonctionnelle/cours/pf
+	url = http://www.fil.univ-lille1.fr/~hym/d/pf.git
