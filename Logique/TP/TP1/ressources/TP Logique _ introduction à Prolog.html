@@ -1,0 +1,132 @@
+
+<!-- saved from url=(0065)http://www.thomaspietrzak.com/enseignement/logique/tp1.htm#salle1 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body><header>
+<meta charset="UTF-8">
+<title>TP Logique : introduction à Prolog</title>
+<link rel="shortcut icon" href="http://www.thomaspietrzak.com/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="./TP Logique _ introduction à Prolog_files/style.css">
+<meta name="keywords" content="electronique, microcontroleurs, mcu, stm32, stm32f4, tutoriel, uc-sdk">
+</header>
+
+<div id="header">
+<h1>TP Logique : introduction à Prolog</h1>
+<h2>Licence 3 Informatique</h2>
+</div>
+<div id="contenu">
+
+Ce TP reprend des énigmes logiques du <a href="http://www.amazon.fr/livre-qui-rend-fou/dp/210003202X/">livre qui rend fou</a> de <a href="http://fr.wikipedia.org/wiki/Raymond_Smullyan">Raymond Smullyan</a>. J'espère que ça vous donnera envie de livre entier. Beaucoup d'énigmes sont résolvables par Mme. Michu, qui n'a pas la chance de suivre ce cours. Vous êtes plus chanceux, vous allez apprendre à utiliser des outils qui permettent de résoudre des problèmes bien plus complexes. En attendant, vous avez un TP à faire.<br>
+<br>
+Il existe plusieurs implémentations de prolog, nous utiliserons SWI Prolog que l'on lance par la commande <div class="commande">swipl</div> (jusque là ça va).<br>
+<br>
+Créez un fichier <div class="commande">tp1.pl</div> qui va contenir votre base de faits dans le même répertoire, puis lancez <div class="commande">swi-prolog</div> dans le même répertoire. Ensuite chargez votre base de faits avec la commande :
+<div class="code">?- [tp1].</div>
+
+Vous devrez relancer cette commande à chaque fois que vous modifiez <div class="commande">tp1.pl</div>.
+
+
+<div class="tdm">
+<h3>Table des Matières</h3>
+<ul class="tdmlist">
+<li><a href="./TP Logique _ introduction à Prolog_files/TP Logique _ introduction à Prolog.html">Première salle</a>
+</li><li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp1.htm#salle2">Deuxième salle</a>
+</li><li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp1.htm#salle3">Troisième salle</a>
+</li></ul>
+</div>
+<br>
+
+
+C'est l'histoire d'un prisonnier sur une île étrange, dirigé par un roi non moins étrange. Pour une raison qui m'échappe je dois bien l'avouer, le roi décide d'en finir avec le prisonnier à l'aide d'une série d'épreuves. Le destin du brave pénitencier sera soit la mort, dévoré par un tigre sanguinaire, soit l'amour, marié avec la fille du roi (et pas l'inverse). Dès fois que vous posiez des questions, le prisonnier ne sait pas dompter les tigres et il est amoureux de la pricesse. La seule issue est la résolution des énigmes.<br>
+
+<a name="salle1"><h3>Première salle</h3>
+
+Le roi veut en finir avant son petit déjeuner, et il a très faim. Il fait venir le prisonnier et lui présente deux portes, chacune ayant une pancarte. Le roi dit au prisonnier : «&nbsp;Votre sort sera décidé par la porte que vous allez passer. Si vous vous trompez, je ne donne pas cher de votre peau. Si vous choisissez bien, je vous donne la main de ma fille. Les indications sur les portes vous aideront à trouver le bon chemin. Je sais que la même personne a écrit les deux pancartes, mais je ne saurais vous dire qui. C'est soit Tweedledee qui dit toujours la vérité, soit Tweedledum qui ment toujours. Bonne chance. »<br>
+
+<div class="pancarte">Il y a un tigre derrière cette porte, ou la princesse derrière l'autre.</div><div class="pancarte">La princesse est derrière l'autre porte.</div><br>
+
+Si vous étiez à la place du prisonnier, vous risqueriez votre vie, et vous n'auriez pas Prolog pour vous aider. A priori vous êtes en sécurité en TP, et vous avez Prolog !
+
+
+<div class="question">
+Écrivez un prédicat <div class="commande">contenu</div> décrit le fait que derrière une porte il y a soit un tigre soit la princesse.
+</div>
+
+<div class="question">
+Écrivez les prédicats <div class="commande">pancarte1</div> et <div class="commande">pancarte2</div> pour chaque pancarte décrivant ce qu'elles prétendent sur ce qu'il y a derrière chaque porte.
+</div>
+
+D'après ce qu'a dit le roi soit les deux pancartes disent vrai, soit elles mentent tous les deux.
+
+<div class="question">
+Écrivez le prédicat <div class="commande">salle1</div> représentant les solutions, qui explore les deux cas possibles.
+</div>
+
+<div class="question">
+Quelle est la solution ? Pour la trouver, identifiez le but à atteindre et exécutez le dans l'interpréteur.
+</div>
+
+J'imagine que vous voulez savoir le raisonnement qui a permis d'obtenir ce résultat. Pour cela, utilisez a fonction <div class="commande">trace</div> sur <div class="commande">pancarte1</div>, <div class="commande">pancarte2</div> et <div class="commande">salle1</div>.
+
+<div class="question">
+Dessinez l'arbre décisionnel du but de la question précédente.
+</div>
+
+</a><a name="salle2"><h3>Deuxième salle</h3>
+
+Ne me demandez pas comment, mais le prisonnier a suivi vos conseils et a franchi la bonne porte. Cependant, c'est une petite déception qui l'attend. En effet les deux portes menaient au même endroit et au lieu d'y découvrir la princesse il vit le roi. Celui-ci lui dit : «&nbsp;Je voulais savoir comment vous vous y preniez. Voici deux nouvelles portes avec chacune une inscription. Je sais que Tweedledee a écrit l'une d'entre elles et Tweedledum a écrit l'autre, mais je ne peux pas vous dire laquelle dit la vérité et laquelle ment. » Le prisonnier lui demande «&nbsp;Comment puis-je savoir cette fois ci s'il y a réellement une princesse derrière la bonne porte ?». Le roi lui répondit : «&nbsp;Vous ne pouvez pas le savoir. Mais je vous promets que si vous ouvrez la mauvaise porte il y aura bien un tigre, et qu'il a très faim. Concentrez vous et bonne chance ».<br>
+
+<div class="pancarte">Il y a une princesse dans cette cellule et un tigre dans l'autre.</div><div class="pancarte">Il y a une princesse dans une cellule et un tigre dans l'autre.</div><br>
+
+<div class="question">
+Écrivez le prédicat <div class="commande">salle2</div> représentant les solutions, qui explore les cas possibles.
+</div>
+
+<div class="question">
+Quelle est la solution ?
+</div>
+
+<div class="question">
+Dessinez l'arbre décisionnel du but de la question précédente.
+</div>
+
+<div class="question">
+Quelle pancarte disait la vérité ?
+</div>
+
+Prolog peut afficher du texte dans la console grâce à la commande <div class="commande">write</div>. Elle s'utilise dans le corps des clauses de la façon suivante :
+<div class="code">write('test'). %affiche le mot test
+write(TEST). %affiche le contenu de la variable TEST</div>
+
+<div class="question">
+Écrivez une règle qui affiche ce qu'il y a derrière deux portes. Attention, il ne faut afficher QUE les solutions potentielles.
+</div>
+
+</a><a name="salle3"><h3>Troisième salle</h3>
+
+La déception se lisait de noveau sur le visage du pauvre prisonnier. En effet le roi se tenait de nouveau face à lui avec un grand sourire aux lèvres. Le prisonnier lui dit : «&nbsp;Vous vous êtes de nouveau moqué de moi ! ». Ce à quoi le roi lui répondit : «&nbsp;Ne vous plaignez pas, vous êtes toujours en vie. Ceci étant dit voici votre épreuve finale, je vous en donne ma parole. ». Le prisonnier sentit le piège en voyant trois portes à pancarte devant lui. Le roi poursuivit : « Ma fille se trouve derrière l'une des portes, le tigre derrière une autre, et il n'y a rien derrière la troisième. Après avoir conduit ma fille derrière sa porte, Tweedledee y a accroché une pancarte, qui ne ment donc pas. Tweedledum s'est chargé du tigre et de sa pancarte, qui ne dit donc pas la vérité. Enfin je ne sais pas lequel des deux a rédigé la pancarte de la porte vide. Au revoir, et peut être à bientôt. » <br>
+
+<div class="pancarte2">Il n'y a rien derrière la&nbsp;3<sup>e</sup>&nbsp;porte.</div><div class="pancarte2">Le tigre est derrière la&nbsp;1<sup>e</sup>&nbsp;porte.</div><div class="pancarte2">Il n'y a rien derrière cette&nbsp;porte.</div><br>
+
+Les choses se compliquent de plusieurs façons. Votre première difficulté réside dans le fait que la véracité d'une pancarte dépend de ce qu'il y a derrière la porte correspondante. Vous aurez donc besoin de définir des prédicats décrivant la vraie information correspondant à chaque porte.
+
+<div class="question">
+Écrivez les prédicats <div class="commande">porte1</div>, <div class="commande">porte2</div>, <div class="commande">porte3</div>. N'oubliez pas que maintenant une salle peut être vide !
+</div>
+
+<div class="question">
+Écrivez le prédicat <div class="commande">salle3</div> représentant les solutions, qui explore les cas possibles.
+</div>
+
+<div class="question">
+Quelle est la solution ?
+</div>
+
+<div class="question">
+Dessinez l'arbre décisionnel du but de la question précédente.
+</div>
+
+Le prisonnier franchit l'ultime porte. Un sourire se dessine sur son visage alors qu'il aperçoit la princesse de ses rêves. Le roi, qui se tient à côté d'elle, s'adressa au prisonnier : «&nbsp;Je te félicite jeune homme, tu es d'évidence digne de marier ma fille ! ». Sur ces mots, il offrit la main de sa fille au prisonnier fortuné. Quant à vous je vous félicite, vous avez fini ce TP. C'est déjà ça.<br>
+
+</a></div><a name="salle3">
+
+
+</a></body><iframe allowtransparency="true" frameborder="0" id="abs-top-frame" src="./TP Logique _ introduction à Prolog_files/top.html" style="position: fixed !important; z-index: 2147483647 !important; overflow: hidden !important; top: 0px !important; left: 0px !important; right: 0px !important; width: 0px !important; height: 0px !important; max-height: none !important; min-height: 0px !important; margin: 0px auto !important; padding: 0px !important; border: 0px !important; display: none !important; background-color: transparent !important;"></iframe></html>
