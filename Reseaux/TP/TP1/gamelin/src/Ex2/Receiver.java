@@ -5,6 +5,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
 
 public class Receiver {
 	
@@ -23,13 +24,10 @@ public class Receiver {
 			ms.joinGroup(InetAddress.getByName("224.0.0.1"));
 			DatagramPacket pack = new DatagramPacket(new byte[MAX_LENGTH],MAX_LENGTH);
 			ms.receive(pack);
-			System.out.println("paquet reçu de : "+ pack.getAddress()+
-			 "port "+ pack.getPort()+
-			 "taille" + pack.getLength());
-			byte[] array = pack.getData();
-			for(int i=0; i<pack.getLength(); i++){
-				System.out.print((char)array[i]);
-			}
+			System.out.println("paquet reÃ§u de : "+ pack.getAddress()+
+			 " port "+ pack.getPort()+
+			 " taille" + pack.getLength() + " hostname " + pack.getAddress().getHostName());
+			System.out.println(new String(pack.getData(), StandardCharsets.UTF_8));
 			ms.leaveGroup(InetAddress.getByName("224.0.0.1"));
 			ms.close();
 			System.out.println();

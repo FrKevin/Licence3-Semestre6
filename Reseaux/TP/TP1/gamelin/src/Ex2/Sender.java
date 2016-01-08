@@ -18,19 +18,17 @@ public class Sender {
 	}
 	
 	public void send(String message){
-		DatagramPacket p;
-		DatagramSocket s;
 		InetAddress group;
 		MulticastSocket ms;
+		DatagramPacket pack;
 		try {
 			group = InetAddress.getByName(this.adresse);
 			ms = new MulticastSocket(7654);
 			ms.joinGroup(group);
 			byte array[] = message.getBytes();
-			p = new DatagramPacket(array, array.length, group, this.port);
-			s = new DatagramSocket();
-			s.send(p);
-			s.close();
+			pack = new DatagramPacket(array, array.length, group, this.port);
+			ms.send(pack);
+			ms.close();
 		} catch (UnknownHostException e1) {
 			e1.printStackTrace();
 		} catch (SocketException e) {
