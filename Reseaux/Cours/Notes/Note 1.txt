@@ -1,0 +1,10 @@
+Note issue du TP1
+
+| Transport  |  UDP                    ---------->  @IP + POrt UDP *2   (Un emetteur, Un recepteur)
+--------------                         |
+| Reseaux    |  IPV4                   |
+--------------
+| Liaison    |  Ethernet
+--------------
+| Physique   |  100 base TX
+--------------
