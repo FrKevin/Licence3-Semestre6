@@ -1,4 +1,4 @@
-package udp;
+package fil.lille1.exo1.udp;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
