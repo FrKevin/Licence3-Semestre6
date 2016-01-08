@@ -1,4 +1,4 @@
-package udp;
+package fil.lille1.exo2.udp;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -10,7 +10,7 @@ public class Sender {
 	private int port;
 	private String adresse;
 	
-	public static final int DEFAULT_PORT = 1024;
+	public static final int DEFAULT_PORT = 7654;
 	
 	public Sender(int port, String adresse) {
 		this.setPort(port);
@@ -24,7 +24,6 @@ public class Sender {
 		DatagramPacket p;
 		DatagramSocket s;
 		InetAddress dst = InetAddress.getByName(adresse);
-		int port = 1024 ;
 		p = new DatagramPacket(message, message.length, dst, port);
 		s = new DatagramSocket();
 		s.send(p);

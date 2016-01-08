@@ -1,8 +1,8 @@
-package main;
+package fil.lille1.exo1.main;
 
 import java.io.IOException;
 
-import udp.Sender;
+import fil.lille1.exo1.udp.Sender;
 
 public class MainSender {
 	public static void main(String[] args) {
