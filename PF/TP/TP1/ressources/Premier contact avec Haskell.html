@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp1.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<title>Premier contact avec Haskell</title>
+
+<link href="./Premier contact avec Haskell_files/feuille.css" rel="stylesheet" type="text/css">
+<meta name="viewport" content="initial-scale=1.0">
+</head>
+<body class="monocol">
+<nav>
+<a href="http://cristal.univ-lille.fr/~hym/">recherche</a> –
+<a href="http://www.fil.univ-lille1.fr/~hym/">~</a>/<a href="http://www.fil.univ-lille1.fr/~hym/e">enseignements</a>
+</nav>
+<header>
+<h1 class="titre">Premier contact avec Haskell</h1>
+
+</header>
+<div class="contenu">
+  <h2 id="environnement">Environnement</h2>
+<p>Il existe plusieurs implémentations d’Haskell. Nous utiliserons la <a href="https://www.haskell.org/platform/">Plateforme Haskell</a> qui contient, outre le compilateur GHC (Glasgow Haskell Compiler) et son interprète GHCi, une grande bibliothèque de fonctions, tout ceci accompagné d’une documentation très complète&nbsp;: <code>/usr/share/doc/ghc-doc/html/index.html</code></p>
+<p>Vous pourrez ainsi utiliser&nbsp;:</p>
+<ul>
+<li><code>ghci</code>, l’interprète,</li>
+<li><code>ghc</code>, le compilateur,</li>
+<li><code>runghc</code>, pour compiler et exécuter à la volée le résultat.</li>
+</ul>
+<p>Les extensions usuelles dans le monde haskell sont&nbsp;:</p>
+<ul>
+<li><code>.hs</code>&nbsp;: fichier source haskell,</li>
+<li><code>.lhs</code>&nbsp;: fichier «&nbsp;literate haskell&nbsp;», où les blocs qui sont identifiés sont les blocs de code, plutôt que les commentaires,</li>
+<li><code>.hi</code>&nbsp;: fichier (compilé) d’interface,</li>
+<li>ainsi que les fichiers habituels (en particulier <code>.o</code> dans la version au M5) de la chaîne de compilation sur laquelle GHC se greffe.</li>
+</ul>
+<h2 id="interprète-ghci">Interprète GHCi</h2>
+<p>L’interprète GHCi effectue la boucle&nbsp;: lecture, évaluation et affichage d’expressions. Par défaut, chaque expression doit être écrite sur une seule ligne&nbsp;: dès que vous tapez «&nbsp;Entrée&nbsp;», GHCi évalue l’expression.</p>
+<p>En plus des expressions, il propose une série de commandes, commençant par «&nbsp;<code>:</code>&nbsp;», notamment&nbsp;:</p>
+<ul>
+<li><code>:help</code>&nbsp;: comme son nom l’indique…,</li>
+<li><code>:quit</code> (ou Ctrl-<code>D</code> marquant la fin de l’entrée standard)&nbsp;: quitte l’interprète,</li>
+<li><code>:load</code> ⟨<em>chemin</em>⟩&nbsp;: charge le fichier source indiqué,</li>
+<li><code>:reload</code>&nbsp;: recharge le dernier fichier chargé (très utile pour mettre un programme au point, donc),</li>
+<li><code>:type</code> ⟨<em>expr</em>⟩&nbsp;: affiche le type de l’expression,</li>
+<li><code>:info</code> ⟨<em>nom</em>⟩&nbsp;: affiche des informations sur le nom donné,</li>
+<li><code>:set</code> ⟨<em>option</em>⟩&nbsp;: active une option&nbsp;; en particulier <code>:set +t</code> permet d’afficher le type après la valeur de chaque expression,</li>
+<li>etc.</li>
+</ul>
+<p>Pour chacune de ces commandes, les abréviations d’une seule lettre, par exemple <code>:r</code>, suffisent. Par ailleurs, GHCi permet l’édition de ligne comme on l’aime, en particulier&nbsp;:</p>
+<ul>
+<li>complétion de commandes, mais aussi des noms, etc. par la touche Tab,</li>
+<li>historique (touches ↑, ↓, Ctrl-<code>R</code>, etc.).</li>
+</ul>
+<p>En plus des commandes et des expressions, vous pouvez aussi utiliser <code class="sourceCode haskell"><span class="kw">let</span></code> pour définir un nom&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Prelude</span><span class="fu">&gt;</span> <span class="kw">let</span> a <span class="fu">=</span> <span class="dv">1</span><span class="fu">+</span><span class="dv">2</span>
+<span class="dt">Prelude</span><span class="fu">&gt;</span> a<span class="fu">+</span><span class="dv">3</span>
+<span class="dv">6</span></code></pre></div>
+<p>Enfin, GHCi donne automatiquement le nom <code>it</code> à la dernière expression évaluée&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Prelude</span><span class="fu">&gt;</span> <span class="dv">1</span><span class="fu">+</span><span class="dv">2</span>
+<span class="dv">3</span>
+<span class="dt">Prelude</span><span class="fu">&gt;</span> it<span class="fu">+</span><span class="dv">3</span>
+<span class="dv">6</span></code></pre></div>
+<h3 id="petit-exemple-de-session">Petit exemple de session</h3>
+<ol type="1">
+<li><p>Créez un petit fichier <code>test.hs</code> contenant le code suivant&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">somme n <span class="fu">=</span> sum [<span class="dv">1</span><span class="fu">..</span>n]</code></pre></div>
+<p>puis lancez <code>ghci</code>&nbsp;:</p>
+<pre class="console"><code>$ ghci
+GHCi, version 7.6.3: http://www.haskell.org/ghc/  :? for help
+Loading package ghc-prim ... linking ... done.
+Loading package integer-gmp ... linking ... done.
+Loading package base ... linking ... done.
+Prelude&gt; :l /tmp/test.hs
+[1 of 1] Compiling Main             ( /tmp/test.hs, interpreted )
+Ok, modules loaded: Main.
+*Main&gt;</code></pre></li>
+</ol>
+<p><code>Prelude</code> est le module chargé initialement. <code>Main</code> est le nom du module pour le code chargé depuis <code>test.hs</code><a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp1.html#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>.</p>
+<p><code>ghci</code> indique de la sorte quels sont les modules dont les noms peuvent être utilisés dans les expressions. Ainsi, vous pouvez évaluer <code class="sourceCode haskell">somme <span class="dv">1234</span></code>.</p>
+<h2 id="listes">Listes</h2>
+<p>Les listes jouent un rôle fondamental en Haskell<a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp1.html#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>. Le langage fournit notamment un peu de syntaxe pour les écrire et les manipuler élégamment.</p>
+<p>Dans les extraits suivants, nous avons activé l’affichage des types des expressions évaluées par un</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Prelude</span><span class="fu">&gt;</span> <span class="fu">:</span>set <span class="fu">+</span>t</code></pre></div>
+<p>Au passage, vous pouvez créer un fichier <code>~/.ghci</code> contenant cette simple ligne&nbsp;:</p>
+<pre><code>:set +t</code></pre>
+<p>pour que les types soient toujours affichés dans vos sessions GHCi.</p>
+<h3 id="construction-de-listes">Construction de listes</h3>
+<p>Haskell permet de manipuler des listes <em>homogènes</em>, c'est-à-dire constituées d’éléments ayant tous le même type.</p>
+<p>Les listes sont des structures de données récursives définies à partir de deux constructeurs&nbsp;: <code>[]</code> pour la liste vide, et <code>:</code> pour l’adjonction d’un élément en tête de liste<a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp1.html#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Prelude</span><span class="fu">&gt;</span> <span class="dv">1</span> <span class="fu">:</span> <span class="dv">2</span> <span class="fu">:</span> <span class="dv">3</span> <span class="fu">:</span> []
+[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]
+<span class="ot">it ::</span> [<span class="dt">Integer</span>]</code></pre></div>
+<p>Il est aussi possible de construire une liste par énumération de ses éléments sous la forme&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Prelude</span><span class="fu">&gt;</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]
+[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]
+<span class="ot">it ::</span> [<span class="dt">Integer</span>]</code></pre></div>
+<p>Il existe encore une autre notation, pour les listes de caractères, à savoir les chaînes (<code class="sourceCode haskell"><span class="dt">String</span></code> est un alias pour le type <code class="sourceCode haskell">[<span class="dt">Char</span>]</code> en Haskell)&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Prelude</span><span class="fu">&gt;</span> <span class="st">"abcdef"</span>
+<span class="st">"abcdef"</span>
+<span class="ot">it ::</span> [<span class="dt">Char</span>]
+<span class="dt">Prelude</span><span class="fu">&gt;</span> [<span class="ch">'a'</span>,<span class="ch">'b'</span>,<span class="ch">'c'</span>]
+<span class="st">"abc"</span>
+<span class="ot">it ::</span> [<span class="dt">Char</span>]</code></pre></div>
+<h3 id="types-listes">Types listes</h3>
+<p>À la différence des <span class="math inline"><em>n</em></span>-uplets, les listes doivent être <em>homogènes</em>&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Prelude</span><span class="fu">&gt;</span> [<span class="dv">1</span>, <span class="ch">'a'</span>, <span class="dt">True</span>]
+
+<span class="fu">&lt;</span>interactive<span class="fu">&gt;:</span><span class="dv">36</span><span class="fu">:</span><span class="dv">10</span><span class="fu">:</span>
+    <span class="dt">Couldn't</span> match expected <span class="kw">type</span> <span class="ot">`Char' with actual type `</span><span class="dt">Bool'</span>
+    <span class="dt">In</span> the expression<span class="fu">:</span> <span class="dt">True</span>
+    <span class="dt">In</span> the expression<span class="fu">:</span> [<span class="dv">1</span>, <span class="ch">'a'</span>, <span class="dt">True</span>]
+    <span class="dt">In</span> an equation for <span class="ot">`it': it = [1, 'a', True]</span></code></pre></div>
+<p>Gloups&nbsp;! Autrement dit, en essayant de trouver le type de la liste, GHCi vérifie si <code class="sourceCode haskell"><span class="ch">'a'</span></code> (de type <code class="sourceCode haskell"><span class="dt">Char</span></code>) et <code class="sourceCode haskell"><span class="dt">True</span></code> (de type <code class="sourceCode haskell"><span class="dt">Bool</span></code>) ont le même type. Comme ce n’est pas le cas, il donne l’expression dans laquelle l’erreur apparaît.</p>
+<p>(On retrouve au passage le fait que GHCi aurait attribué le nom <code>it</code> pour la valeur de l’expression que l’on a donnée s’il avait réussi à l’interpréter.)</p>
+<p>Le type d’une liste de valeurs de type&nbsp;τ est noté [τ]&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Prelude</span><span class="fu">&gt;</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]
+[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]
+<span class="ot">it ::</span> [<span class="dt">Integer</span>]
+<span class="dt">Prelude</span><span class="fu">&gt;</span> [<span class="dt">True</span>, <span class="dt">False</span>]
+[<span class="dt">True</span>,<span class="dt">False</span>]
+<span class="ot">it ::</span> [<span class="dt">Bool</span>]
+<span class="dt">Prelude</span><span class="fu">&gt;</span> [(<span class="dv">1</span>,<span class="dv">2</span>),(<span class="dv">3</span>,<span class="dv">4</span>)]
+[(<span class="dv">1</span>,<span class="dv">2</span>),(<span class="dv">3</span>,<span class="dv">4</span>)]
+<span class="ot">it ::</span> [(<span class="dt">Integer</span>, <span class="dt">Integer</span>)]</code></pre></div>
+<p>La liste vide peut être d’un type polymorphe si elle est construite avec le constructeur&nbsp;<code>[]</code>&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Prelude</span><span class="fu">&gt;</span> []
+[]
+<span class="ot">it ::</span> [a]</code></pre></div>
+<p>ou d’un type instancié si elle est obtenue à partir d’une autre liste&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Prelude</span><span class="fu">&gt;</span> tail [<span class="dt">True</span>]
+[]
+<span class="ot">it ::</span> [<span class="dt">Bool</span>]
+<span class="dt">Prelude</span><span class="fu">&gt;</span> tail [<span class="dv">1</span>]
+[]
+<span class="ot">it ::</span> [<span class="dt">Integer</span>]
+<span class="dt">Prelude</span><span class="fu">&gt;</span> tail <span class="st">"a"</span>
+<span class="st">""</span>
+<span class="ot">it ::</span> [<span class="dt">Char</span>]</code></pre></div>
+<h3 id="fonctions-sur-les-listes">Fonctions sur les listes</h3>
+<p>Le module standard de manipulation des listes est <code>Data.List</code>. Mais, comme nous l’avons dit, les listes jouent un rôle fondamental dans le langage. Du coup une grande partie des fonctions de ce module sont réexportées dans le <code>Prelude</code>. Vous trouverez ainsi dans la documentation du <code>Prelude</code> (<code>/usr/share/doc/ghc-doc/html/libraries/base-4.6.0.1/Prelude.html</code> au M5) une section «&nbsp;List operations&nbsp;».</p>
+<ol start="2" type="1">
+<li>Allez lire cette documentation.</li>
+</ol>
+<p>Les fonctions dont les noms sont composés de symboles (<code>++</code> la concaténation et <code>!!</code> la récupération du enième élément) sont utilisées en notation infixe&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Prelude</span><span class="fu">&gt;</span> [<span class="dt">True</span>, <span class="dt">False</span>] <span class="fu">!!</span> <span class="dv">1</span>
+<span class="dt">False</span>
+<span class="ot">it ::</span> <span class="dt">Bool</span>
+<span class="dt">Prelude</span><span class="fu">&gt;</span> <span class="st">"abcdef"</span> <span class="fu">!!</span> <span class="dv">3</span>
+<span class="ch">'d'</span>
+<span class="ot">it ::</span> <span class="dt">Char</span></code></pre></div>
+<p>Notez que la documentation indique des conditions d’utilisation pour certaines fonctions. En particulier, <code>head</code> ne peut être utilisée que sur une liste non-vide, sans quoi&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Prelude</span><span class="fu">&gt;</span> head []
+<span class="fu">***</span> <span class="dt">Exception</span><span class="fu">:</span> Prelude.head<span class="fu">:</span> empty list</code></pre></div>
+<h2 id="filtrage-de-motif-sur-les-listes">Filtrage de motif sur les listes</h2>
+<p>Comme dit plus haut, les listes sont des structures de données récursives définies à partir de deux constructeurs&nbsp;: <code>[]</code> pour la liste vide, et <code>:</code> pour l’adjonction d’un élément en tête de liste. Les fonctions qui prennent en argument une liste peuvent bien entendu utiliser les fonctions standard (<code>null</code> pour savoir si la liste est vide, <code>head</code> pour en extraire le premier élément, etc.) pour accéder aux éléments de la liste, mais elles gagnent souvent en concision et en lisibilité en utilisant un <em>filtrage de motif</em>.</p>
+<p>Voici par exemple programmées par filtrage de motifs les fonctions <code>tete</code> et <code>reste</code> équivalentes aux fonctions <code>head</code> et <code>tail</code>. Ces deux fonctions déclenchent une exception lorsque la liste est vide.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">tete (x<span class="fu">:</span>_) <span class="fu">=</span> x
+
+reste (_<span class="fu">:</span>xs) <span class="fu">=</span> xs</code></pre></div>
+<p><em>Remarque</em>&nbsp;: il est de coutume d’utiliser un genre de notation hongroise pour les noms des paramètres en Haskell. Ainsi les noms de paramètres contenant une liste finissent généralement par un <code>s</code> (marque du pluriel…&nbsp;; une liste de listes sera <code>xss</code>, etc.). N’oubliez pas qu’un code lisible est plus facile à comprendre, même à son auteur, et qu’il contient donc moins de bogues.</p>
+<p>Notez que nous n’avons pas défini de comportement dans le cas d’une liste vide&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">*</span><span class="dt">Main</span><span class="fu">&gt;</span> tete <span class="st">"acdef"</span>
+<span class="ch">'a'</span>
+<span class="ot">it ::</span> <span class="dt">Char</span>
+<span class="fu">*</span><span class="dt">Main</span><span class="fu">&gt;</span> tete <span class="st">""</span>
+<span class="fu">***</span> <span class="dt">Exception</span><span class="fu">:</span> test<span class="fu">.</span>hs<span class="fu">:</span><span class="dv">1</span><span class="fu">:</span><span class="dv">1</span><span class="fu">-</span><span class="dv">14</span><span class="fu">:</span> <span class="dt">Non</span><span class="fu">-</span>exhaustive patterns <span class="kw">in</span> function tete</code></pre></div>
+<p>mais cette erreur sera détectable à la compilation, quand le compilateur nous donnera un exemple de liste que notre fonction <code>tete</code> ne sait pas traiter&nbsp;:</p>
+<pre class="console"><code>test.hs:1:1: Warning:
+    Pattern match(es) are non-exhaustive
+    In an equation for `tete': Patterns not matched: []</code></pre>
+<p>Nous pouvons alors rajouter une equation de sorte que la définition complète de <code>tete</code> soit&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">tete (x<span class="fu">:</span>_) <span class="fu">=</span> x
+tete []    <span class="fu">=</span> error <span class="st">"tete: liste vide"</span></code></pre></div>
+<p>(ce qui aura le même effet d’interrompre l’exécution à cet endroit, mais avec un message un peu plus compréhensible…)</p>
+<p><strong>Remarque</strong>&nbsp;: malgré cet exemple, les exceptions sont très peu utilisées en Haskell car elles sont par nature impures&nbsp;; au même titre qu’un <code class="sourceCode c">abort();</code> en C, elles sont à réserver essentiellement aux cas où l’on veut avorter immédiatement le programme complet.</p>
+<p>Le calcul de la longueur d’une liste avec un filtrage de motifs se programme tout simplement aussi.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">longueur []     <span class="fu">=</span> <span class="dv">0</span>
+longueur (_<span class="fu">:</span>xs) <span class="fu">=</span> <span class="dv">1</span> <span class="fu">+</span> longueur xs</code></pre></div>
+<p>On peut réécrire ces fonctions sans utiliser directement le filtrage à gauche du <code>=</code> en utilisant l’expression <code>case … of</code> Par exemple&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">longueur' xs <span class="fu">=</span> <span class="kw">case</span> xs <span class="kw">of</span>
+                 []    <span class="ot">-&gt;</span> <span class="dv">0</span>
+                 _<span class="fu">:</span>xs' <span class="ot">-&gt;</span> <span class="dv">1</span> <span class="fu">+</span> longueur' xs'</code></pre></div>
+<p><strong>Attention</strong>&nbsp;: il est très important de bien aligner les différents cas, <code>[</code> et <code>_</code> doivent être sur la même colonne. Comme les alignements sont un cauchemar quand on mélange tabulations et espaces, configurez votre éditeur pour qu’il n’indente qu’en utilisant des espaces.</p>
+<p>Notez aussi que, toujours en suivant les coutumes haskellesques, nous avons utilisé <code>xs'</code> comme nom pour la sous-liste de <code>xs</code>&nbsp;: les noms <code>xs</code> et <code>xs'</code> apparaissent ainsi immédiatement liés pour le lecteur humain ce qui aide, encore une fois, la lecture et compréhension du code.</p>
+<p>Un dernier exemple, pour la route, où l’on voit que le filtrage peut s’appliquer sur tous les paramètres d’une fonction&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">liste_sommes []     []     <span class="fu">=</span> []
+liste_sommes (x<span class="fu">:</span>xs) (y<span class="fu">:</span>ys) <span class="fu">=</span> x<span class="fu">+</span>y <span class="fu">:</span> liste_sommes xs ys</code></pre></div>
+<p>Ici, l’idée est bien de constituer la liste des sommes&nbsp;: l’expression <code class="sourceCode haskell">x<span class="fu">+</span>y <span class="fu">:</span> liste_sommes xs ys</code> doit être lue comme <code class="sourceCode haskell">(x<span class="fu">+</span>y) <span class="fu">:</span> (liste_sommes xs ys)</code>. Haskell est un langage purement fonctionnel&nbsp;: l’application d’une fonction comme <code>liste_sommes</code> à ses arguments prime sur tous les opérateurs, comme <code>:</code>. Il faut encore départager <code>+</code> et <code>:</code>. Utilisez des parenthèses quand vous n’êtes pas sûrs des priorités<a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp1.html#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a>.</p>
+<h2 id="exercices">Exercices</h2>
+<ol start="3" type="1">
+<li><p>Programmez la fonction <code>sommeDeXaY</code> du TD1.</p></li>
+<li><p>Programmez une fonction <code>somme</code> de type <code>[Int] -&gt; Int</code> qui calcule la somme des éléments de la liste.</p></li>
+<li><p>Re-programmez les fonctions standard <code>last</code> et <code>init</code> en utilisant uniquement les fonctions <code>head</code>, <code>tail</code>, <code>!!</code>, <code>take</code>, <code>drop</code>, <code>length</code>, <code>++</code>, <code>reverse</code>.</p></li>
+<li><p>Re-programmez les fonctions standard <code>!!</code>, <code>++</code>, <code>concat</code>, <code>map</code> (en leur donnant un autre nom pour éviter le conflit avec les fonctions du <code>Prelude</code>) en n’utilisant que du filtrage de motifs.</p></li>
+<li><p>Si <code>l</code> est une liste (de type <code class="sourceCode haskell">[a]</code>, ignorons pour l’instant le type des éléments), que représente la déclaration</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">x <span class="fu">=</span> (<span class="fu">!!</span>) l</code></pre></div></li>
+<li><p>Utilisez <code>map</code> et <code>somme</code> pour définir une fonction calculant la longueur d’une liste.</p></li>
+<li>Programmez une fonction qui prend pour paramètres&nbsp;:
+<ol type="1">
+<li>une fonction <code>f</code> de type <code class="sourceCode haskell">a <span class="ot">-&gt;</span> a</code>,</li>
+<li>un élément <code>x</code> de type <code>a</code>,</li>
+<li>et un entier <code>n</code> (≥ 0),</li>
+</ol>
+<p>et construit la liste <code>[x, f x, f (f x), ..., f (f (f ... (f x) ... )]</code> où le dernier élément est <span class="math inline"><em>f</em><sup><em>n</em></sup>(<em>x</em>)</span>.</p>
+<p>Vous proposerez une version récursive et une version utilisant les fonctions standard <code>iterate</code> et <code>take</code>.</p></li>
+<li><p>Utilisez la fonction précédente pour définir une fonction à un argument entier <span class="math inline"><em>n</em> ≥ 0</span> qui produit la liste des entiers consécutifs de 0 à <span class="math inline"><em>n</em></span>.</p></li>
+</ol>
+<p>En autonomie, ou si vous terminez rapidement&nbsp;:</p>
+<ol start="11" type="1">
+<li>Lisez <a href="http://lyah.haskell.fr/demarrons">Démarrons</a> du LYAH (ou la <a href="http://learnyouahaskell.com/starting-out">VO anglaise</a>) et expérimentez les exemples.</li>
+</ol>
+<section class="footnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Nous verrons plus tard comment nommer un module<a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp1.html#fnref1">↩</a></p></li>
+<li id="fn2"><p>Et dans la plupart des langages fonctionnels.<a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp1.html#fnref2">↩</a></p></li>
+<li id="fn3"><p>Attention, les significations de <code>:</code> et <code>::</code> sont exactement inverses entre Haskell et OCaml…<a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp1.html#fnref3">↩</a></p></li>
+<li id="fn4"><p>Pour apprendre les priorités des opérateurs, vous pouvez utiliser la commande <code>:info</code>&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Prelude</span><span class="fu">&gt;</span> <span class="fu">:</span>i (<span class="fu">+</span>)
+<span class="kw">class</span> <span class="dt">Num</span> a <span class="kw">where</span>
+<span class="ot">  (+) ::</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a
+  <span class="fu">...</span>
+        <span class="co">-- Defined in `GHC.Num'</span>
+<span class="kw">infixl</span> <span class="dv">6</span> <span class="fu">+</span>
+<span class="dt">Prelude</span><span class="fu">&gt;</span> <span class="fu">:</span>i (<span class="fu">:</span>)
+<span class="kw">data</span> [] a <span class="fu">=</span> <span class="fu">...</span> <span class="fu">|</span> a <span class="fu">:</span> [a] 	<span class="co">-- Defined in `GHC.Types'</span>
+<span class="kw">infixr</span> <span class="dv">5</span> <span class="fu">:</span></code></pre></div>
+<p>L’information que l’on cherche est donnée par les lignes <code>infix…</code> (puisque les opérateurs s’utilisent en général en notation <em>infixe</em>, c’est-à-dire entre leurs deux arguments).</p>
+<p><code>+</code>, à 6, est prioritaire sur <code>:</code>, à 5. Cela signifie que <code class="sourceCode haskell">x<span class="fu">+</span>y<span class="fu">:</span>z</code> est parsé comme <code class="sourceCode haskell">(x<span class="fu">+</span>y)<span class="fu">:</span>z</code>.</p>
+<p>Par ailleurs, <code>+</code> associe à gauche (l) de sorte que <code class="sourceCode haskell"><span class="dv">1</span> <span class="fu">+</span> <span class="dv">2</span> <span class="fu">+</span> <span class="dv">3</span></code> est parsée comme <code class="sourceCode haskell">(<span class="dv">1</span> <span class="fu">+</span> <span class="dv">2</span>) <span class="fu">+</span> <span class="dv">3</span></code>, tandis que <code>:</code> associe à droite (r) de sorte que <code class="sourceCode haskell"><span class="dv">1</span> <span class="fu">:</span> <span class="dv">2</span> <span class="fu">:</span> []</code> est parsée comme <code class="sourceCode haskell"><span class="dv">1</span> <span class="fu">:</span> (<span class="dv">2</span> <span class="fu">:</span> [])</code> (heureusement&nbsp;! <code class="sourceCode haskell">(<span class="dv">1</span> <span class="fu">:</span> <span class="dv">2</span>) <span class="fu">:</span> []</code> n’est pas ce qu’on veut dire, puisque <code class="sourceCode haskell"><span class="dv">2</span></code> n’est pas une liste&nbsp;; de façon générale, il est plus courant d’ajouter deux éléments en tête d’une liste plutôt que d’ajouter une tête à une liste qu’on ajoute dans une liste de listes… d’où le choix d’associativité de <code class="sourceCode haskell"><span class="fu">:</span></code>).<a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp1.html#fnref4">↩</a></p></li>
+</ol>
+</section>
+</div>
+<footer>Dernière modification&nbsp;: 18 janvier 2015. </footer>
+
+</body><iframe allowtransparency="true" frameborder="0" id="abs-top-frame" src="./Premier contact avec Haskell_files/top.html" style="position: fixed !important; z-index: 2147483647 !important; overflow: hidden !important; top: 0px !important; left: 0px !important; right: 0px !important; width: 0px !important; height: 0px !important; max-height: none !important; min-height: 0px !important; margin: 0px auto !important; padding: 0px !important; border: 0px !important; display: none !important; background-color: transparent !important;"></iframe></html>
