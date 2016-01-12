@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp2.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<title>Deuxième contact avec Haskell</title>
+
+<link href="./Deuxieme contact avec Haskell_files/feuille.css" rel="stylesheet" type="text/css">
+<meta name="viewport" content="initial-scale=1.0">
+</head>
+<body class="monocol">
+<nav>
+<a href="http://cristal.univ-lille.fr/~hym/">recherche</a> –
+<a href="http://www.fil.univ-lille1.fr/~hym/">~</a>/<a href="http://www.fil.univ-lille1.fr/~hym/e">enseignements</a>
+</nav>
+<header>
+<h1 class="titre">Deuxième contact avec Haskell</h1>
+
+</header>
+<div class="contenu">
+  <h2 id="échauffement">Échauffement</h2>
+<ol type="1">
+<li><p>Écrivez une fonction <code>alterne</code> qui prend un élément sur deux dans une liste. Par exemple <code class="sourceCode haskell">alterne [<span class="dv">1</span><span class="fu">..</span><span class="dv">5</span>]</code> est égal à <code class="sourceCode haskell">[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>]</code>.</p></li>
+<li><p>Définissez une fonction <code class="sourceCode haskell"><span class="ot">combine ::</span> (a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [b] <span class="ot">-&gt;</span> [c]</code> qui prend en argument&nbsp;:</p>
+<ul>
+<li>une fonction&nbsp;<code class="sourceCode haskell">f</code>,</li>
+<li>une liste <code class="sourceCode haskell">[x1, x2, <span class="fu">...</span>]</code>,</li>
+<li>une seconde liste&nbsp;<code class="sourceCode haskell">[y1, y2, <span class="fu">...</span>]</code>,</li>
+</ul>
+<p>et retourne la liste des <code class="sourceCode haskell">[f x1 y1, f x2 y2, <span class="fu">...</span>]</code> (ayant la même longueur que la plus courte des deux listes en argument).</p>
+<p>Par exemple&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">*</span><span class="dt">Main</span><span class="fu">&gt;</span> combine (<span class="fu">+</span>) [<span class="dv">0</span><span class="fu">..</span><span class="dv">5</span>] [<span class="dv">4</span><span class="fu">..</span><span class="dv">30</span>]
+[<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">8</span>,<span class="dv">10</span>,<span class="dv">12</span>,<span class="dv">14</span>]</code></pre></div></li>
+</ol>
+<h2 id="triangle-de-pascal">Triangle de Pascal</h2>
+<p>Nous allons définir le <a href="https://fr.wikipedia.org/wiki/Triangle_de_Pascal">triangle de Pascal</a>.</p>
+<p>La fonction nommée <code>combine</code> juste au-dessus s’appelle <code>zipWith</code> dans le Prelude.</p>
+<ol start="3" type="1">
+<li><p>En utilisant la fonction <code>zipWith</code>, définissez une fonction <code>pasPascal :: [Integer] -&gt; [Integer]</code> qui calcule une ligne du triangle de Pascal en fonction de la ligne précédente.</p></li>
+<li><p>Définissez le triangle de Pascal <code>pascal :: [[Integer]]</code> en utilisant la fonction&nbsp;<code>iterate</code>.</p>
+<p>Attention, <code>pascal</code> est une liste infinie&nbsp;: si vous demandez à GHCi de l’afficher, vous devrez l’interrompre (Ctrl-C). Le plus raisonnable est de n’afficher que les premières lignes&nbsp;: <code>take 10 pascal</code> est la liste des 10 premières lignes.</p></li>
+</ol>
+<h2 id="courbe-du-dragon">Courbe du dragon</h2>
+<p>L’objectif de cet exercice est de dessiner la <a href="https://fr.wikipedia.org/wiki/Courbe_du_dragon">courbe du dragon</a>. Nous allons la représenter de la façon suivante&nbsp;: chaque point sera identifié par ses coordonnées, c’est-à-dire un couple de <code class="sourceCode haskell"><span class="dt">Float</span></code>&nbsp;; la courbe elle-même sera simplement la liste des points.</p>
+<p>Nous utiliserons le module <code>Graphics.Gloss</code> pour dessiner la courbe. Ce module définit les deux synonymes de type suivants&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">Point</span> <span class="fu">=</span> (<span class="dt">Float</span>, <span class="dt">Float</span>)
+<span class="kw">type</span> <span class="dt">Path</span>  <span class="fu">=</span> [<span class="dt">Point</span>]</code></pre></div>
+<p>Comme l’illustre <a href="https://fr.wikipedia.org/wiki/Fichier:Dragon_curve_iterations_%282%29.svg">wikipédia</a>, cette courbe peut être construite par itérations successives.</p>
+<p>Entre deux points&nbsp;A et&nbsp;B (de coordonnées <span class="math inline">(<em>x</em><sub><em>A</em></sub>, <em>y</em><sub><em>A</em></sub>)</span> et <span class="math inline">(<em>x</em><sub><em>B</em></sub>, <em>y</em><sub><em>B</em></sub>)</span>) d’une itération, nous allons intercaler un point de coordonnées <br><span class="math display">((<em>x</em><sub><em>A</em></sub> + <em>x</em><sub><em>B</em></sub>)/2 + (<em>y</em><sub><em>B</em></sub> − <em>y</em><sub><em>A</em></sub>)/2, (<em>y</em><sub><em>A</em></sub> + <em>y</em><sub><em>B</em></sub>)/2 + (<em>x</em><sub><em>A</em></sub> − <em>x</em><sub><em>B</em></sub>)/2)</span><br> à l’itération suivante.</p>
+<ol start="5" type="1">
+<li>Définissez une fonction <code class="sourceCode haskell"><span class="ot">pointAintercaler ::</span> <span class="dt">Point</span> <span class="ot">-&gt;</span> <span class="dt">Point</span> <span class="ot">-&gt;</span> <span class="dt">Point</span></code> utilisant cette formule.</li>
+</ol>
+<p><em>Attention</em>&nbsp;: <code>pointAintercaler a b</code> et <code>pointAintercaler b a</code> ne sont pas égaux. Pour trois points successifs&nbsp;A,&nbsp;B et&nbsp;C de la courbe, vous intercalerez par exemple à l’itération suivante <code>pointAintercaler a b</code> entre&nbsp;A et&nbsp;B, et <code>pointAintercaler c b</code> entre&nbsp;B et&nbsp;C&nbsp;: il faut cette alternance pour créer la courbe&nbsp;!</p>
+<ol start="6" type="1">
+<li><p>Définissez une fonction <code class="sourceCode haskell"><span class="ot">pasDragon ::</span> <span class="dt">Path</span> <span class="ot">-&gt;</span> <span class="dt">Path</span></code> qui, à partir de la courbe d’une itération, calcule la courbe à l’itération suivante.</p></li>
+<li><p>Définissez une fonction <code>dragon :: Point -&gt; Point -&gt; [Path]</code> qui calcule la liste des différentes itérations de la courbe du dragon créée entre les deux points donnés.</p></li>
+</ol>
+<p>Vous pouvez finir en affichant successivement les itérations de la courbe en insérant au début de votre fichier <code>dragon.hs</code>&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Graphics.Gloss</span>
+
+main <span class="fu">=</span> animate (<span class="dt">InWindow</span> <span class="st">"Dragon"</span> (<span class="dv">500</span>, <span class="dv">500</span>) (<span class="dv">0</span>, <span class="dv">0</span>)) white (dragonAnime (<span class="dv">50</span>,<span class="dv">250</span>) (<span class="dv">450</span>,<span class="dv">250</span>))
+
+dragonAnime a b t <span class="fu">=</span> <span class="dt">Line</span> (dragon a b <span class="fu">!!</span> (round t <span class="ot">`mod`</span> <span class="dv">20</span>))
+
+dragon = -- Là, c’est à vous
+         undefined</code></pre></div>
+<p>Vous pourrez consulter la documentation de Gloss (/usr/share/doc/libghc-gloss-doc/html/Graphics-Gloss.html au M5). Cette documentation indique en particulier comment contrôler le programme lancé&nbsp;:</p>
+<ul>
+<li>«&nbsp;Échap&nbsp;» pour quitter,</li>
+<li>les flèches pour déplacer la vue,</li>
+<li>«&nbsp;Ctrl&nbsp;» + boutons et molette de la souris pour faire tourner ou zoomer, etc.</li>
+</ul>
+<p>Vous pourrez lancer votre programme écrit dans le fichier <code>dragon.hs</code> en lançant simplement <code>runghc dragon.hs</code> dans votre shell (plutôt que dans GHCi).</p>
+<h3 id="définition-alternative">Définition alternative</h3>
+<p>La courbe du dragon peut aussi être définie en partant de deux points&nbsp;A et&nbsp;B de la façon suivante&nbsp;:</p>
+<ul>
+<li>le dragon d’<em>ordre</em>&nbsp;0 est simplement le segment&nbsp;AB,</li>
+<li>le dragon d’<em>ordre</em> <span class="math inline"><em>n</em> + 1</span> est composé d’un dragon d’ordre&nbsp;<span class="math inline"><em>n</em></span> entre&nbsp;A et&nbsp;C, et un dragon d’ordre&nbsp;<span class="math inline"><em>n</em></span> entre&nbsp;B et&nbsp;C (attention à ne pas inverser les points&nbsp;!), où C&nbsp;est le point à intercaler entre&nbsp;A et&nbsp;B.</li>
+</ul>
+<ol start="8" type="1">
+<li><p>Définissez une fonction <code class="sourceCode haskell"><span class="ot">dragonOrdre ::</span> <span class="dt">Point</span> <span class="ot">-&gt;</span> <span class="dt">Point</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Path</span></code> qui prend en arguments deux points&nbsp;A et&nbsp;B et un ordre et calcule le dragon de cet ordre.</p></li>
+<li><p>Adapter le canevas de fonction <code>main</code> donné ci-dessus pour utiliser cette version.</p></li>
+</ol>
+<h2 id="lyah">LYAH</h2>
+<ol start="10" type="1">
+<li>Lisez <a href="http://lyah.haskell.fr/types-et-classes-de-types">Types et classes de types</a> et <a href="http://lyah.haskell.fr/syntaxe-des-fonctions">Syntaxe des fonctions</a> du LYAH (ou la VO anglaise&nbsp;: <a href="http://learnyouahaskell.com/types-and-typeclasses">1</a> et&nbsp;<a href="http://learnyouahaskell.com/syntax-in-functions">2</a>) et expérimentez les exemples.</li>
+</ol>
+</div>
+<footer>Dernière modification&nbsp;: 18 janvier 2015. </footer>
+
+</body></html>
