@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Arrays;
 import java.util.Date;
@@ -27,7 +28,6 @@ public class MulticastConnection implements Closeable {
 	public MulticastConnection(InetAddress h, int p) {
 		
 		port = p;
-		
 		host = h;
 		
 		try {
@@ -55,7 +55,9 @@ public class MulticastConnection implements Closeable {
 						} catch(Exception e) {
 							mess = e.toString();
 						}
-						passMessageToListener(new Message(mess, p.getAddress()));
+						
+						InetAddress messageAddr = NetworkInterface.getByInetAddress(p.getAddress()) != null ? null : p.getAddress();
+						passMessageToListener(new Message(mess, messageAddr));
 					}
 				} catch (SocketException e) {
 				} catch (IOException e) {
@@ -101,14 +103,6 @@ public class MulticastConnection implements Closeable {
 	
 	
 	
-	
-	public void setListener(MessagesManager l) {
-		listener.set(l);
-	}
-	
-	
-	
-	
 	public synchronized void close() {
 		stop.set(true);
 		
@@ -124,6 +118,13 @@ public class MulticastConnection implements Closeable {
 	
 	
 	
+	public synchronized void setMessageManager(MessagesManager m) {
+		listener.set(m);
+	}
+	
+	
+	
+	
 	
 	
 	
@@ -132,6 +133,7 @@ public class MulticastConnection implements Closeable {
 		public final Date date;
 		public final String data;
 		public final InetAddress address;
+		public final String hostName;
 		private int count = 1;
 		
 		public Message(String d, InetAddress a) {
@@ -139,12 +141,20 @@ public class MulticastConnection implements Closeable {
 			data = d;
 			address = a;
 			date = new Date();
+			
+			hostName = (address == null) ? null : address.getHostName().replace(".univ-lille1.fr", "");
+			
 		}
 		
 		@Override
 		public String toString() {
 			return "Message[address="+address+";data="+data+"]";
 		}
+		
+		
+		public int getCount() { return count; }
+		
+		public void addcount() { count++; }
 		
 		
 		public boolean canBeMergedWith(Message m, long maxTimeDiff) {

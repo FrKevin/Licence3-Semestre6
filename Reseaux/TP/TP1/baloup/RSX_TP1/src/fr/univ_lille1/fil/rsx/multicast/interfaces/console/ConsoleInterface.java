@@ -2,19 +2,19 @@ package fr.univ_lille1.fil.rsx.multicast.interfaces.console;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.NetworkInterface;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import fr.univ_lille1.fil.rsx.multicast.network.MulticastConnection;
+import fr.univ_lille1.fil.rsx.multicast.interfaces.UserInterface;
+import fr.univ_lille1.fil.rsx.multicast.interfaces.gui.GraphicalInterface;
 import fr.univ_lille1.fil.rsx.multicast.network.MessagesManager;
-import fr.univ_lille1.fil.rsx.multicast.network.MulticastConnection.Message;
+import fr.univ_lille1.fil.rsx.multicast.network.MessagesManager.ReadOnlyMessage;
 import jline.console.ConsoleReader;
 
-public class ConsoleInterface {
+public class ConsoleInterface implements UserInterface {
 	
 	
 	public static final String ANSI_RESET = "\u001B[0m";
@@ -47,17 +47,17 @@ public class ConsoleInterface {
 	
 	
 	
-	private MulticastConnection connection;
+	private MessagesManager messagesManager;
 	
 	private ConsoleReader reader;
 	private PrintWriter out;
 	
-	private String name = null;
 	
-	private Map<String, String> aliases = new HashMap<String, String>();
 	
-	public ConsoleInterface(MulticastConnection co) throws IOException {
-		connection = co;
+	private GraphicalInterface launchedGUI = null;
+	
+	public ConsoleInterface(MessagesManager m) throws IOException {
+		messagesManager = m;
 		reader = new ConsoleReader();
 		reader.setBellEnabled(false);
 		reader.setPrompt("\r"+ANSI_LIGHT_PURPLE+">");
@@ -65,7 +65,7 @@ public class ConsoleInterface {
 		
 
 		println(ANSI_BOLD+"--------------- Chat en multicast ---------------"+ANSI_RESET
-				+ "\nAdresse multicast : "+connection.host+":"+connection.port+""
+				+ "\nAdresse multicast : "+messagesManager.getConnection().host+":"+messagesManager.getConnection().port+""
 				+ "\n"
 				+ "\nPour envoyer un message, écrivez-le et appuyez sur entrée."
 				+ "\nPour une commande spécifique, faites-la précéder de '"+ANSI_BOLD+"/"+ANSI_RESET+"'."
@@ -93,24 +93,45 @@ public class ConsoleInterface {
 							|| command.equalsIgnoreCase("stop")
 							|| command.equalsIgnoreCase("end")
 							|| command.equalsIgnoreCase("quit")) {
-						connection.close();
-						System.exit(0);
+						println("Déconnexion ...");
+						return;
 					}
 					else if (command.toLowerCase().startsWith("name ")) {
-						name = command.substring(5);
-						println("Nom défini à '"+name+"'.");
+						messagesManager.setDisplayName(command.substring(5), this);
+						println("Nom défini à '"+messagesManager.getDisplayName()+"'.");
 					}
 					else if (command.equalsIgnoreCase("name")) {
-						name = null;
+						messagesManager.setDisplayName(null, this);
 						println("Nom retiré.");
 					}
 					else if (command.toLowerCase().startsWith("alias ")) {
 						String[] args = command.substring(6).split(" ", 2);
-						aliases.put(args[0], args[1]);
+						messagesManager.setHostnameAlias(args[0], args[1], this);
 						println("Alias '"+args[1]+"' défini pour '"+args[0]+"'.");
 					}
 					else if (command.toLowerCase().startsWith("clear")) {
-						connection.send(((command.length()>6)?command.substring(6):"")+getMegaClear(25));
+						/* il s'agit d'un message surprise à l'attention des utilisateurs connectés.
+						 * celui-ci contient des séquences ANSI équivalente au résultat de la
+						 * combinaison de touche Ctrl + L dans un terminal.
+						 * Le nom d'utilisateur est retiré avant l'envoi, puis rétabli après.
+						 */
+						String dispName = messagesManager.getDisplayName();
+						messagesManager.setDisplayName(null, this);
+						messagesManager.send(((command.length()>6)?command.substring(6):"")+getMegaClear(25));
+						messagesManager.setDisplayName(dispName, this);
+					}
+					else if (command.equalsIgnoreCase("gui")) {
+						if (launchedGUI == null) {
+							println("Démarrage de l'interface graphique.");
+							launchedGUI = new GraphicalInterface(messagesManager);
+							messagesManager.addInterface(launchedGUI);
+						}
+						else {
+							println("Arrêt de l'interface graphique.");
+							messagesManager.removeInterface(launchedGUI);
+							launchedGUI.dispose();
+							launchedGUI = null;
+						}
 					}
 					else {
 						println("Aides pour les commandes");
@@ -118,14 +139,11 @@ public class ConsoleInterface {
 						println(""+ANSI_BOLD+"/name <Nom>"+ANSI_RESET+" pour vous donner un nom (qui sera visible pour tout le monde).");
 						println(""+ANSI_BOLD+"/name"+ANSI_RESET+" sans paramètre pour retirer ce nom.");
 						println(""+ANSI_BOLD+"/alias <HostName> <UserName>"+ANSI_RESET+" pour définir le nom d'une personne pour un nom de machine donné.");
+						println(""+ANSI_BOLD+"/gui"+ANSI_RESET+" lance ou arrête l'interface graphique.");
 					}
 				}
 				else {
-					try {
-						connection.send(((name != null)?(name+" : "):"")+line);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					messagesManager.send(line);
 				}
 				
 				
@@ -146,33 +164,33 @@ public class ConsoleInterface {
 	
 	
 	
+	
+	
+	
 	private String getMegaClear(int nb) {
 		return nb > 0 ? ANSI_CLEAR_SCREEN + getMegaClear(nb-1) : "";
 	}
 	
 	
 	
-
+	
+	
+	
 	@Override
-	public void onReceiveMessage(Message m) {
+	public void onReceiveMessage(ReadOnlyMessage m) {
 		
-		boolean isOwn = false;
-		try {
-			isOwn = m.address == null || NetworkInterface.getByInetAddress(m.address) != null;
-		} catch(Exception e) { }
 		
 		
 		String disp = ANSI_BLUE + dateFormat.format(new Date()) + ANSI_RESET + " ";
-		if (isOwn) {
+		if (!m.isRemote()) {
 			disp += ANSI_YELLOW
 					+ "Cet ordi" + ANSI_RESET;
 		}
 		else {
-			String host = m.address.getHostName();
-			host = host.replace(".univ-lille1.fr", "");
+			String host = m.getRemoteHostName();
 			boolean hostReplaced = false;
-			if (aliases.get(host) != null) {
-				host = aliases.get(host);
+			if (messagesManager.getHostnameAlias(host) != null) {
+				host = messagesManager.getHostnameAlias(host);
 				hostReplaced = true;
 			}
 			
@@ -183,7 +201,7 @@ public class ConsoleInterface {
 		disp += ANSI_GOLD
 				+ "> "
 				+ ANSI_RESET
-				+ m.data.replace(ANSI_CLEAR_SCREEN, "")
+				+ m.getMessage().replace(ANSI_CLEAR_SCREEN, "")
 				+ ANSI_RESET;
 		
 		
@@ -192,6 +210,19 @@ public class ConsoleInterface {
 		
 		
 	}
+
+	@Override
+	public void onMessagesHistoryUpdate(List<ReadOnlyMessage> messagesHistory) { }
+	@Override
+	public void onDisplayNameChange(String newName) { }
+	@Override
+	public void onAliasesChange(Map<String, String> newAliases) { }
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -205,5 +236,6 @@ public class ConsoleInterface {
 			e.printStackTrace();
 		}
 	}
+
 	
 }
