@@ -24,7 +24,7 @@ public class Sender {
 	
 	public void joinGroup(){
 		try {
-			multicastSocket.joinGroup(InetAddress.getByName("224.0.0.1"));
+			multicastSocket.joinGroup(InetAddress.getByName(adresse));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -32,7 +32,7 @@ public class Sender {
 	
 	public void leaveGroupe(){
 		try {
-			multicastSocket.leaveGroup(InetAddress.getByName("224.0.0.1"));
+			multicastSocket.leaveGroup(InetAddress.getByName(adresse));
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

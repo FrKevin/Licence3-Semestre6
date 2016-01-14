@@ -38,7 +38,8 @@ public class Window extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
-				System.out.println("coucou");
+				app.getReceiver().leaveGroupe();
+				app.getSender().leaveGroupe();
 			}
 		});
 		
