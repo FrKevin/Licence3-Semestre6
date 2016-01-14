@@ -2,6 +2,7 @@ package fr.univ_lille1.fil.rsx.multicast;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Random;
 
 import javax.swing.UIManager;
 
@@ -28,7 +29,17 @@ public class MulticastChat {
 		
 		connection.setMessageManager(messagesManager);
 		
-		if (System.console() != null) {
+		
+		if (args.length > 0 && args[0].equalsIgnoreCase("spam")) {
+			// spam le réseau pour tester les performances de l'interface graphique
+			Random r = new Random();
+			for (int i=0; i<10000; i++) {
+				try { Thread.sleep(10); } catch (InterruptedException e) { }
+				messagesManager.send(r.nextInt(100)+"");
+			}
+		}
+		
+		else if (System.console() != null) {
 			// lancé via une console, ou en utilisant (pour Windows) l'exécutable java.exe au lieu de javaw.exe
 			ConsoleInterface console = new ConsoleInterface(messagesManager);
 			
