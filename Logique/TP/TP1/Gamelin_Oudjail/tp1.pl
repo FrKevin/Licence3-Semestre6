@@ -2,7 +2,6 @@
 % Question 1
 contenu(tigre).
 contenu(princesse).
-contenu(vide).
 
 % Question 2
 pancarte1(tigre, _).
@@ -10,8 +9,8 @@ pancarte1(_, princesse).
 pancarte2(princesse, _).
 
 % Question 3
-salle1(X, Y) :- pancarte1(X, Y), pancarte2(X, Y).
-salle1(X, Y) :- not(pancarte1(X, Y)), not(pancarte2(X, Y)).
+salle1(X, Y) :- contenu(X), contenu(Y), pancarte1(X, Y), pancarte2(X, Y).
+salle1(X, Y) :- contenu(X), contenu(Y), not(pancarte1(X, Y)), not(pancarte2(X, Y)).
 
 % Question 4
 /*
@@ -42,8 +41,8 @@ pancarte21(princesse, tigre).
 pancarte22(princesse, tigre).
 pancarte22(tigre, princesse).
 
-salle2(X, Y) :- pancarte21(X, Y), not(pancarte22(X, Y)).
-salle2(X, Y) :- pancarte22(X, Y), not(pancarte21(X, Y)).
+salle2(X, Y) :- contenu(X), contenu(Y), pancarte21(X, Y), not(pancarte22(X, Y)).
+salle2(X, Y) :- contenu(X), contenu(Y), pancarte22(X, Y), not(pancarte21(X, Y)).
 
 % Question 7
 /*
@@ -81,15 +80,86 @@ salle2(X, Y) :- pancarte22(X, Y), not(pancarte21(X, Y)).
 
 % Question 10
 affiche(X, Y) :- salle2(X, Y),
-  write("Porte numero 1 : "),
+  write('Porte numero 1 : '),
   write(X),
   nl,
-  write("Porte numero 2 : "),
+  write('Porte numero 2 : '),
   write(Y),
   nl.
 
 % Troisième salle
 % Question 11
-porte().
-porte().
-porte().
+
+contenu2(princesse).
+contenu2(tigre).
+contenu2(vide).
+
+
+pancarte31(princesse, tigre, vide).
+pancarte31(tigre, princesse, vide).
+pancarte31(_, _, vide).
+
+
+pancarte32(tigre, princesse, vide).
+pancarte32(tigre, vide, princesse).
+
+pancarte33(tigre, princesse, vide).
+pancarte33(princesse, tigre, vide).
+
+
+
+porte1(P1, P2, P3) :- pancarte31(P1, P2, P3), pancarte33(P1, P2, P3), not(pancarte32(P1, P2, P3)).
+% porte1(P1, P2, P3) :- not(pancarte31(P1, P2, P3)), not(pancarte33(P1, P2, P3)), pancarte32(P1, P2, P3).
+
+porte2(P1, P2, P3) :- pancarte32(P1, P2, P3), not(pancarte31(P1, P2, P3)), not(pancarte33(P1, P2, P3)).
+% porte2(P1, P2, P3) :- not(pancarte32(P1, P2, P3)), pancarte31(P1, P2, P3), pancarte33(P1, P2, P3).
+
+porte3(P1, P2, P3) :- pancarte33(P1, P2, P3), pancarte31(P1, P2, P3), not(pancarte32(P1, P2, P3)).
+%porte3(P1, P2, P3) :- not(pancarte33(P1, P2, P3)), not(pancarte31(P1, P2, P3)), pancarte32(P1, P2, P3).
+
+% Question 12
+salle3(P1, P2, P3) :- contenu2(P1), contenu2(P2), contenu2(P3), not(porte1(P1, P2, P3)), porte2(P1, P2, P3), not(porte3(P1, P2, P3)).
+salle3(P1, P2, P3) :- contenu2(P1), contenu2(P2), contenu2(P3), porte1(P1, P2, P3), not(porte2(P1, P2, P3)), porte3(P1, P2, P3).
+
+% Question 13
+/*
+  12 ?- salle3(X, Y, Z).
+  X = princesse,
+  Y = tigre,
+  Z = vide .
+*/
+
+% Question 14
+/*
+ T Call: (7) salle3(_G3190, _G3191, _G3192)
+ T Call: (9) porte1(_G3190, _G3191, _G3192)
+ T Call: (10) pancarte31(_G3190, _G3191, _G3192)
+ T Exit: (10) pancarte31(princesse, tigre, vide)
+ T Call: (10) pancarte33(princesse, tigre, vide)
+ T Exit: (10) pancarte33(princesse, tigre, vide)
+ T Call: (11) pancarte32(princesse, tigre, vide)
+ T Fail: (11) pancarte32(princesse, tigre, vide)
+ T Exit: (9) porte1(princesse, tigre, vide)
+ T Redo: (7) salle3(_G3190, _G3191, _G3192)
+ T Call: (8) porte1(_G3190, _G3191, _G3192)
+ T Call: (9) pancarte31(_G3190, _G3191, _G3192)
+ T Exit: (9) pancarte31(princesse, tigre, vide)
+ T Call: (9) pancarte33(princesse, tigre, vide)
+ T Exit: (9) pancarte33(princesse, tigre, vide)
+ T Call: (10) pancarte32(princesse, tigre, vide)
+ T Fail: (10) pancarte32(princesse, tigre, vide)
+ T Exit: (8) porte1(princesse, tigre, vide)
+ T Call: (9) porte2(princesse, tigre, vide)
+ T Call: (10) pancarte32(princesse, tigre, vide)
+ T Fail: (10) pancarte32(princesse, tigre, vide)
+ T Fail: (9) porte2(princesse, tigre, vide)
+ T Call: (8) porte3(princesse, tigre, vide)
+ T Call: (9) pancarte33(princesse, tigre, vide)
+ T Exit: (9) pancarte33(princesse, tigre, vide)
+ T Call: (9) pancarte31(princesse, tigre, vide)
+ T Exit: (9) pancarte31(princesse, tigre, vide)
+ T Call: (10) pancarte32(princesse, tigre, vide)
+ T Fail: (10) pancarte32(princesse, tigre, vide)
+ T Exit: (8) porte3(princesse, tigre, vide)
+ T Exit: (7) salle3(princesse, tigre, vide)
+*/
