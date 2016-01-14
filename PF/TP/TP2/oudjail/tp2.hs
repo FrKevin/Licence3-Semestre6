@@ -23,7 +23,15 @@ pascal = (iterate pasPascal [])
 pointAintercaler :: Point -> Point -> Point
 pointAintercaler (xA, xB) (yA, yB) = ((xA + xB)/2 + (yB - yA)/2, (yA + yB)/2 + (xA - xB)/2)
 
+pasDragon :: Path -> Path
+pasDragon [] = []
+pasDragon [xa] = [xa] -- Ou mettre un fail
+pasDragon [xa, xb] = xa : [pointAintercaler xa xb] ++ [xb]
+pasDragon (xa : xb : xc : xs) =
+    xa : (pointAintercaler xa xb) : xb : (pointAintercaler xc xb) : xc : (pasDragon xs)
 
+dragon :: Path -> Path
+dragon p1 p2 = error "Not implemented"
 
 main :: IO ()
 main = do
