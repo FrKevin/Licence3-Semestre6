@@ -2,6 +2,7 @@
 % Question 1
 contenu(tigre).
 contenu(princesse).
+contenu(vide).
 
 % Question 2
 pancarte1(tigre, _).
@@ -78,10 +79,17 @@ salle2(X, Y) :- pancarte22(X, Y), not(pancarte21(X, Y)).
   on peut la definir comme une tautologie.
 */
 
-% Question 10, a voir
-pancarte21(X, Y), write(X), write(Y).
-pancarte22(X, Y), write(X), write(Y).
+% Question 10
+affiche(X, Y) :- salle2(X, Y),
+  write("Porte numero 1 : "),
+  write(X),
+  nl,
+  write("Porte numero 2 : "),
+  write(Y),
+  nl.
 
 % Troisième salle
 % Question 11
-/* TODO */
+porte().
+porte().
+porte().
