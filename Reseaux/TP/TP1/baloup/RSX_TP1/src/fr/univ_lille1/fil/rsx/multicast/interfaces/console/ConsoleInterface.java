@@ -2,8 +2,6 @@ package fr.univ_lille1.fil.rsx.multicast.interfaces.console;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +38,6 @@ public class ConsoleInterface implements UserInterface {
 	public static final String ANSI_BOLD = "\u001B[1m";
 	
 	public static final String ANSI_CLEAR_SCREEN = "\u001B[2J\u001B[1;1H";
-	
-	
-	public static final DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 	
 	
 	
@@ -121,6 +116,11 @@ public class ConsoleInterface implements UserInterface {
 						messagesManager.setDisplayName(dispName, this);
 					}
 					else if (command.equalsIgnoreCase("gui")) {
+						if (launchedGUI != null && launchedGUI.hasDisposed()) {
+							messagesManager.removeInterface(launchedGUI);
+							launchedGUI = null;
+						}
+						
 						if (launchedGUI == null) {
 							println("Démarrage de l'interface graphique.");
 							launchedGUI = new GraphicalInterface(messagesManager);
@@ -181,7 +181,7 @@ public class ConsoleInterface implements UserInterface {
 		
 		
 		
-		String disp = ANSI_BLUE + dateFormat.format(new Date()) + ANSI_RESET + " ";
+		String disp = ANSI_BLUE + DATE_FORMAT.format(new Date()) + ANSI_RESET + " ";
 		if (!m.isRemote()) {
 			disp += ANSI_YELLOW
 					+ "Cet ordi" + ANSI_RESET;

@@ -3,6 +3,7 @@ package fr.univ_lille1.fil.rsx.multicast.network;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,21 +16,27 @@ import fr.univ_lille1.fil.rsx.multicast.network.MulticastConnection.Message;
 public class MessagesManager {
 	
 	
-	public static final long TIME_BETWEEN_MESSAGE_FOR_SPAM = 5000; // 5 secondes
+	public static final long TIME_BETWEEN_MESSAGE_FOR_SPAM = 10000; // 5 secondes
+	
+	public static final long HISTORY_LENGTH = 300;
 	
 	private MulticastConnection connection;
 	
-	private List<Message> messagesHistory;
+	private List<Message> messagesHistory = new ArrayList<Message>();
+	private List<ReadOnlyMessage> readOnlyMessageHistory = new ArrayList<ReadOnlyMessage>();
 	
 	private String name = null;
 	private Map<String, String> aliases = new HashMap<String, String>();
 	
 	private List<UserInterface> interfaces = new ArrayList<UserInterface>();
 	
+	public final Object messagesHistoryLocker = new Object();
+	
 	
 	
 	public MessagesManager(MulticastConnection co) {
-		messagesHistory = new ArrayList<Message>();
+		
+		connection = co;
 		
 	}
 	
@@ -138,7 +145,6 @@ public class MessagesManager {
 	
 	
 	
-	
 	/**
 	 * Prends en charge les messages reçu via le réseau.<br/>
 	 * <b>Attention : Cela inclus nos propres messages.</b>
@@ -171,10 +177,19 @@ public class MessagesManager {
 		}
 		
 		if (!merged) {
-			messagesHistory.add(message);
-			synchronized (aliases) {
-				if (!aliases.containsKey(message.hostName))
-					setHostnameAlias(message.hostName, null, null);
+			synchronized (messagesHistoryLocker) {
+				messagesHistory.add(message);
+				readOnlyMessageHistory.add(new ReadOnlyMessage(message));
+				while (messagesHistory.size()>HISTORY_LENGTH) {
+					messagesHistory.remove(0);
+					readOnlyMessageHistory.remove(0);
+				}
+			}
+			if (message.hostName != null) {
+				synchronized (aliases) {
+					if (!aliases.containsKey(message.hostName))
+						setHostnameAlias(message.hostName, null, null);
+				}
 			}
 			
 		}
@@ -204,10 +219,7 @@ public class MessagesManager {
 	
 	
 	private synchronized List<ReadOnlyMessage> getMessagesHistory() {
-		List<ReadOnlyMessage> ret = new ArrayList<ReadOnlyMessage>();
-		for (Message m : messagesHistory)
-			ret.add(new ReadOnlyMessage(m));
-		return ret;
+		return Collections.unmodifiableList(readOnlyMessageHistory);
 	}
 	
 	
@@ -225,7 +237,7 @@ public class MessagesManager {
 		}
 		
 		public String getMessage() { return m.data; }
-		public boolean isRemote() { return getRemoteAddress() == null; }
+		public boolean isRemote() { return getRemoteAddress() != null; }
 		public InetAddress getRemoteAddress() { return m.address; }
 		public String getRemoteHostName() { return m.hostName; }
 		public int getCount() { return m.getCount(); }

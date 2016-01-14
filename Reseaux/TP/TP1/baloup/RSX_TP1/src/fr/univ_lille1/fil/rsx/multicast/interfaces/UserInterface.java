@@ -1,5 +1,7 @@
 package fr.univ_lille1.fil.rsx.multicast.interfaces;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +9,9 @@ import fr.univ_lille1.fil.rsx.multicast.network.MessagesManager;
 import fr.univ_lille1.fil.rsx.multicast.network.MessagesManager.ReadOnlyMessage;
 
 public interface UserInterface {
+	
+	
+	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss");
 	
 	/**
 	 * Appelé lorsque un message individuel a été reçu depuis le réseau

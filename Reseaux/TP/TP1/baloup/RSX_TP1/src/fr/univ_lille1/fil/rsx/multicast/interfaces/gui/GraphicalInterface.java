@@ -1,12 +1,21 @@
 package fr.univ_lille1.fil.rsx.multicast.interfaces.gui;
 
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 import fr.univ_lille1.fil.rsx.multicast.interfaces.UserInterface;
 import fr.univ_lille1.fil.rsx.multicast.network.MessagesManager;
@@ -15,8 +24,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
+import javax.swing.JOptionPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -28,28 +36,22 @@ public class GraphicalInterface extends JFrame implements UserInterface {
 	
 	private JPanel contentPane;
 	
+	private AtomicBoolean hasDisposed = new AtomicBoolean(false);
+	
 	
 	
 	private JTextField messageField;
-	private JLabel chatContent;
+	private JEditorPane chatContent;
 	private JTextField nameField;
 	private JTable aliasesTable;
+	JScrollPane chatScrollPane;
 	
 	
 	private MessagesManager messagesManager;
+	
+	private AtomicReference<List<ReadOnlyMessage>> messagesHistoryCache = new AtomicReference<List<ReadOnlyMessage>>(new ArrayList<ReadOnlyMessage>());
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			// donne à l'interface graphique le thème associé au système d'exploitation
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) { }
-		GraphicalInterface frame = new GraphicalInterface(null);
-		frame.setVisible(true);
-		frame.waitForDispose();
-	}
+	
 
 	/**
 	 * Create the frame.
@@ -76,15 +78,16 @@ public class GraphicalInterface extends JFrame implements UserInterface {
 		chatSubPanel.setBorder(new EmptyBorder(2, 2, 2, 2));
 		chatSubPanel.setLayout(new BorderLayout(0, 0));
 		
-		JScrollPane chatScrollPane = new JScrollPane();
+		chatScrollPane = new JScrollPane();
 		chatScrollPane.setViewportBorder(null);
 		chatScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		chatScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		chatSubPanel.add(chatScrollPane);
 		
-		chatContent = new JLabel("<html><b>Ferme-moi cette fenêtre !</b><br/>L'interface graphique n'est pas fonctionnelle.</html>");
-		chatContent.setHorizontalAlignment(SwingConstants.LEFT);
-		chatContent.setVerticalAlignment(SwingConstants.TOP);
+		chatContent = new JEditorPane();
+		chatContent.setContentType("text/html");
+		chatContent.setEditable(false);
+		chatContent.setText("<html><b>En attente d'un premier message ...</b></html>");
 		chatScrollPane.setViewportView(chatContent);
 		
 		JPanel messagePanel = new JPanel();
@@ -98,6 +101,11 @@ public class GraphicalInterface extends JFrame implements UserInterface {
 		messageField = new JTextField();
 		messagePanel.add(messageField, BorderLayout.CENTER);
 		messageField.setColumns(10);
+		messageField.addActionListener(new ActionListener() {
+			@Override public synchronized void actionPerformed(ActionEvent e) {
+				sendMessage();
+			}
+		});
 		
 		JPanel configPanel = new JPanel();
 		tabbedPane.addTab("Configuration", null, configPanel, null);
@@ -114,6 +122,11 @@ public class GraphicalInterface extends JFrame implements UserInterface {
 		nameField = new JTextField();
 		namePanel.add(nameField, BorderLayout.CENTER);
 		nameField.setColumns(10);
+		nameField.addActionListener(new ActionListener() {
+			@Override public synchronized void actionPerformed(ActionEvent e) {
+				changeName();
+			}
+		});
 		
 		JPanel aliasesPanel = new JPanel();
 		aliasesPanel.setBorder(new EmptyBorder(2, 2, 2, 2));
@@ -128,7 +141,7 @@ public class GraphicalInterface extends JFrame implements UserInterface {
 		aliasesTable = new JTable();
 		aliasesTable.setModel(new DefaultTableModel(
 					new Object[][] {
-						{null, null},
+						{"(vide)", null},
 					},
 					new String[] {
 						"Nom d'hôte", "Alias attribué"
@@ -147,10 +160,57 @@ public class GraphicalInterface extends JFrame implements UserInterface {
 				return columnEditables[column];
 			}
 		});
+		aliasesTable.getModel().addTableModelListener(new TableModelListener() {
+			@Override public void tableChanged(TableModelEvent e) {
+				if (e.getColumn() != 1)
+					return;
+				if (e.getFirstRow() != e.getLastRow() || e.getFirstRow() < 0)
+					return; // modif via la mise à jour depuis le gesionnaire de message
+				
+				String hostname = (String)aliasesTable.getValueAt(e.getFirstRow(), 0);
+				
+				if (hostname.equals("(vide)"))
+					return;
+				
+				String alias = (String)aliasesTable.getValueAt(e.getFirstRow(), 1);
+				
+				messagesManager.setHostnameAlias(hostname, alias, GraphicalInterface.this);
+			}
+		});
+		
 		aliasesTable.getColumnModel().getColumn(0).setPreferredWidth(150);
 		aliasesTable.getColumnModel().getColumn(0).setMinWidth(100);
 		aliasesTable.getColumnModel().getColumn(1).setPreferredWidth(300);
 		aliasesScrollPane.setViewportView(aliasesTable);
+		
+		setVisible(true);
+		
+		new Thread(new Runnable() {
+			@Override public void run() {
+				List<ReadOnlyMessage> oldList = null;
+				while(!hasDisposed()) {
+					
+					while(messagesHistoryCache.get() == oldList)
+						try { Thread.sleep(100); } catch (InterruptedException e) { }
+					
+					
+					List<ReadOnlyMessage> current = messagesHistoryCache.get();
+					
+					List<ReadOnlyMessage> safeCopy;
+					synchronized (messagesManager.messagesHistoryLocker) {
+						safeCopy = new ArrayList<ReadOnlyMessage>(current);
+					}
+					updateChatDisplay(safeCopy);
+					
+					oldList = current;
+					
+					
+					try { Thread.sleep(Math.max(200,10*current.size())); } catch (InterruptedException e) { }
+				}
+			}
+		}).start();
+		
+		
 	}
 	
 	
@@ -160,9 +220,11 @@ public class GraphicalInterface extends JFrame implements UserInterface {
 
 	
 	
+
 	@Override
 	public synchronized void dispose() {
 		super.dispose();
+		hasDisposed.set(true);
 		notify();
 	}
 	
@@ -173,7 +235,95 @@ public class GraphicalInterface extends JFrame implements UserInterface {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public synchronized boolean hasDisposed() { return hasDisposed.get(); }
+	
+	
+	
+	
+	
+	private synchronized void sendMessage() {
+		messageField.setEnabled(false);
+		String mess = messageField.getText();
+		if (!mess.trim().equals(""))
+			messagesManager.send(mess);
+		messageField.setText("");
+		messageField.setEnabled(true);
+		messageField.requestFocusInWindow();
+	}
+	
+	
+	private synchronized void changeName() {
+		nameField.setEnabled(false);
+		String name = nameField.getText();
+		if (name.trim().equals(""))
+			name = null;
+		messagesManager.setDisplayName(name, this);
+		JOptionPane.showMessageDialog(this, (name == null)?"Le nom a été retiré":"Le nom a été défini en '"+name+"'", "Changement de nom", JOptionPane.INFORMATION_MESSAGE);
+		nameField.setEnabled(true);
+		nameField.requestFocusInWindow();
+	}
+	
+	
+	
+	private void updateChatDisplay(List<ReadOnlyMessage> current) {
+		String htmlOutput = "<html>";
+		
+		for (ReadOnlyMessage m : current) {
+			
+			String disp = "<span style='color: blue; font-weight: bold;'>" + DATE_FORMAT.format(m.getDate()) + "</span> ";
+			if (!m.isRemote()) {
+				disp += "<span style='color: orange;'>Cet ordi</span>";
+			}
+			else {
+				String host = m.getRemoteHostName();
+				boolean hostReplaced = false;
+				if (messagesManager.getHostnameAlias(host) != null) {
+					host = messagesManager.getHostnameAlias(host);
+					hostReplaced = true;
+				}
+				if (hostReplaced)
+					disp += "<span style='color: green; font-weight: bold;'>"+host+"</span>";
+				else
+					disp += "<span style='color: green;'>"+host+"</span>";
+				
+			}
+			
+			disp += "<span style='color: orange; font-weight: bold;'>&gt;</span> "
+					+ m.getMessage().replaceAll("[\\x00-\\x1F\\x7F]", "?").replace("<", "&lt;").replace(">", "&gt;");
+			
+			if (m.getCount() > 1) {
+				disp += " <span style='background-color: red; color: black;'>&times; "+m.getCount()+"</span>";
+			}
+			
+			
+			
+			htmlOutput += disp + "<br/>";
+			
+		}
+		
+		htmlOutput += "</html>";
+		
+		EventQueue.invokeLater(new Runnable() {
+			String s;
+			public Runnable init(String S) { s = S; return this; }
+			
+			@Override
+			public void run() {
+				chatContent.setText(s);
+				chatContent.setCaretPosition(chatContent.getDocument().getLength());
+			}
+		}.init(htmlOutput));
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -182,11 +332,7 @@ public class GraphicalInterface extends JFrame implements UserInterface {
 
 	@Override
 	public void onMessagesHistoryUpdate(List<ReadOnlyMessage> messagesHistory) {
-		// TODO
-		
-		/*
-		 * Traitement de chaque message : message = message.replaceAll("[\\x00-\\x1F\\x7F]", "?");
-		 */
+		messagesHistoryCache.set(messagesHistory);
 	}
 	
 	@Override
@@ -196,10 +342,26 @@ public class GraphicalInterface extends JFrame implements UserInterface {
 	
 	@Override
 	public void onAliasesChange(Map<String, String> newAliases) {
-		// TODO
+		DefaultTableModel model = (DefaultTableModel) aliasesTable.getModel();
+		
+		String[] headers = new String[] {"Nom d'hôte", "Alias attribué"};
+		
+		String[][] content = new String[newAliases.size()][2];
+		
+		int i=0;
+		for(String key : newAliases.keySet()) {
+			String value = newAliases.get(key);
+			content[i][0] = key;
+			content[i][1] = value;
+			i++;
+		}
+		
+		model.setDataVector(content, headers);
+		
+		model.fireTableDataChanged();
+		
 	}
 	
 	
 	
-
 }
