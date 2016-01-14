@@ -82,7 +82,7 @@ public class Window extends JFrame {
 	public void seText(String msg){
 		textArea.setText(textArea.getText() + "\n" + msg);
 		message.setText("");
-		scrollPane.getViewport().setViewPosition(new Point(0,textArea.getDocument().getLength()));
+		//scrollPane.getViewport().setViewPosition(new Point(0,textArea.getDocument().getLength()));
 	}
 	
 	public TextArea getMessage(){

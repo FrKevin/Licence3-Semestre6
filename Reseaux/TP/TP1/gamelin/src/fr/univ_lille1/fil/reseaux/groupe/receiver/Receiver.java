@@ -55,7 +55,7 @@ public class Receiver implements Runnable {
 			
 			DatagramPacket pack = new DatagramPacket(new byte[MAX_LENGTH],MAX_LENGTH);
 			multicastSocket.receive(pack);
-			String msg = "paquet reçu de : "+ pack.getAddress() + " port "+ pack.getPort() + " taille" + pack.getLength() + " hostname " + pack.getAddress() + ": ";
+			String msg = "paquet reçu de : "+ pack.getAddress() + " port "+ pack.getPort() + " taille" + pack.getLength() + " hostname " + pack.getAddress().getHostName() + ": ";
 			msg += new String(pack.getData(), StandardCharsets.UTF_8).toString();
 			window.seText(msg);
 		} catch (SocketException e) {
