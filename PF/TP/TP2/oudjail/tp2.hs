@@ -13,7 +13,6 @@ combine fct (x1 : xs1) (x2 : xs2) = (fct x1 x2) : (combine fct xs1 xs2)
 
 pasPascal:: [Int] -> [Int]
 pasPascal [] = [1]
-pasPascal [_] = [1, 1]
 pasPascal l = [1] ++ (zipWith (+) (tail l) (init l)) ++ [1]
 
 pascal:: [[Int]]
