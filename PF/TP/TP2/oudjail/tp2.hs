@@ -21,19 +21,20 @@ pascal :: [[Int]]
 pascal = (iterate pasPascal [])
 
 pointAintercaler :: Point -> Point -> Point
-pointAintercaler (xA, xB) (yA, yB) = ((xA + xB)/2 + (yB - yA)/2, (yA + yB)/2 + (xA - xB)/2)
+pointAintercaler (xA, yA) (xB, yB) = ((xA + xB)/2 + (yB - yA)/2, (yA + yB)/2 + (xA - xB)/2)
 
 pasDragon :: Path -> Path
 pasDragon [] = []
-pasDragon [xa] = [xa] -- Ou mettre un fail
-pasDragon [xa, xb] = xa : [pointAintercaler xa xb] ++ [xb]
+pasDragon [xa] = [xa] -- cas d'arret n impair element n >= 3
+pasDragon [xa, xb] = xa : [pointAintercaler xa xb] ++ [xb] -- cas d'arret n pair element n >= 3
 pasDragon (xa : xb : xc : xs) =
-    xa : (pointAintercaler xa xb) : xb : (pointAintercaler xc xb) : xc : (pasDragon xs)
+    xa : (pointAintercaler xa xb) : xb : (pointAintercaler xc xb) : (pasDragon (xc:xs))
 
-dragon :: Path -> Path
-dragon p1 p2 = error "Not implemented"
+dragon :: Point -> Point -> [Path]
+dragon (xA, yA) (xB, yB) = (iterate pasDragon [(xA, yA),(xB, yB)])
+
 
 main :: IO ()
-main = do
-  print "Q1 - "
-  print (alterne [1, 2, 3])
+main = animate (InWindow "Dragon" (500, 500) (0, 0)) white (dragonAnime (50,250) (450,250))
+
+dragonAnime a b t = Line (dragon a b !! (round t `mod` 20))
