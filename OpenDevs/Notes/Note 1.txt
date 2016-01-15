@@ -60,9 +60,10 @@ Structure de controle :
       if (condition) {                        (condition) ifTrue : ["action"]; ifFalse : ["autreAction"]
         action();                             condition est une instance de la classe Boolean
       } else {                                ifTrue est une methode de la classe Boolean, elle prend une
-        autreAction();                        closure [] : Fonction anonyme permettant d'executer du code
-      }                                       ; ifFalse methode appeler sur condition, si celle ci est vrai
-                                              (cela implique faux pour ifTrue), la closure passer en param
+        autreAction();                        (closure [] : Fonction anonyme permettant d'executer du code)  quelle executera si la cond et vrai
+                                              et renvoie la condition quoiqu'il arrive
+      }                                       ; ifFalse methode appeler sur condition (on peut ce passer du point virgule car ifTrue renvoie condition), si celle ci est vrai
+                                              (cela implique faux pour ifTrue), la closure passer en param et renvoie la cond
 
     Il existe des methode comme ifNotNil qui sont plus specifique sont implemente dans les objet en general
   Iteratif :
