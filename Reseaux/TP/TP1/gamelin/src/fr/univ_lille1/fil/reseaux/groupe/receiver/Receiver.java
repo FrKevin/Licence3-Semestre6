@@ -6,6 +6,7 @@ import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import fr.univ_lille1.fil.reseaux.gui.Window;
 
@@ -16,6 +17,7 @@ public class Receiver implements Runnable {
 	protected final int MAX_LENGTH = 1024;
 	protected MulticastSocket multicastSocket;
 	protected Window window;
+	protected AtomicBoolean isEnd = new AtomicBoolean(false);
 	
 	public Receiver(String adresse, int port, Window window){
 		this.adresse = adresse;
@@ -39,6 +41,7 @@ public class Receiver implements Runnable {
 	public void leaveGroupe(){
 		try {
 			multicastSocket.leaveGroup(InetAddress.getByName(adresse));
+			isEnd.set(true);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -56,15 +59,13 @@ public class Receiver implements Runnable {
 			msg += new String(pack.getData(), StandardCharsets.UTF_8).toString();
 			window.seText(msg);
 		} catch (SocketException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void run() {
-		while(true) {
+		while(!isEnd.get()) {
 			receive();
 		}
 	}

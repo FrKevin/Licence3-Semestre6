@@ -1,10 +1,7 @@
 package fr.univ_lille1.fil.reseaux;
 
-import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
-import javax.swing.text.BadLocationException;
 
 import fr.univ_lille1.fil.reseaux.groupe.receiver.Receiver;
 import fr.univ_lille1.fil.reseaux.groupe.sender.Sender;
@@ -39,6 +36,13 @@ public class Application extends KeyAdapter{
 		if(arg0.getKeyCode() == 112){
 			sender.send(window.getMessage().getText());
 		}
-		
+	}
+
+	public Receiver getReceiver() {
+		return receiver;
+	}
+
+	public Sender getSender() {
+		return sender;
 	}	
 }
