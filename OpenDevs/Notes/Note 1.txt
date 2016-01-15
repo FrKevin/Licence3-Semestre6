@@ -74,4 +74,12 @@ Structure de controle :
         action();
       }
 
-A completer
+
+Notion avancé :
+  Customisation de classe :
+  Concept qui permet de copier une classe dans un package specifique et de redefinir les methodes neccessaire
+  Pour ce faire, il faut allez dans la classe que l'ont veut custom
+  Il faut ensuite y ajoute un package qui doit suivre un certain nommage
+    Ce package doit commencé obligatoirement par une etoile,
+    Il doit comporter le nom du package qui contiendra la classe customiser
+    (la suite n'est pas totalement valide, je pense, il doit contenir un tiret suivie du nom du package courant de la classe cible)
