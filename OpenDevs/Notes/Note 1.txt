@@ -3,34 +3,74 @@ Premier cours :
     - Journal de bord
 
 
-#Apprentissage de Pharo:
+# Apprentissage de Pharo:
 ============
 Entete d'une classe
   Object subclass: #Toto
+
+Note sur la syntaxe :
+  Les expressions (sauf les declarations) doivent ce finir par un point, à part la derniere.
+  [], les expression permettent d'etre evaluer (bloc d'evaluation)
+
+Declaration :
+  Les declaration de variable doivent etre entourer de pipe |...|
+  Exemple :
+    |x|
+    |x y|
 
 Commentaire:
   "C'est mon commentaire"
 
 Ouvrir une console permettant d'afficher la sortie standard : Tools -> Transcript
 
+Appel de methode :
+  Object toString
+  Object equals : a
+
 Methode de print
   Transcript show: 'sexe'; cr. (cr modelise le retour à la ligne, c'est une methode)
+  (;) represente un appel de methode multiple sur un objet courant (facilité synthaxique)
 
 Ajouter un package pour de nouvelle class
   - 1er colone de gauche -> Add package
 
-Ajouter une class
-  - Dans la deuxième fenetre (en partant de la  gauche) -> click droit -> Add class, 
+Ajouter une classe
+  - Dans la deuxième fenetre (en partant de la  gauche) -> click droit -> Add class,
   - Dans la colone en bas a gauche ecrire le corps de la class
 
 Ajouter une categorie de fonction
-  Avant dernière colone: Add protocol (droite)
+  Avant dernière colonne: Add protocol (droite)
 
 Ajouter une méthode
   - Selectioner un package
   - Ecrire dans la méthode  grace a la fenetre en bas a gauche
 
 Méthode avec paramètre:
-  - Ajouter ':' ala fin du nom de la méthode et mettre les paramètres
+  - Ajouter ':' à la fin du nom de la méthode et mettre les paramètres
+
+
+Structure de controle :
+  Conditionnelle :
+    Contrairement au langage classique, les structure conditionnelles ne sont pas des mot clé qui prennent
+    un type bool (primitive)
+    En effet en PHARO, les conditions "classique" sont implementé par des methodes appartenant à la classe Boolean
+    Par exemple :
+      JAVA                                   PHARO
+
+      if (condition) {                        (condition) ifTrue : ["action"]; ifFalse : ["autreAction"]
+        action();                             condition est une instance de la classe Boolean
+      } else {                                ifTrue est une methode de la classe Boolean, elle prend une
+        autreAction();                        closure [] : Fonction anonyme permettant d'executer du code
+      }                                       ; ifFalse methode appeler sur condition, si celle ci est vrai
+                                              (cela implique faux pour ifTrue), la closure passer en param
+
+    Il existe des methode comme ifNotNil qui sont plus specifique sont implemente dans les objet en general
+  Iteratif :
+    De meme que pour les conditions, les structures iteratif sont des methodes de l'objet Boolean
+    Par exemple
+      JAVA                                   PHARO
+      while (condition) {                    (condition) whileTrue : ["action"]
+        action();
+      }
 
 A completer
