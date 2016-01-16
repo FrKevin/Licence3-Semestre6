@@ -2,6 +2,9 @@ Premier cours :
   Documents à editer :
     - Journal de bord
 
+Ressource :
+  PharoParLExemple
+  http://fr.slideshare.net/squidik/meta-board
 
 # Apprentissage de Pharo:
 ============
