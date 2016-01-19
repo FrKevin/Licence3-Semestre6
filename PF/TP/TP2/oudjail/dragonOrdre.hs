@@ -1,10 +1,11 @@
 module Main where
 import Graphics.Gloss
 
+-- Fonction qui permet de calculer le point au centre de celui qui sont passes en parametre
 pointAintercaler :: Point -> Point -> Point
 pointAintercaler (xA, yA) (xB, yB) = ((xA + xB)/2 + (yB - yA)/2, (yA + yB)/2 + (xA - xB)/2)
 
-
+-- Fonction alternative qui permet de calculer la courbe du dragon
 dragonOrdre :: Point -> Point -> Int -> Path
 dragonOrdre pA pB 0 = [pA, pB]
 dragonOrdre pA pB n = let pC = (pointAintercaler pA pB) in
