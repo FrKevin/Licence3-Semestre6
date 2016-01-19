@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp-lsystemes.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<title>Le L-système et la Tortue</title>
+
+<link href="./Le L-système et la Tortue_files/feuille.css" rel="stylesheet" type="text/css">
+<meta name="viewport" content="initial-scale=1.0">
+</head>
+<body class="monocol">
+<nav>
+<a href="http://cristal.univ-lille.fr/~hym/">recherche</a> –
+<a href="http://www.fil.univ-lille1.fr/~hym/">~</a>/<a href="http://www.fil.univ-lille1.fr/~hym/e">enseignements</a>
+</nav>
+<header>
+<h1 class="titre">Le L-système et la Tortue</h1>
+
+</header>
+<div class="contenu">
+  <h2 id="l-système">L-système</h2>
+<p>Les <a href="https://fr.wikipedia.org/wiki/L-Syst%C3%A8me">L-systèmes</a> sont un formalisme introduit en 1968 par le biologiste Aristid Lindenmayer pour décrire la croissance des plantes. Ce formalisme décrit une grammaire permettant de dériver un mot à partir d’un mot de départ ou <em>axiome</em> et des règles de réécriture ou dérivation. Les L-systèmes que nous définissons ci-dessous sont les L-systèmes <em>libres</em> (ou <em>hors contexte</em>) et <em>déterministes</em>.</p>
+<h3 id="définition">Définition</h3>
+<p>Un L-système est la donnée&nbsp;:</p>
+<ol type="1">
+<li>d’un <em>alphabet</em> fini <span class="math inline"><em>A</em> = {<em>a</em><sub>1</sub>, <em>a</em><sub>2</sub>, …, <em>a</em><sub><em>n</em></sub>}</span> de symboles&nbsp;;</li>
+<li><p>de <em>règles de dérivation</em></p>
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><span class="math inline"><em>r</em> : <em>A</em></span></td>
+<td style="text-align: center;"><span class="math inline"> → </span></td>
+<td style="text-align: left;"><span class="math inline"><em>A</em><sup> * </sup></span></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><span class="math inline"><em>a</em></span></td>
+<td style="text-align: center;"><span class="math inline"> ↦ </span></td>
+<td style="text-align: left;"><span class="math inline"><em>u</em></span></td>
+</tr>
+</tbody>
+</table>
+où <span class="math inline"><em>A</em><sup> * </sup></span> désigne l’ensemble des mots sur l’alphabet <span class="math inline"><em>A</em></span>&nbsp;;</li>
+<li><p>d’un <em>axiome</em> <span class="math inline"><em>u</em><sub>0</sub> ∈ <em>A</em><sup> * </sup></span>.</p></li>
+</ol>
+<h4 id="exemple">Exemple</h4>
+<p>Voici le L-système permettant d’obtenir (en partie) le flocon de von Koch ci-dessus.</p>
+<ol type="1">
+<li>l’alphabet <span class="math inline"><em>A</em> = {<em>F</em>,  + ,  − }</span>&nbsp;;</li>
+<li>l’axiome <span class="math inline"><em>u</em><sub>0</sub> = <em>F</em></span>&nbsp;;</li>
+<li><p>les règles de dérivation&nbsp;:</p>
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><span class="math inline"><em>F</em></span></td>
+<td style="text-align: center;"><span class="math inline"> ↦ </span></td>
+<td style="text-align: left;"><span class="math inline"><em>F</em> − <em>F</em> +  + <em>F</em> − <em>F</em></span></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><span class="math inline"> + </span></td>
+<td style="text-align: center;"><span class="math inline"> ↦ </span></td>
+<td style="text-align: left;"><span class="math inline"> + </span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><span class="math inline"> − </span></td>
+<td style="text-align: center;"><span class="math inline"> ↦ </span></td>
+<td style="text-align: left;"><span class="math inline"> − </span></td>
+</tr>
+</tbody>
+</table></li>
+</ol>
+<h3 id="dérivation-dun-mot">Dérivation d’un mot</h3>
+<p>Étant donné un L-système, il est possible de construire une suite <span class="math inline">(<em>u</em><sub><em>n</em></sub>)<sub><em>n</em> ∈ <em>ℕ</em></sub></span> de mots à partir de l’axiome et des règles de dérivation&nbsp;:</p>
+<ol type="1">
+<li>Le mot initial est l’axiome <span class="math inline"><em>u</em><sub>0</sub></span>.</li>
+<li>On calcule le mot <span class="math inline"><em>u</em><sub><em>n</em> + 1</sub></span> à partir du mot <span class="math inline"><em>u</em><sub><em>n</em></sub></span> en remplaçant chacune des lettres <span class="math inline"><em>x</em></span> de <span class="math inline"><em>u</em><sub><em>n</em></sub></span> par son image&nbsp;<span class="math inline"><em>r</em>(<em>x</em>)</span> donnée par les règles de dérivation.</li>
+</ol>
+<h4 id="exemple-1">Exemple</h4>
+<p>Avec l’exemple du L-système présenté ci-dessus, voici les premiers mots obtenus&nbsp;:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;"><span class="math inline"><em>n</em></span></th>
+<th style="text-align: left;"><span class="math inline"><em>u</em><sub><em>n</em></sub></span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><span class="math inline">0</span></td>
+<td style="text-align: left;"><span class="math inline"><em>F</em></span></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><span class="math inline">1</span></td>
+<td style="text-align: left;"><span class="math inline"><em>F</em> − <em>F</em> +  + <em>F</em> − <em>F</em></span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><span class="math inline">2</span></td>
+<td style="text-align: left;"><span class="math inline"><em>F</em> − <em>F</em> +  + <em>F</em> − <em>F</em> − <em>F</em> − <em>F</em> +  + <em>F</em> − <em>F</em> +  + <em>F</em> − <em>F</em> +  + <em>F</em> − <em>F</em> − <em>F</em> − <em>F</em> +  + <em>F</em> − <em>F</em></span></td>
+</tr>
+</tbody>
+</table>
+<p>le mot <span class="math inline"><em>u</em><sub>2</sub></span> est de longueur 36 et le mot suivant, <span class="math inline"><em>u</em><sub>3</sub></span>, est de longueur 148.</p>
+<h3 id="implémentation">Implémentation</h3>
+<p>Nous allons implémenter les L-systèmes. Pour cela commençons en indiquant au typeur de quoi nous allons parler. Nous utiliserons simplement des <code class="sourceCode haskell"><span class="dt">Char</span></code> comme symboles (et donc des listes de <code>Char</code>, c’est-à-dire des chaînes de caractères, pour les mots). Pour les règles, nous utiliserons directement une fonction associant à un symbole un mot. Enfin, un L-système complet sera la liste (infinie) des mots.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">Symbole</span>  <span class="fu">=</span> <span class="dt">Char</span>
+<span class="kw">type</span> <span class="dt">Mot</span>      <span class="fu">=</span> [<span class="dt">Symbole</span>]
+<span class="kw">type</span> <span class="dt">Axiome</span>   <span class="fu">=</span> <span class="dt">Mot</span>
+<span class="kw">type</span> <span class="dt">Regles</span>   <span class="fu">=</span> <span class="dt">Symbole</span> <span class="ot">-&gt;</span> <span class="dt">Mot</span>
+<span class="kw">type</span> <span class="dt">LSysteme</span> <span class="fu">=</span> [<span class="dt">Mot</span>]</code></pre></div>
+<ol type="1">
+<li><p>Définissez la fonction <code>motSuivant :: Regles -&gt; Mot -&gt; Mot</code> qui prend en argument les règles d’un L-système et un mot&nbsp;<span class="math inline"><em>u</em><sub><em>n</em></sub></span> et calcule le mot&nbsp;<span class="math inline"><em>u</em><sub><em>n</em> + 1</sub></span>.</p>
+Cette fonction peut être écrite en utilisant&nbsp;:
+<ul>
+<li>la récursivité,</li>
+<li>une liste en compréhension,</li>
+<li>ou une fonction bien choisie du Prelude.</li>
+</ul>
+<p>Vous proposerez les&nbsp;3 versions (<code>motSuivant</code>, <code>motSuivant'</code>, et <code>motSuivant''</code>).</p></li>
+<li><p>Pour vérifier vos fonctions, vous définirez la règle pour le L-système du flocon de von Koch et vous vérifierez que vous obtenez des mots de la bonne longueur pour les premiers mots du L-système.</p></li>
+<li><p>Définissez une fonction <code class="sourceCode haskell"><span class="ot">lsysteme ::</span> <span class="dt">Axiome</span> <span class="ot">-&gt;</span> <span class="dt">Regles</span> <span class="ot">-&gt;</span> <span class="dt">LSysteme</span></code> qui calcule le L-système défini par l’axiome et les règles données.</p></li>
+</ol>
+<h2 id="tortue">Tortue</h2>
+<p>Les mots d’un L-système peuvent être interprétés en dessins en associant à chaque symbole un ordre pour la <a href="https://fr.wikipedia.org/wiki/LOGO#Interface_graphique_:_la_tortue">tortue</a>.</p>
+<p>La tortue graphique est un automate de dessin dont l’état est caractérisé par sa position courante et le cap vers lequel elle est prête à se diriger. Nous définirons donc le synonyme de type suivant&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">EtatTortue</span> <span class="fu">=</span> (<span class="dt">Point</span>, <span class="dt">Float</span>)</code></pre></div>
+<p>où <code>Point</code> est le type défini par Gloss pour un point et le second élément de la paire est le cap, c’est-à-dire un angle par rapport à l’axe des abscisses exprimé en radians.</p>
+<p>La tortue pourra initialement comprendre trois ordres&nbsp;:</p>
+<ul>
+<li><code>F</code>&nbsp;: avance d’un pas suivant le cap actuel en traçant un trait&nbsp;; à l’issue de cet ordre, sa nouvelle position est&nbsp;:
+<ul>
+<li><span class="math inline"><em>x</em>′ = <em>x</em> + <em>d</em> × cos(cap)</span>,</li>
+<li><span class="math inline"><em>y</em>′ = <em>y</em> + <em>d</em> × sin(cap)</span>,</li>
+</ul>
+où <span class="math inline"><em>d</em></span> est la distance correspondant à un pas&nbsp;; son cap reste inchangé&nbsp;;</li>
+<li><code>+</code>&nbsp;: tourne à gauche, c’est-à-dire <span class="math inline"><em>c</em><em>a</em><em>p</em>′ = <em>c</em><em>a</em><em>p</em> + <em>α</em></span> où <span class="math inline"><em>α</em></span> est un angle donné&nbsp;;</li>
+<li><code>-</code>&nbsp;: tourne à droite, c’est-à-dire <span class="math inline"><em>c</em><em>a</em><em>p</em>′ = <em>c</em><em>a</em><em>p</em> − <em>α</em></span> où <span class="math inline"><em>α</em></span> est un angle donné.</li>
+</ul>
+<p>Nous définirons le synonyme de type suivant&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> Config = (EtatTortue -- État initial de la tortue
+              ,<span class="dt">Float</span>      <span class="co">-- Longueur initiale d’un pas</span>
+              ,<span class="dt">Float</span>      -- Facteur d’échelle
+              ,<span class="dt">Float</span>      <span class="co">-- Angle pour les rotations de la tortue</span>
+              ,[<span class="dt">Symbole</span>]) <span class="co">-- Liste des symboles compris par la tortue</span></code></pre></div>
+<p>pour décrire une configuration de la tortue.</p>
+<ol start="4" type="1">
+<li>Définissez les fonctions suivantes&nbsp;:
+<ul>
+<li><code class="sourceCode haskell"><span class="ot">etatInitial    ::</span> <span class="dt">Config</span> <span class="ot">-&gt;</span> <span class="dt">EtatTortue</span></code>,</li>
+<li><code class="sourceCode haskell"><span class="ot">longueurPas    ::</span> <span class="dt">Config</span> <span class="ot">-&gt;</span> <span class="dt">Float</span></code>,</li>
+<li><code class="sourceCode haskell"><span class="ot">facteurEchelle ::</span> <span class="dt">Config</span> <span class="ot">-&gt;</span> <span class="dt">Float</span></code>,</li>
+<li><code class="sourceCode haskell"><span class="ot">angle          ::</span> <span class="dt">Config</span> <span class="ot">-&gt;</span> <span class="dt">Float</span></code>,</li>
+<li><code class="sourceCode haskell"><span class="ot">symbolesTortue ::</span> <span class="dt">Config</span> <span class="ot">-&gt;</span> [<span class="dt">Symbole</span>]</code>.</li>
+</ul>
+<p>Ces fonctions se contentent d’extraire l’information du quintuplet.</p></li>
+<li><p>Définissez la fonction <code class="sourceCode haskell"><span class="ot">avance ::</span> <span class="dt">Config</span> <span class="ot">-&gt;</span> <span class="dt">EtatTortue</span> <span class="ot">-&gt;</span> <span class="dt">EtatTortue</span></code> calculant l’état de la tortue après avoir avancé d’un pas.</p></li>
+<li><p>Définissez les fonctions <code class="sourceCode haskell"><span class="ot">tourneAGauche ::</span> <span class="dt">Config</span> <span class="ot">-&gt;</span> <span class="dt">EtatTortue</span> <span class="ot">-&gt;</span> <span class="dt">EtatTortue</span></code> et <code class="sourceCode haskell"><span class="ot">tourneADroite ::</span> <span class="dt">Config</span> <span class="ot">-&gt;</span> <span class="dt">EtatTortue</span> <span class="ot">-&gt;</span> <span class="dt">EtatTortue</span></code>.</p></li>
+<li><p>Définissez la fonction <code class="sourceCode haskell"><span class="ot">filtreSymbolesTortue ::</span> <span class="dt">Config</span> <span class="ot">-&gt;</span> <span class="dt">Mot</span> <span class="ot">-&gt;</span> <span class="dt">Mot</span></code> qui supprime tous les symboles qui ne sont pas des ordres pour la tortue dans le mot passé en argument.</p></li>
+</ol>
+<p>Nous allons réutiliser la bibliothèque de fonctions Gloss. Gloss fournit la fonction <code class="sourceCode haskell"><span class="ot">line ::</span> <span class="dt">Path</span> <span class="ot">-&gt;</span> <span class="dt">Picture</span></code> pour créer un dessin composé d’une ligne passant par tous les points du chemin (rappelons que <code>Path</code> est défini par&nbsp;: <code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">Path</span> <span class="fu">=</span> [<span class="dt">Point</span>]</code>).</p>
+<p>Les dessins que la tortue peut faire avec les ordres décrits précédemment sont simplement des lignes composées de tous les traits correspondant aux pas. Le résultat d’une suite d’ordres sera donc une liste de tous les <code>Point</code>s par lesquels la tortue est passée.</p>
+<p>Nous définirons donc&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">EtatDessin</span> <span class="fu">=</span> (<span class="dt">EtatTortue</span>, <span class="dt">Path</span>)</code></pre></div>
+<p>pour la paire contenant, à un instant donné, l’état de la tortue et le chemin qu’elle a parcouru jusqu’à maintenant.</p>
+<ol start="8" type="1">
+<li><p>Définissez une fonction <code class="sourceCode haskell"><span class="ot">interpreteSymbole ::</span> <span class="dt">Config</span> <span class="ot">-&gt;</span> <span class="dt">EtatDessin</span> <span class="ot">-&gt;</span> <span class="dt">Symbole</span> <span class="ot">-&gt;</span> <span class="dt">EtatDessin</span></code> qui calcule le nouvel état atteint par l’exécution de l’ordre correspondant au symbole donné en partant de l’état donné.</p></li>
+<li><p>Définissez une fonction <code class="sourceCode haskell"><span class="ot">interpreteMot ::</span> <span class="dt">Config</span> <span class="ot">-&gt;</span> <span class="dt">Mot</span> <span class="ot">-&gt;</span> <span class="dt">Picture</span></code>.</p></li>
+</ol>
+<p>Pour rendre le dessin correspondant à un mot, vous pourrez utiliser le code suivant&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Graphics.Gloss</span>
+
+dessin <span class="fu">=</span> interpreteMot (((<span class="fu">-</span><span class="dv">150</span>,<span class="dv">0</span>),<span class="dv">0</span>),<span class="dv">100</span>,<span class="dv">1</span>,pi<span class="fu">/</span><span class="dv">3</span>,<span class="st">"F+-"</span>) <span class="st">"F+F--F+F"</span>
+
+main = display (InWindow <span class="st">"L-système"</span> (<span class="dv">1000</span>, <span class="dv">1000</span>) (<span class="dv">0</span>, <span class="dv">0</span>)) white dessin</code></pre></div>
+<p>qui devrait alors vous afficher&nbsp;:</p>
+<figure>
+<img src="./Le L-système et la Tortue_files/vonkoch1.png" alt="Flocon de von Koch, au tout début"><figcaption>Flocon de von Koch, au tout début</figcaption>
+</figure>
+<p>Afin de pouvoir visualiser la construction progressive de l’image au fur et à mesure des itérations du L-système, nous allons utiliser la fonction <code>animate</code> de Gloss qui prend comme dernier argument, au lieu d’une image de type <code>Picture</code>, une fonction de type <code>Float -&gt; Picture</code>. Cette fonction crée l’image correspondant à l’<code>instant</code> qu’elle reçoit en argument. Comme pour la courbe du dragon, vous transformerez cet <code>instant</code> en un indice dans la liste du L-système, en prenant le <code>enieme</code> élément de la liste avec</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">enieme <span class="fu">=</span> round instant <span class="ot">`mod`</span> <span class="dv">10</span></code></pre></div>
+<p><strong>Attention</strong>&nbsp;: comme l’indique cet extrait, vous utiliserez un modulo pour éviter d’afficher une courbe trop avancée dans votre L-système. En effet Gloss est rapidement <strong>très</strong> gourmand en ressources (notamment mémoire) pour des figures trop compliquées.</p>
+<ol start="10" type="1">
+<li><p>Définissez une fonction <code class="sourceCode haskell"><span class="ot">lsystemeAnime ::</span> <span class="dt">LSysteme</span> <span class="ot">-&gt;</span> <span class="dt">Config</span> <span class="ot">-&gt;</span> <span class="dt">Float</span> <span class="ot">-&gt;</span> <span class="dt">Picture</span></code>, prenant en argument un L-système, une configuration et un instant et calcule l’image correspondant.</p>
+<p>Le facteur d’échelle donné par la configuration indique comment la longueur d’un pas de la tortue est modifiée d’une itération à la suivante&nbsp;: par exemple, si la longueur de pas initiale est de&nbsp;800 et le facteur d’échelle de&nbsp;<span class="math inline">1/2</span>, <code>lsystem !! 0</code> sera dessiné avec un pas de longueur&nbsp;800, mais <code>lsystem !! 1</code> sera dessiné avec un pas de longueur&nbsp;400.</p></li>
+</ol>
+<h3 id="exemples">Exemples</h3>
+<p>Vous pourrez ainsi visualiser les courbes suivantes, notamment la courbe du dragon construite par L-système. N’oubliez pas que Gloss vous permet de vous déplacer, de zoomer et dézoomer, etc.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">vonKoch1 ::</span> <span class="dt">LSysteme</span>
+vonKoch1 <span class="fu">=</span> lsysteme <span class="st">"F"</span> regles
+    <span class="kw">where</span> regles <span class="ch">'F'</span> <span class="fu">=</span> <span class="st">"F-F++F-F"</span>
+          regles  s  <span class="fu">=</span> [s]
+
+<span class="ot">vonKoch2 ::</span> <span class="dt">LSysteme</span>
+vonKoch2 <span class="fu">=</span> lsysteme <span class="st">"F++F++F++"</span> regles
+    <span class="kw">where</span> regles <span class="ch">'F'</span> <span class="fu">=</span> <span class="st">"F-F++F-F"</span>
+          regles  s  <span class="fu">=</span> [s]
+
+<span class="ot">hilbert ::</span> <span class="dt">LSysteme</span>
+hilbert <span class="fu">=</span> lsysteme <span class="st">"X"</span> regles
+    <span class="kw">where</span> regles <span class="ch">'X'</span> <span class="fu">=</span> <span class="st">"+YF-XFX-FY+"</span>
+          regles <span class="ch">'Y'</span> <span class="fu">=</span> <span class="st">"-XF+YFY+FX-"</span>
+          regles  s  <span class="fu">=</span> [s]
+
+<span class="ot">dragon ::</span> <span class="dt">LSysteme</span>
+dragon <span class="fu">=</span> lsysteme <span class="st">"FX"</span> regles
+    <span class="kw">where</span> regles <span class="ch">'X'</span> <span class="fu">=</span> <span class="st">"X+YF+"</span>
+          regles <span class="ch">'Y'</span> <span class="fu">=</span> <span class="st">"-FX-Y"</span>
+          regles  s  <span class="fu">=</span> [s]
+
+<span class="ot">vonKoch1Anime ::</span> <span class="dt">Float</span> <span class="ot">-&gt;</span> <span class="dt">Picture</span>
+vonKoch1Anime <span class="fu">=</span> lsystemeAnime vonKoch1 (((<span class="fu">-</span><span class="dv">400</span>, <span class="dv">0</span>), <span class="dv">0</span>), <span class="dv">800</span>, <span class="dv">1</span><span class="fu">/</span><span class="dv">3</span>, pi<span class="fu">/</span><span class="dv">3</span>, <span class="st">"F+-"</span>)
+
+<span class="ot">vonKoch2Anime ::</span> <span class="dt">Float</span> <span class="ot">-&gt;</span> <span class="dt">Picture</span>
+vonKoch2Anime <span class="fu">=</span> lsystemeAnime vonKoch2 (((<span class="fu">-</span><span class="dv">400</span>, <span class="fu">-</span><span class="dv">250</span>), <span class="dv">0</span>), <span class="dv">800</span>, <span class="dv">1</span><span class="fu">/</span><span class="dv">3</span>, pi<span class="fu">/</span><span class="dv">3</span>, <span class="st">"F+-"</span>)
+
+<span class="ot">hilbertAnime ::</span> <span class="dt">Float</span> <span class="ot">-&gt;</span> <span class="dt">Picture</span>
+hilbertAnime <span class="fu">=</span> lsystemeAnime hilbert (((<span class="fu">-</span><span class="dv">400</span>, <span class="fu">-</span><span class="dv">400</span>), <span class="dv">0</span>), <span class="dv">800</span>, <span class="dv">1</span><span class="fu">/</span><span class="dv">2</span>, pi<span class="fu">/</span><span class="dv">2</span>, <span class="st">"F+-"</span>)
+
+<span class="ot">dragonAnime ::</span> <span class="dt">Float</span> <span class="ot">-&gt;</span> <span class="dt">Picture</span>
+dragonAnime <span class="fu">=</span> lsystemeAnime dragon (((<span class="dv">0</span>, <span class="dv">0</span>), <span class="dv">0</span>), <span class="dv">50</span>, <span class="dv">1</span>, pi<span class="fu">/</span><span class="dv">2</span>, <span class="st">"F+-"</span>)</code></pre></div>
+<h2 id="tortue-volante">Tortue volante</h2>
+<p>Nous allons enrichir les capacités de la tortue pour pouvoir dessiner des plantes (ce qui était le but des L-systèmes), par exemple&nbsp;:</p>
+<figure>
+<img src="./Le L-système et la Tortue_files/brindille.png" alt="Une brindille"><figcaption>Une brindille</figcaption>
+</figure>
+<p>Pour cela, il faut que notre tortue puisse «&nbsp;voler&nbsp;»&nbsp;: nous allons enregistrer certaines positions dans le tracé et lui permettre de revenir à une position enregistrée. Plus précisément, les mots que nous allons interpréter pourront contenir deux nouveaux ordres, <code>[</code> et&nbsp;<code>]</code>, signifiant&nbsp;:</p>
+<ul>
+<li><code>[</code>&nbsp;: enregistre l’état (position et cap) actuel de la tortue,</li>
+<li><code>]</code>&nbsp;: remplace l’état actuel de la tortue par celui sauvé par le dernier&nbsp;<code>[</code> (et oublie la sauvegarde).</li>
+</ul>
+<p>Concrètement, le nouvel <code>EtatDessin</code> contiendra une pile (codée par une liste) d’<code>EtatTortue</code>, avec l’état courant tout en haut de la pile.</p>
+<p>Puisque la tortue va désormais pouvoir «&nbsp;voler&nbsp;» vers une position précédente, c’est-à-dire commencer un tracé ailleurs, l’<code>EtatDessin</code> ne contiendra pas seulement un <code>Path</code>, mais une liste de <code>Path</code>. De sorte que vous changerez la définition ainsi&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">EtatDessin</span> <span class="fu">=</span> ([<span class="dt">EtatTortue</span>], [<span class="dt">Path</span>])</code></pre></div>
+<ol start="11" type="1">
+<li>Faites le changement de <code>EtatDessin</code>. Constatez que le compilateur vous insulte copieusement.</li>
+</ol>
+<p>Haskell est fortement typé statiquement&nbsp;: vous pouvez profiter du compilateur pour savoir tous les endroits de votre code que vous devez réusiner&nbsp;! (Au passage, pour que les insultes de GHC soient bien localisées, il est très important d’avoir explicitement donné les signatures de toutes vos fonctions.)</p>
+<ol start="12" type="1">
+<li>Réusinez votre code pour l’adapter au nouvel <code>EtatDessin</code>. Vous vérifierez que votre code fonctionne avec les exemples précédents.</li>
+</ol>
+<h3 id="exemples-botanistes">Exemples botanistes</h3>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">brindille ::</span> <span class="dt">LSysteme</span>
+brindille <span class="fu">=</span> lsysteme <span class="st">"F"</span> regles
+    <span class="kw">where</span> regles <span class="ch">'F'</span> <span class="fu">=</span> <span class="st">"F[-F]F[+F]F"</span>
+          regles  s  <span class="fu">=</span> [s]
+
+<span class="ot">broussaille ::</span> <span class="dt">LSysteme</span>
+broussaille <span class="fu">=</span> lsysteme <span class="st">"F"</span> regles
+    <span class="kw">where</span> regles <span class="ch">'F'</span> <span class="fu">=</span> <span class="st">"FF-[-F+F+F]+[+F-F-F]"</span>
+          regles  s  <span class="fu">=</span> [s]
+
+<span class="ot">brindilleAnime ::</span> <span class="dt">Float</span> <span class="ot">-&gt;</span> <span class="dt">Picture</span>
+brindilleAnime <span class="fu">=</span> lsystemeAnime brindille (((<span class="dv">0</span>, <span class="fu">-</span><span class="dv">400</span>), pi<span class="fu">/</span><span class="dv">2</span>), <span class="dv">800</span>, <span class="dv">1</span><span class="fu">/</span><span class="dv">3</span>, <span class="dv">25</span><span class="fu">*</span>pi<span class="fu">/</span><span class="dv">180</span>, <span class="st">"F+-[]"</span>)
+
+<span class="ot">broussailleAnime ::</span> <span class="dt">Float</span> <span class="ot">-&gt;</span> <span class="dt">Picture</span>
+broussailleAnime <span class="fu">=</span> lsystemeAnime broussaille (((<span class="dv">0</span>, <span class="fu">-</span><span class="dv">400</span>), pi<span class="fu">/</span><span class="dv">2</span>), <span class="dv">500</span>, <span class="dv">2</span><span class="fu">/</span><span class="dv">5</span>, <span class="dv">25</span><span class="fu">*</span>pi<span class="fu">/</span><span class="dv">180</span>, <span class="st">"F+-[]"</span>)</code></pre></div>
+<h2 id="lyah">LYAH</h2>
+<ol start="13" type="1">
+<li>Lisez <a href="http://lyah.haskell.fr/recursivite">Récursivité</a> du LYAH (ou la <a href="http://learnyouahaskell.com/recursion">VO anglaise</a>) et expérimentez les exemples.</li>
+</ol>
+</div>
+<footer></footer>
+
+</body><iframe allowtransparency="true" frameborder="0" id="abs-top-frame" src="./Le L-système et la Tortue_files/top.html" style="position: fixed !important; z-index: 2147483647 !important; overflow: hidden !important; top: 0px !important; left: 0px !important; right: 0px !important; width: 0px !important; height: 0px !important; max-height: none !important; min-height: 0px !important; margin: 0px auto !important; padding: 0px !important; border: 0px !important; display: none !important; background-color: transparent !important;"></iframe></html>
