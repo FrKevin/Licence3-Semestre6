@@ -1,0 +1,230 @@
+
+<!-- saved from url=(0058)http://www.thomaspietrzak.com/enseignement/logique/tp2.htm -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body><header>
+<meta charset="UTF-8">
+<title>TP Logique : les listes Prolog</title>
+<link rel="shortcut icon" href="http://www.thomaspietrzak.com/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="./TP Logique _ les listes Prolog_files/style.css">
+<meta name="keywords" content="electronique, microcontroleurs, mcu, stm32, stm32f4, tutoriel, uc-sdk">
+</header>
+
+<div id="header">
+<h1>TP Logique : les listes en Prolog</h1>
+<h2>Licence 3 Informatique</h2>
+</div>
+<div id="contenu">
+
+<div class="paragraph">Dans ce TP nous allons nous intéresser aux listes en Prolog. Cette fois il n'y a ni roi ni prisonnier, ni princesse, et heureusement pas de tigre. Je vous laisse avec la froideur des objets formels, mais l'informaticien qui sommeille en vous ne sera pas déçu.</div>
+
+
+<div class="tdm">
+<h3>Table des Matières</h3>
+<ul class="tdmlist">
+<li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp2.htm#oplistes">Opérations de base sur les listes</a></li>
+<li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp2.htm#trislistes">Tris de listes</a></li>
+<li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp2.htm#opensembles">Opérations de base sur les ensembles</a></li>
+</ul>
+</div>
+
+<div class="paragraph">Les listes peuvent être défines de plusieurs façons différentes. La plus simple consiste à émumérer les éléments de la liste un par un. Par exemple : <div class="commande">[a, 42,f(3,a), [3, a]]</div>
+Comme vous pouvez le voir, une liste peut contenir des éléments de types différents, et elle peut contenir de tout : constantes, nombres, prédicats, listes, etc. <br>
+La deuxième notation est plus structurelle et permet de réaliser des inductions : <div class="commande">[X | L]</div> où <div class="commande">X</div> est la tête de la liste (premier élément) et <div class="commande">L</div> la queue de la liste (liste contenant tous les éléments sauf le premier).</div>
+
+<a name="oplistes"><h3>Opérations de base sur les listes</h3>
+
+Nous allons commencer par écrire des fonctions usuelles sur les listes. Mettez à profit la structure inductive des listes, démontez les et remontez les comme il faut pour obtenir le résultat souhaité. Je vous conseille fortement de sortir un stylo (peu importe la couleur) une feuille de papier (peu importe s'il y a des carreaux) et de faire des schémas.
+
+<div class="question">
+Définissez le prédicat <div class="commande">longueur/2</div> qui calcule la longueur d'une liste.
+<h5>Exemple</h5>
+<div class="code">?- longueur([1, 2, 3], A).
+A = 3.</div>
+</div>
+
+
+<div class="question">
+Définissez le prédicat <div class="commande">somme/2</div> qui calcule la somme des éléments d'une liste.
+<h5>Exemple</h5>
+<div class="code">?- somme([1,2,3,4], X).
+X = 10.</div>
+</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">membre/2</div> qui retourne <div class="commande">true</div> si un élément appartient à une liste une liste.
+<h5>Exemple</h5>
+<div class="code">?- membre(2, [1, 2, 3, 4]).
+true.
+
+?- membre(5, [1, 2, 3, 4]).
+false.</div>
+</div>
+
+
+<div class="question">
+Définissez le prédicat <div class="commande">ajoute_en_tete/3</div> qui ajoute un élément en tête de liste .
+<h5>Exemple</h5>
+<div class="code">?- ajoute_en_tete(1,&nbsp;[2, 3, 4], L).
+L = [1, 2, 3, 4].</div>
+</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">ajoute_en_queue/3</div> qui ajoute un élément en queue de liste .
+<h5>Exemple</h5>
+<div class="code">?- ajoute_en_queue(4,&nbsp;[1, 2, 3], L).
+L = [1, 2, 3, 4].</div>
+</div>
+
+Pour la question suivante, nous allons utiliser la propriété de réversibilité de Prolog.
+
+<div class="question">
+Utilisez <div class="commande">ajoute_en_tete</div> pour définir le prédicat <div class="commande">extraire_tete/3</div> qui retourne la tête et la queue d'une liste.
+<h5>Exemple</h5>
+<div class="code">?- extraire_tete([1, 2, 3, 4], X, L).
+X = 1,
+L = [2, 3, 4].</div>
+</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">concatene/3</div> qui concatène deux listes.
+<h5>Exemple</h5>
+<div class="code">?- concatene([1, 2, 3], [4, 5, 6], L).
+L = [1, 2, 3, 4, 5, 6].</div>
+</div>
+
+
+<div class="question">
+Définissez le prédicat <div class="commande">retourne/3</div> qui retourne les éléments d'une liste. Utilisez un accumulateur sous la forme d'un paramètre que vous initialiserez à <div class="commande">[]</div>.
+<h5>Exemple</h5>
+<div class="code">?- retourne([1, 2, 3], [], A).
+A = [3, 2, 1].</div>
+</div>
+
+</a><a name="trislistes"><h3>Tris de listes</h3>
+
+<div class="paragraph">Comme on vous l'a déjà expliqué assez souvent, les tris de listes sont des opérations courantes. En plus ça fait des TP très intéressants. On va donc implémenter quelques tris.</div>
+
+<h4>Tri par insertion</h4>
+
+<div class="paragraph">Commençons par le commencement : le tri par insertion. Ce tri utilise une fonction qui insère un élément à la bonne place dans une liste triée. L'algorithme principal se contente donc juste d'insérer les éléments un par un à l'aide de la fonction précédente.</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">insert_trie/3</div> qui insère un élément dans une liste à la bonne place.
+<h5>Exemple</h5>
+<div class="code">?- insert_trie(3, [1, 2, 4, 5], L).
+L = [1, 2, 3, 4, 5].</div>
+</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">tri_insert/2</div> qui trie une liste en utilisant le prédicat de la question précédente.
+<h5>Exemple</h5>
+<div class="code">?- tri_insert([5,2,4,3,1], L).
+L = [1, 2, 3, 4, 5].</div>
+</div>
+
+<div class="paragraph">Essayons maintenant d'implémenter le tri fusion. Pour rappel, ce tri utilise la stratégie «&nbsp;diviser pour régner » : la liste est divisée en deux parties égales, les deux parties sont triées récursivement, puis fusionnées en conservant l'ordre des éléments.</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">divise/3</div> qui divise une liste en deux parties égales (à un élément près). L'exemple suivant donne une idée de stratégie. Si vous songez à compter les éléments de la liste, ce n'est pas sérieux.
+<h5>Exemple</h5>
+<div class="code">?- divise([1,2,3,4,5], L, L2).
+L = [1, 3, 5],
+L2 = [2, 4].</div>
+</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">fusion/3</div> qui fusionne deux listes, en conservant l'ordre des éléments.
+<h4>Exemple</h4>
+<div class="code">?- fusion([1,3,4], [2,5], L).
+L = [1, 2, 3, 4, 5].</div>
+</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">tri_fusion/2</div> qui trie une liste avec l'algorithme de tri fusion. Bien entendu, réutilisez le résultat des questions prcédentes.
+<h5>Exemple</h5>
+<div class="code">?- tri_fusion([5,2,4,3,1], L).
+L = [1, 2, 3, 4, 5].</div>
+</div>
+
+<div class="paragraph">Je vous sens impatients d'essayer le tri rapide. Votre vœu est exaucé. Je vous rappelle cependant le principe du tri rapide. On choisit un pivot dans la liste (par exemple le premier élément). Nous créons ensuite à partir de ce pivot et du reste de la liste deux nouvelle listes. La première contient les éléments plus petits que le pivot et la seconde les éléments plus grands que le pivot. Il suffit ensuite de trier ces deux listes récursivement, et de concaténer le tout (sous-listes triées et pivot) pour obtenir la liste triée.</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">balance/4</div> qui étant donné un élément et une liste produit deux listes, l'une contenant les élément plus grands et l'autre contenant les éléments plus petits.
+<h5>Exemple</h5>
+<div class="code">?- balance(3, [1, 2, 3, 4, 5], L1, L2).
+L1 = [1, 2],
+L2 = [3, 4, 5].</div>
+</div>
+
+<div class="question">
+Utilisez le prédicat précédent pour définir le prédicat <div class="commande">tri_rapide/2</div> qui trie une liste à l'aide de l'algorithme de tri rapide. Vous pouvez utiliser le prédicat <div class="commande">concatene/2</div> défini précédemment.
+<h5>Exemple</h5>
+<div class="code">?- tri_rapide([5,2,4,3,1], L).
+L = [1, 2, 3, 4, 5].</div>
+</div>
+
+
+
+</a><a name="opensembles"><h3>Opérations de base sur les ensembles</h3>
+
+<div class="paragraph">Nous allons maintenant utiliser des listes pour coder des ensembles. Je vous rappelle que dans un ensemble, un élément ne peut appartenir au plus qu'une seule fois.</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">est_vide/1</div> qui retourne vrai si et seulement si l'ensemble passé en argument est vide.
+<h5>Exemple</h5>
+<div class="code">?- est_vide([]).
+true.
+
+?- est_vide([1]).
+false.</div>
+</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">ajoute_ensemble/3</div> qui ajoute un élément à un ensemble. L'élément n'est ajouté que s'il n'est pas déjà dans l'ensemble.
+<h5>Exemple</h5>
+<div class="code">?- ajoute_ensemble(2,&nbsp;[1, 2, 3], L).
+L = [1, 2, 3].
+
+?- ajoute_ensemble(4,&nbsp;[1, 2, 3], L).
+L = [1, 2, 3, 4].</div>
+</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">sous_ensemble/3</div> qui retourne vrai si et seulement si le premier ensemble est un sous-ensemble du second.
+<h5>Exemple</h5>
+<div class="code">?- sous_ensemble([4,2], [1,2,3,4]).
+true.
+
+?- sous_ensemble([4,2,5], [1,2,3,4]).
+false.</div>
+</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">union/3</div> qui retourne l'union de deux ensembles.
+<h5>Exemple</h5>
+<div class="code">?- union([1,3,2], [2,3,4], L).
+L = [1, 2, 3, 4].</div>
+</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">intersect/3</div> qui retourne l'intersection de deux ensembles.
+<h5>Exemple</h5>
+<div class="code">?- intersect([1,3,2], [2,3,4], L).
+L = [3, 2].
+
+?- intersect([1,5], [2,3,4], L).
+L = [].</div>
+</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">diff/3</div> qui retourne la différence de deux ensembles.
+<h5>Exemple</h5>
+<div class="code">?- diff([1,3,2,5], [2,3,4], L).
+L = [1, 5].</div>
+</div>
+
+
+
+</a></div><a name="opensembles">
+
+
+</a></body></html>

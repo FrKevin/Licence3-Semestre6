@@ -1,0 +1,180 @@
+body
+{
+    font-family: Verdana, Geneva, sans-serif;
+    text-align: justify;
+    counter-reset: question;
+}
+
+img
+{
+    display: block;
+    margin-top: 10px;    
+    margin-bottom: 10px; 
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#header
+{
+    background-image: url('lille1.png');
+    background-position: right top;
+    background-size: 200px;
+    background-repeat: no-repeat;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+#contenu
+{
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.commande
+{
+    display: inline-block;
+    font-family: courier;
+}
+
+.code
+{
+    font-family: courier;
+    font-size: 80%;
+    padding: 10px;
+    margin-top: 10px;    
+    margin-bottom: 10px;    
+    border: 1px solid lightgrey;
+    white-space: pre;
+    background-color: #EEEEEE;
+}
+
+
+.effect {
+    padding: 15px;
+    border-color: #DDDDDD;
+    background-color: #EBF5FF;
+    border: 2px solid;
+    border-radius: 25px;
+    box-shadow: 5px 5px 2px #EEEEEE;
+}
+
+.tip
+{
+    padding: 10px;
+    padding-left: 110px;
+    margin-top: 10px;    
+    margin-bottom: 10px;    
+    border: 1px solid lightgrey;
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+	background-size: 50px;
+    margin-left: 0px;
+    margin-right: 0px;
+    min-height: 60px;
+}
+
+.tip 
+{
+    background-image: url('tip.jpg');
+    padding-left: 80px;
+    width: 80%;
+    background-color: #FFFFF0;
+}
+
+
+.pancarte
+{
+    padding: 10px;
+    margin: 30px;
+    text-align: center;
+    width: 300px;
+    height: 70px;
+    background-color: #fe9;
+    display: inline-block;
+    border: 10px groove #db0;
+    font-family: cursive;
+    vertical-align: middle;
+}
+
+.pancarte2
+{
+    padding: 10px;
+    margin: 10px;
+    text-align: center;
+    width: 200px;
+    height: 70px;
+    background-color: #fe9;
+    display: inline-block;
+    border: 10px groove #db0;
+    font-family: cursive;
+    vertical-align: middle;
+}
+
+h3
+{
+    border-bottom: 3px solid lightgrey;
+    margin-top: 20px;
+}
+
+h5
+{
+    margin-top: 10px;
+    margin-bottom: 10px;
+/*    margin-right: 20px;
+    display: inline-block;*/
+}
+
+.paragraph
+{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.question:before
+{
+    counter-increment: question;
+    content: "Question " counter(question);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.question
+{
+    border: 1px solid lightgrey;
+    padding: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background: #ffe;
+}
+
+.tdm
+{
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 700px;
+    border: 1px solid lightgrey;
+}
+
+.tdmlist
+{
+    list-style-type: none;
+}
+
+.cell1
+{
+    background-color: #bbddff;
+    text-align: center;
+    font-size: 9pt;
+    padding: 10px;
+}
+
+.cell2
+{
+    background-color: #99bbff;
+    font-size: 9pt;
+    text-align: center;
+    padding: 10px;
+}
