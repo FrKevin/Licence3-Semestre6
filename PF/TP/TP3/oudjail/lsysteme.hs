@@ -1,4 +1,4 @@
-module Main where
+module LSysteme where
 
 type Symbole  = Char
 type Mot      = [Symbole]
@@ -16,47 +16,44 @@ motSuivant' r m = concat [(r x) | x <- m]
 motSuivant'' :: Regles -> Mot -> Mot
 motSuivant'' r m = concat (map r m)
 
-axiome :: Axiome
-axiome = "F"
+regle :: Axiome
+regle = "F"
+regle' :: Axiome
+regle' = "F-F++F-F"
 
-axiome' :: Axiome
-axiome' = "F-F++F-F"
+regle'' :: Axiome
+regle'' = "F-F++F-F-F-F++F-F++F-F++F-F-F-F++F-F"
 
-axiome'' :: Axiome
-axiome'' = "F-F++F-F-F-F++F-F++F-F++F-F-F-F++F-F"
-
-regle :: Symbole -> Mot
-regle '+' = "+"
-regle '-' = "-"
-regle 'F' = axiome'
-regle _ = fail ""
+vonKoch :: Symbole -> Mot
+vonKoch '+' = "+"
+vonKoch '-' = "-"
+vonKoch 'F' = regle'
+vonKoch _ = fail ""
 
 lsysteme :: Axiome -> Regles -> LSysteme
 lsysteme a r = iterate (motSuivant r) a
 
-
-
 lengthVonKoch :: Int -> Int
-lengthVonKoch 0 = length axiome
-lengthVonKoch 1 = length axiome'
-lengthVonKoch 2 = length axiome''
+lengthVonKoch 0 = length regle
+lengthVonKoch 1 = length regle'
+lengthVonKoch 2 = length regle''
 lengthVonKoch 3 = 148
 lengthVonKoch _ = -1
 
 assertVonKoch :: (Regles -> Mot -> Mot) -> Bool
-assertVonKoch f = length (f regle axiome) == lengthVonKoch 1 &&
-                  length (f regle axiome') == lengthVonKoch 2 &&
-                  length (f regle axiome'') == lengthVonKoch 3
+assertVonKoch f = length (f vonKoch regle) == lengthVonKoch 1 &&
+                  length (f vonKoch regle') == lengthVonKoch 2 &&
+                  length (f vonKoch regle'') == lengthVonKoch 3
 
 main :: IO ()
 main = do
-  putStrLn "motSuivant regle \"F-F++F-F\" :"
-  print (motSuivant regle "F-F++F-F")
-  putStrLn "\nmotSuivant' regle \"F-F++F-F\" :"
-  print (motSuivant' regle "F-F++F-F")
-  putStrLn "\nmotSuivant'' regle \"F-F++F-F\" :"
-  print (motSuivant'' regle "F-F++F-F")
-  putStrLn "\ntake 3 (lsysteme \"F\" regle)"
-  print (take 3 (lsysteme "F" regle))
+  putStrLn "motSuivant vonKoch \"F-F++F-F\" :"
+  print (motSuivant vonKoch "F-F++F-F")
+  putStrLn "\nmotSuivant' vonKoch \"F-F++F-F\" :"
+  print (motSuivant' vonKoch "F-F++F-F")
+  putStrLn "\nmotSuivant'' vonKoch \"F-F++F-F\" :"
+  print (motSuivant'' vonKoch "F-F++F-F")
+  putStrLn "\ntake 3 (lsysteme \"F\" vonKoch)"
+  print (take 3 (lsysteme "F" vonKoch))
   putStrLn "\nassertVonKoch motSuivant :"
   print (assertVonKoch motSuivant)
