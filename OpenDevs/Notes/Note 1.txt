@@ -68,7 +68,7 @@ Structure de controle :
       }                                       ; ifFalse methode appeler sur condition (on peut ce passer du point virgule car ifTrue renvoie condition), si celle ci est vrai
                                               (cela implique faux pour ifTrue), la closure passer en param et renvoie la cond
 
-    Il existe des methode comme ifNotNil qui sont plus specifique sont implemente dans les objet en general
+    Il existe des methodes comme `ifNotNil` qui sont plus specifique et qui sont implementé dans les objets en generale.
   Iteratif :
     De meme que pour les conditions, les structures iteratif sont des methodes de l'objet Boolean
     Par exemple
