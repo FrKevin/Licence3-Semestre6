@@ -1,12 +1,12 @@
-package fr.univ_lille1.fil.rsx.multicast.interfaces;
+package multicast_chat.interfaces;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
-import fr.univ_lille1.fil.rsx.multicast.network.MessagesManager;
-import fr.univ_lille1.fil.rsx.multicast.network.MessagesManager.ReadOnlyMessage;
+import multicast_chat.network.MessagesManager;
+import multicast_chat.network.MessagesManager.ReadOnlyMessage;
 
 public interface UserInterface {
 	

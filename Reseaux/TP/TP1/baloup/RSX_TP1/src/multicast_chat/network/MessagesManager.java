@@ -1,4 +1,4 @@
-package fr.univ_lille1.fil.rsx.multicast.network;
+package multicast_chat.network;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import fr.univ_lille1.fil.rsx.multicast.interfaces.UserInterface;
-import fr.univ_lille1.fil.rsx.multicast.network.MulticastConnection.Message;
+import multicast_chat.interfaces.UserInterface;
+import multicast_chat.network.MulticastConnection.Message;
 
 public class MessagesManager {
 	

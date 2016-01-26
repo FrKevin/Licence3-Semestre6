@@ -1,4 +1,4 @@
-package fr.univ_lille1.fil.rsx.multicast.network;
+package multicast_chat.network;
 
 import java.io.Closeable;
 import java.io.IOException;
