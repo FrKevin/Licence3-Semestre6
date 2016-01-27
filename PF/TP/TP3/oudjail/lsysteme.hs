@@ -44,16 +44,3 @@ assertVonKoch :: (Regles -> Mot -> Mot) -> Bool
 assertVonKoch f = length (f vonKoch regle) == lengthVonKoch 1 &&
                   length (f vonKoch regle') == lengthVonKoch 2 &&
                   length (f vonKoch regle'') == lengthVonKoch 3
-
-main :: IO ()
-main = do
-  putStrLn "motSuivant vonKoch \"F-F++F-F\" :"
-  print (motSuivant vonKoch "F-F++F-F")
-  putStrLn "\nmotSuivant' vonKoch \"F-F++F-F\" :"
-  print (motSuivant' vonKoch "F-F++F-F")
-  putStrLn "\nmotSuivant'' vonKoch \"F-F++F-F\" :"
-  print (motSuivant'' vonKoch "F-F++F-F")
-  putStrLn "\ntake 3 (lsysteme \"F\" vonKoch)"
-  print (take 3 (lsysteme "F" vonKoch))
-  putStrLn "\nassertVonKoch motSuivant :"
-  print (assertVonKoch motSuivant)

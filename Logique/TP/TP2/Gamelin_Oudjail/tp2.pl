@@ -24,6 +24,17 @@ insert_trie(E, [], [E]) :- !.
 insert_trie(E, [X | L1], R) :- E =< X, !, ajoute_en_tete(E, [X | L1], R).
 insert_trie(E, [X | L1], [X | L2]) :- E > X, !, insert_trie(E, L1, L2).
 
-% Marche pas :(
 tri_insert([], []).
-tri_insert([X | L1], [Y | L1]) :- insert_trie(X, L1, T), tri_insert(L1, T).
+tri_insert([X | L1], R) :- tri_insert(L1, T), insert_trie(X, T, R).
+
+divise([], [], []).
+divise([E], [E], []).
+divise([X | L], [X | L1], [X2 | L2]) :- divise(Q, L1, L2), extraire_tete(L, X2, Q).
+
+/*
+divise([], [], []).
+divise([E], [E], []).
+divise([X | L], [X | L1], [Xr | L2]) :- retourne(L, [], R), extraire_tete(R, Xr, Qr),
+                                        retourne(Qr, [], Q), divise(Q, L1, L2).
+
+*/
