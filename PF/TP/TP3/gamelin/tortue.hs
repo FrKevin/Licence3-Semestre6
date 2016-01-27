@@ -47,3 +47,27 @@ tourneADroite  c ((_, _), cap) = ( (_,_), cap')
 -- Définissez la fonction filtreSymbolesTortue, qui supprime tous les symboles qui ne sont pas des ordres pour la tortue dans le mot passé en argument.
 filtreSymbolesTortue :: Config -> Mot -> Mot
 filtreSymbolesTortue c m = [s | s <- m, s `elem` symbolesTortue c]
+
+-- Définissez une fonction interpreteSymbole, qui calcule le nouvel état atteint par l’exécution de l’ordre correspondant au symbole donné en partant de l’état donné.
+interpreteSymbole :: Config -> EtatDessin -> Symbole -> EtatDessin
+interpreteSymbole c (etat, path) s
+      | s == 'F' = (eAvance, dAvance)
+      | s == '+' = (eTourneAGauche, dTourneAGauche)
+      | s == '-' = (eTourneADroite, dTourneADroite)
+      | otherwise = error "Symbole not match"
+      where eAvance = avance c etat
+            eTourneADroite = tourneADroite c etat
+            eTourneAGauche = tourneAGauche c etat
+            dAvance = path ++ [fst eAvance]
+            dTourneADroite = path ++ [fst eTourneADroite]
+            dTourneAGauche = path ++ [fst eTourneAGauche]
+
+interpreteMot :: Config -> Mot -> Picture
+interpreteMot c m = line (snd (foldl (\ e s -> interpreteSymbole c e s) initial_Etat mot_filter))
+  where initial_path = fst (etatInitial c)
+        initial_Etat = (etatInitial c, [initial_path])
+        mot_filter = filtreSymbolesTortue c m
+
+
+dessin = interpreteMot (((-150,0),0),100,1,pi/3,"F+-") "F+F--F+F"
+main = display (InWindow "L-système" (1000, 1000) (0, 0)) white dessin
