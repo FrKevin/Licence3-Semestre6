@@ -12,7 +12,8 @@ ajoute_en_tete(T, Q, [T | Q]).
 ajoute_en_queue(E, [], [E]).
 ajoute_en_queue(E, [X | TL], [X | L]) :- ajoute_en_queue(E, TL, L).
 
-extraire_tete(L, T, Q) :- ajoute_en_queue(T, Q, L).
+extraire_tete_v1(L, T, Q) :- ajoute_en_queue(T, Q, L).
+extraire_tete_v2([X | L], X, L).
 
 concatene(L, [], L).
 concatene(L1, [X2 | L2], R) :- ajoute_en_queue(X2, L1, L), concatene(L, L2, R).
@@ -29,12 +30,29 @@ tri_insert([X | L1], R) :- tri_insert(L1, T), insert_trie(X, T, R).
 
 divise([], [], []).
 divise([E], [E], []).
-divise([X | L], [X | L1], [X2 | L2]) :- divise(Q, L1, L2), extraire_tete(L, X2, Q).
+divise([X | L], [X | L1], [X2 | L2]) :- extraire_tete_v2(L, X2, Q), divise(Q, L1, L2).
 
-/*
-divise([], [], []).
-divise([E], [E], []).
-divise([X | L], [X | L1], [Xr | L2]) :- retourne(L, [], R), extraire_tete(R, Xr, Qr),
-                                        retourne(Qr, [], Q), divise(Q, L1, L2).
+fusion(L1, L2, R) :- concatene(L1, L2, L), tri_insert(L, R).
 
-*/
+tri_fusion([], []).
+tri_fusion([E], [E]).
+tri_fusion(L, R) :- divise(L, L1, L2), tri_fusion(L1, TL1), tri_fusion(L2, TL2),
+                    fusion(TL1, TL2, R).
+
+balance(_, [], [], []).
+balance(E, [X | L], [X | L1], L2) :- X < E, !, balance(E, L, L1, L2).
+balance(E, [X | L], L1, [X | L2]) :- X >= E, !, balance(E, L, L1, L2).
+
+
+tri_rapide([], []).
+tri_rapide([X | L], R) :- balance(X, L, L1, L2),
+                          tri_rapide(L1, TL1), tri_rapide(L2, TL2),
+                          concatene(TL1, [X], Rp), concatene(Rp, TL2, R).
+est_vide([]).
+
+ajoute_ensemble(E, [], [E]).
+ajoute_ensemble(E, [E | L], [E | L]).
+ajoute_ensemble(E, [X | L], [X | R]) :- ajoute_ensemble(E, L, R).
+
+sous_ensemble([], L).
+sous_ensemble([X | L1], [X | L2]) :- sous_ensemble(L1, L2).
