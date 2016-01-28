@@ -55,4 +55,6 @@ ajoute_ensemble(E, [E | L], [E | L]).
 ajoute_ensemble(E, [X | L], [X | R]) :- ajoute_ensemble(E, L, R).
 
 sous_ensemble([], L).
-sous_ensemble([X | L1], [X | L2]) :- sous_ensemble(L1, L2).
+sous_ensemble([X | L1], L2) :- membre(X, sous_ensemble(, L2).
+
+union(L, )
