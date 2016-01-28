@@ -10,7 +10,7 @@ type Config = (EtatTortue -- État initial de la tortue
               ,Float      -- Angle pour les rotations de la tortue
               ,[Symbole]) -- Liste des symboles compris par la tortue
 
-type EtatDessin = (EtatTortue, Path)
+type EtatDessin = ([EtatTortue], [Path])
 
 iEtat :: EtatTortue
 iEtat = ((-150.0, 0.0), 0.0)
@@ -25,7 +25,7 @@ iAngle :: Float
 iAngle = pi/3
 
 iSymboles :: [Symbole]
-iSymboles = "F+-"
+iSymboles = "F+-[]"
 
 iConfig :: Config
 iConfig = (iEtat, iLongueur, iFacteurE, iAngle, iSymboles)
@@ -67,10 +67,12 @@ filtreSymbolesTortue c m = [s | s <- m, s `elem` symbolesTortue c]
 
 
 interpreteSymbole :: Config -> EtatDessin -> Symbole -> EtatDessin
-interpreteSymbole c (etat, path) s
-      | s == 'F' = (eAvance, dAvance)
-      | s == '+' = (eTourneAGauche, dTourneAGauche)
-      | s == '-' = (eTourneADroite, dTourneADroite)
+interpreteSymbole c (etat:lE, path:lP) s
+      | s == 'F' = ([eAvance], [dAvance])
+      | s == '+' = ([eTourneAGauche], [dTourneAGauche])
+      | s == '-' = ([eTourneADroite], [dTourneADroite])
+      | s == '[' = (etat:lE, path:lP)
+      | s == ']' = (head lE, head lP)
       | otherwise = error "Symbole not match"
       where eAvance = avance c etat
             eTourneADroite = tourneADroite c etat
