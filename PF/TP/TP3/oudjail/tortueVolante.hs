@@ -1,4 +1,4 @@
-module Tortue where
+module TortueVolante where
 import  Graphics.Gloss
 import  LSysteme
 
@@ -68,11 +68,11 @@ filtreSymbolesTortue c m = [s | s <- m, s `elem` symbolesTortue c]
 
 interpreteSymbole :: Config -> EtatDessin -> Symbole -> EtatDessin
 interpreteSymbole c (etat:lE, path:lP) s
-      | s == 'F' = ([eAvance], [dAvance])
-      | s == '+' = ([eTourneAGauche], [dTourneAGauche])
-      | s == '-' = ([eTourneADroite], [dTourneADroite])
-      | s == '[' = (etat:lE, path:lP)
-      | s == ']' = (head lE, head lP)
+      | s == 'F' = (eAvance:lE, dAvance:lP)
+      | s == '+' = (eTourneAGauche:lE, dTourneAGauche:lP)
+      | s == '-' = (eTourneADroite:lE, dTourneADroite:lP)
+      | s == '[' = (etat:lE ++ [etat], path:lP ++ [path])
+      | s == ']' = (last lE:init lE,last lP:init lP)
       | otherwise = error "Symbole not match"
       where eAvance = avance c etat
             eTourneADroite = tourneADroite c etat
@@ -80,12 +80,21 @@ interpreteSymbole c (etat:lE, path:lP) s
             dAvance = path ++ [fst eAvance]
             dTourneADroite = path ++ [fst eTourneADroite]
             dTourneAGauche = path ++ [fst eTourneAGauche]
+interpreteSymbole _ _ _ = error "The parameter is not good"
+
 
 interpreteMot :: Config -> Mot -> Picture
-interpreteMot c m = line (snd (foldl (interpreteSymbole c) iE mF))
+interpreteMot c m = line (concat (snd (foldl (interpreteSymbole c) iE mF)))
     where iP = fst (etatInitial c)
-          iE = (etatInitial c, [iP])
+          iE = ([etatInitial c], [[iP]])
           mF = filtreSymbolesTortue c m
+
+etatTest :: EtatDessin
+etatTest = ([etatInitial iConfig], [[fst (etatInitial iConfig)]])
+
+
+testInterpreteSymb :: EtatDessin
+testInterpreteSymb = interpreteSymbole iConfig etatTest 'm'
 
 vonKoch1 :: LSysteme
 vonKoch1 = lsysteme "F" regles
@@ -109,6 +118,16 @@ dragon = lsysteme "FX" regles
           regles 'Y' = "-FX-Y"
           regles  s  = [s]
 
+brindille :: LSysteme
+brindille = lsysteme "F" regles
+    where regles 'F' = "F[-F]F[+F]F"
+          regles  s  = [s]
+
+broussaille :: LSysteme
+broussaille = lsysteme "F" regles
+    where regles 'F' = "FF-[-F+F+F]+[+F-F-F]"
+          regles  s  = [s]
+
 lsystemeAnime :: LSysteme -> Config -> Float -> Picture
 lsystemeAnime ls c t = interpreteMot conf (ls !! enieme)
   where enieme = round t `mod` 10
@@ -127,8 +146,23 @@ hilbertAnime = lsystemeAnime hilbert (((-400, -400), 0), 800, 1/2, pi/2, "F+-")
 dragonAnime :: Float -> Picture
 dragonAnime = lsystemeAnime dragon (((0, 0), 0), 50, 1, pi/2, "F+-")
 
+brindilleAnime :: Float -> Picture
+brindilleAnime = lsystemeAnime brindille (((0, -400), pi/2), 800, 1/3, 25*pi/180, "F+-[]")
+
+broussailleAnime :: Float -> Picture
+broussailleAnime = lsystemeAnime broussaille (((0, -400), pi/2), 500, 2/5, 25*pi/180, "F+-[]")
+
 dessin :: Picture
 dessin = interpreteMot (((-150,0),0),100,1,pi/3,"F+-") "F+F--F+F"
 
+interpreteMotTest :: Config -> Mot -> Path
+interpreteMotTest c m = (concat (snd (foldl (interpreteSymbole c) iE mF)))
+    where iP = fst (etatInitial c)
+          iE = ([etatInitial c], [[iP]])
+          mF = filtreSymbolesTortue c m
+
+mainTest :: Path
+mainTest = interpreteMotTest (((0, -400), pi/2), 800, 1/3, 25*pi/180, "F+-[]") "FF--[F+F+F]++[F-F-F]"
+
 main :: IO ()
-main = animate (InWindow "L-systeme" (1000, 1000) (0, 0)) white hilbertAnime
+main = animate (InWindow "L-systeme" (1000, 1000) (0, 0)) white brindilleAnime
