@@ -1,4 +1,4 @@
-package fr.univ_lille1.fil.rsx.multicast.interfaces.console;
+package multicast_chat.interfaces.console;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -6,11 +6,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import fr.univ_lille1.fil.rsx.multicast.interfaces.UserInterface;
-import fr.univ_lille1.fil.rsx.multicast.interfaces.gui.GraphicalInterface;
-import fr.univ_lille1.fil.rsx.multicast.network.MessagesManager;
-import fr.univ_lille1.fil.rsx.multicast.network.MessagesManager.ReadOnlyMessage;
 import jline.console.ConsoleReader;
+import multicast_chat.interfaces.UserInterface;
+import multicast_chat.interfaces.gui.GraphicalInterface;
+import multicast_chat.network.MessagesManager;
+import multicast_chat.network.MessagesManager.ReadOnlyMessage;
 
 public class ConsoleInterface implements UserInterface {
 	

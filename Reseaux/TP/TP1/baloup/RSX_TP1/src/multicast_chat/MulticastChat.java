@@ -1,4 +1,4 @@
-package fr.univ_lille1.fil.rsx.multicast;
+package multicast_chat;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -6,10 +6,10 @@ import java.util.Random;
 
 import javax.swing.UIManager;
 
-import fr.univ_lille1.fil.rsx.multicast.interfaces.console.ConsoleInterface;
-import fr.univ_lille1.fil.rsx.multicast.interfaces.gui.GraphicalInterface;
-import fr.univ_lille1.fil.rsx.multicast.network.MessagesManager;
-import fr.univ_lille1.fil.rsx.multicast.network.MulticastConnection;
+import multicast_chat.interfaces.console.ConsoleInterface;
+import multicast_chat.interfaces.gui.GraphicalInterface;
+import multicast_chat.network.MessagesManager;
+import multicast_chat.network.MulticastConnection;
 
 public class MulticastChat {
 	

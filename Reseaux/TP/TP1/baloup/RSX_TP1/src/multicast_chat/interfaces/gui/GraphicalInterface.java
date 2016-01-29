@@ -1,4 +1,4 @@
-package fr.univ_lille1.fil.rsx.multicast.interfaces.gui;
+package multicast_chat.interfaces.gui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -16,10 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-
-import fr.univ_lille1.fil.rsx.multicast.interfaces.UserInterface;
-import fr.univ_lille1.fil.rsx.multicast.network.MessagesManager;
-import fr.univ_lille1.fil.rsx.multicast.network.MessagesManager.ReadOnlyMessage;
 import javax.swing.JTabbedPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -28,6 +24,10 @@ import javax.swing.JOptionPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import multicast_chat.interfaces.UserInterface;
+import multicast_chat.network.MessagesManager;
+import multicast_chat.network.MessagesManager.ReadOnlyMessage;
 
 public class GraphicalInterface extends JFrame implements UserInterface {
 	private static final long serialVersionUID = 1L;
