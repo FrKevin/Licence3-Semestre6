@@ -59,4 +59,71 @@ ETHERNET
   98 90 96 bb 80 7c 08 -> adresse destinataire (nous)
   00 ->
 
-3) 
+3)
+  Speed: 100Mb/s
+	Duplex: Full
+  Il est utilie a la couche physique
+
+
+4)
+  le champ Speed et Duplex ont un statut Unknown! de plus Link detected est a: no.
+  Pour le eth0 sont statut a changer il n'est plus en RUNNING
+
+5) OK
+
+CONCENTRATEUR
+
+1)
+  Tous les ordinateurs présent sur le hub, recoivent les requètes  ping, mais seule la source envoie uen reponsse.
+
+2) 
+
+3)10 base t
+
+4)
+
+5)
+-- Serveur
+Server listening on TCP port 5001
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  4] local 192.168.5.58 port 5001 connected with 192.168.5.57 port 48170
+[ ID] Interval       Transfer     Bandwidth
+[  4]  0.0-10.4 sec  8.12 MBytes  6.54 Mbits/sec
+[  5] local 192.168.5.58 port 5001 connected with 192.168.5.57 port 48171
+[  5]  0.0-10.6 sec  8.12 MBytes  6.45 Mbits/sec
+
+--Avant
+ collisions:0, bande passante: 422.8 KiB, erreur 0
+  RX packets:4998 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:3419 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 lg file transmission:1000 
+          RX bytes:4958497 (4.7 MiB)  TX bytes:432998 (422.8 KiB)
+          Interruption:20 Mémoire:f7d00000-f7d20000 
+
+--Apres
+ collisions:198 bande passante: 1.2 MiB, erreur 3
+ RX packets:25683 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:15602 errors:3 dropped:0 overruns:0 carrier:3
+          collisions:198 lg file transmission:1000 
+          RX bytes:32901097 (31.3 MiB)  TX bytes:1331282 (1.2 MiB)
+          Interruption:20 Mémoire:f7d00000-f7d20000 
+
+Un hub trasmet le message a tous les pc présent sur le hub. Si deux requêtes sont envoyer en même temps => colision.
+COMMUTATEUR
+--Avant
+1) On ne recoit pas les paquets qui ne nous sont pas destiné
+--Avant
+ TX packets:15966 errors:3 dropped:0 overruns:0 carrier:3
+          collisions:198 lg file transmission:1000 
+
+--Apres
+ RX packets:107785 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:56163 errors:3 dropped:0 overruns:0 carrier:3
+          collisions:198
+
+Pas de colisions, pas d'erreur.
+
+
+
+ROUTEUR
