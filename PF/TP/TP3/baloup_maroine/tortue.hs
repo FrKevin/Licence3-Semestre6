@@ -48,19 +48,19 @@ symbolesTortue (_,_,_,_,a) = a
 
 avance :: Config -> EtatTortue -> EtatTortue
 avance c ((x,y),a) = ((x',y'),a)
-				where x' = x + (longueurPas c) * (cos a)
-				      y' = y + (longueurPas c) * (cos a)
+                where x' = x + (longueurPas c) * (cos a)
+                      y' = y + (longueurPas c) * (cos a)
 
 
 -- Tourner à gauche
 tourneAGauche :: Config -> EtatTortue -> EtatTortue
 tourneAGauche c (point, cap) = (point, cap')
-                where cap' = angle c + cap
+                where cap' = cap + (angle c)
 
 -- tourner à droite
 tourneADroite :: Config -> EtatTortue -> EtatTortue
 tourneADroite c (point, cap) = (point, cap')
-                where cap' = angle c + cap
+                where cap' = cap - (angle c)
 
 -- Filtre symbole tortue
 filtreSymboleTortue :: Config -> Mot -> Mot
