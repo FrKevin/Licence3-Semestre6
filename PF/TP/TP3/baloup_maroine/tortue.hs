@@ -66,6 +66,17 @@ tourneADroite c (point, cap) = (point, cap')
 filtreSymboleTortue :: Config -> Mot -> Mot
 filtreSymboleTortue c m = [s | s <- m, s `elem` symbolesTortue c]
 
+interpreteSymbole :: Config -> EtatDessin -> Symbole -> EtatDessin
+interpreteSymbole c (etat, path) 'F' = (etat', path ++ [fst etat'])
+                where etat' = avance c etat
+
+interpreteSymbole c (etat, path) '+' = (etat', path ++ [fst etat'])
+                where etat' = tourneAGauche c etat
+
+interpreteSymbole c (etat, path) '-' = (etat', path ++ [fst etat'])
+                where etat' = tourneADroite c etat
+
+
 
 
 
