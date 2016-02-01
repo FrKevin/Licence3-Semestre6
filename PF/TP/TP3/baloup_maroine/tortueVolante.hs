@@ -1,4 +1,4 @@
-module Tortue where
+module TortueVolante where
 
 import Graphics.Gloss
 import LSystem
@@ -16,7 +16,7 @@ type Config = (EtatTortue -- État initial de la tortue
               ,Float      -- Angle pour les rotations de la tortue
               ,[Symbole]) -- Liste des symboles compris par la tortue
 
-type EtatDessin = (EtatTortue, Path)
+type EtatDessin = ([EtatTortue], [Path])
 
 --------------------------------------------------------------------------------
 -----------------------------------FONCTIONS------------------------------------
@@ -123,8 +123,8 @@ dragonAnime = lsystemeAnime dragon (((0, 0), 0), 50, 1, pi/2, "F+-")
 
 
 
-dessin = interpreteMot (((-150,0),0),100,1,pi/3,"F+-") "F+F--F+F"
+--dessin = interpreteMot (((-150,0),0),100,1,pi/3,"F+-") "F+F--F+F"
 
-main :: IO()
+--main :: IO()
 
-main = display (InWindow "L-système" (1000, 1000) (0, 0)) white dessin
+--main = display (InWindow "L-système" (1000, 1000) (0, 0)) white dessin
