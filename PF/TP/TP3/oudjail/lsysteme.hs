@@ -8,13 +8,13 @@ type LSysteme = [Mot]
 
 motSuivant :: Regles -> Mot -> Mot
 motSuivant _ [] = []
-motSuivant r (x:xs) = (r x) ++ (motSuivant r xs)
+motSuivant r (x:xs) = r x ++ motSuivant r xs
 
 motSuivant' :: Regles -> Mot -> Mot
-motSuivant' r m = concat [(r x) | x <- m]
+motSuivant' r m = concat [r x | x <- m]
 
 motSuivant'' :: Regles -> Mot -> Mot
-motSuivant'' r m = concat (map r m)
+motSuivant'' = concatMap -- concat (map r m)
 
 regle :: Axiome
 regle = "F"

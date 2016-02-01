@@ -65,19 +65,12 @@ tourneADroite c (point, cap) = (point, cap')
 filtreSymbolesTortue :: Config -> Mot -> Mot
 filtreSymbolesTortue c m = [s | s <- m, s `elem` symbolesTortue c]
 
-
 interpreteSymbole :: Config -> EtatDessin -> Symbole -> EtatDessin
-interpreteSymbole c (etat, path) s
-      | s == 'F' = (eAvance, dAvance)
-      | s == '+' = (eTourneAGauche, dTourneAGauche)
-      | s == '-' = (eTourneADroite, dTourneADroite)
-      | otherwise = error "Symbole not match"
-      where eAvance = avance c etat
-            eTourneADroite = tourneADroite c etat
-            eTourneAGauche = tourneAGauche c etat
-            dAvance = path ++ [fst eAvance]
-            dTourneADroite = path ++ [fst eTourneADroite]
-            dTourneAGauche = path ++ [fst eTourneAGauche]
+interpreteSymbole cfg (etat, path) s = (etat', path ++ [fst etat'])
+    where etat' | s == 'F'  = avance cfg etat
+                | s == '+'  = tourneAGauche cfg etat
+                | s == '-'  = tourneADroite cfg etat
+                | otherwise = error "wrong symbol"
 
 interpreteMot :: Config -> Mot -> Picture
 interpreteMot c m = line (snd (foldl (interpreteSymbole c) iE mF))

@@ -48,50 +48,39 @@ symbolesTortue (_, _, _, _, s) = s
 
 avance :: Config -> EtatTortue -> EtatTortue
 avance c ((x, y), cap) = ((x', y'), cap)
-                        where
-                          x' = x + longueurPas c * cos cap
-                          y' = y + longueurPas c * sin cap
+                        where x' = x + longueurPas c * cos cap
+                              y' = y + longueurPas c * sin cap
 
 tourneAGauche :: Config -> EtatTortue -> EtatTortue
 tourneAGauche c (point, cap) = (point, cap')
-                        where
-                          cap' = cap + angle c
+                        where cap' = cap + angle c
 
 tourneADroite :: Config -> EtatTortue -> EtatTortue
 tourneADroite c (point, cap) = (point, cap')
-                        where
-                          cap' = cap - angle c
+                        where cap' = cap - angle c
 
 filtreSymbolesTortue :: Config -> Mot -> Mot
 filtreSymbolesTortue c m = [s | s <- m, s `elem` symbolesTortue c]
 
 
 interpreteSymbole :: Config -> EtatDessin -> Symbole -> EtatDessin
-interpreteSymbole c (etat:lE, path:lP) s
-      | s == 'F' = (eAvance:lE, dAvance:lP)
-      | s == '+' = (eTourneAGauche:lE, dTourneAGauche:lP)
-      | s == '-' = (eTourneADroite:lE, dTourneADroite:lP)
-      | s == '[' = (etat:lE ++ [etat], path:lP ++ [path])
-      | s == ']' = (last lE:init lE,last lP:init lP)
-      | otherwise = error "Symbole not match"
-      where eAvance = avance c etat
-            eTourneADroite = tourneADroite c etat
-            eTourneAGauche = tourneAGauche c etat
-            dAvance = path ++ [fst eAvance]
-            dTourneADroite = path ++ [fst eTourneADroite]
-            dTourneAGauche = path ++ [fst eTourneAGauche]
-interpreteSymbole _ _ _ = error "The parameter is not good"
+interpreteSymbole cfg (et:ets,p:ps) s | s == '['  = (et:et:ets, p:p:ps)
+                                      | s == ']'  = (ets, p:ps)
+                                      | otherwise = (et':ets, (p ++ [fst et']):ps)
+    where et' | s == 'F'  = avance cfg et
+              | s == '+'  = tourneAGauche cfg et
+              | s == '-'  = tourneADroite cfg et
+              | otherwise = error "wrong symbol"
+interpreteSymbole _ _ _   = error "The parameter is not good"
 
 
 interpreteMot :: Config -> Mot -> Picture
-interpreteMot c m = line (concat (snd (foldl (interpreteSymbole c) iE mF)))
-    where iP = fst (etatInitial c)
-          iE = ([etatInitial c], [[iP]])
+interpreteMot c m = line (head (snd (foldl (interpreteSymbole c) iE mF)))
+    where iE = ([etatInitial c], [[fst (etatInitial c)]])
           mF = filtreSymbolesTortue c m
 
 etatTest :: EtatDessin
 etatTest = ([etatInitial iConfig], [[fst (etatInitial iConfig)]])
-
 
 testInterpreteSymb :: EtatDessin
 testInterpreteSymb = interpreteSymbole iConfig etatTest 'm'
@@ -154,15 +143,6 @@ broussailleAnime = lsystemeAnime broussaille (((0, -400), pi/2), 500, 2/5, 25*pi
 
 dessin :: Picture
 dessin = interpreteMot (((-150,0),0),100,1,pi/3,"F+-") "F+F--F+F"
-
-interpreteMotTest :: Config -> Mot -> Path
-interpreteMotTest c m = (concat (snd (foldl (interpreteSymbole c) iE mF)))
-    where iP = fst (etatInitial c)
-          iE = ([etatInitial c], [[iP]])
-          mF = filtreSymbolesTortue c m
-
-mainTest :: Path
-mainTest = interpreteMotTest (((0, -400), pi/2), 800, 1/3, 25*pi/180, "F+-[]") "FF--[F+F+F]++[F-F-F]"
 
 main :: IO ()
 main = animate (InWindow "L-systeme" (1000, 1000) (0, 0)) white brindilleAnime
