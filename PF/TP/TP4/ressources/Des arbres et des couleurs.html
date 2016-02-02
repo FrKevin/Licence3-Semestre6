@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!-- saved from url=(0059)http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp-arbres.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<title>Des arbres et des couleurs</title>
+
+<link href="./Des arbres et des couleurs_files/feuille.css" rel="stylesheet" type="text/css">
+<meta name="viewport" content="initial-scale=1.0">
+</head>
+<body class="monocol">
+<nav><a href="http://cristal.univ-lille.fr/~hym">recherche</a> – <a href="http://www.fil.univ-lille1.fr/~hym/">~</a>/<a href="http://www.fil.univ-lille1.fr/~hym/e">enseignements</a></nav>
+<header>
+<h1 class="titre">Des arbres et des couleurs</h1>
+
+</header>
+<div class="contenu">
+  <p>N’oubliez pas d’aller consulter la documentation des modules <code class="sourceCode haskell"><span class="dt">Data.List</span></code>, <code class="sourceCode haskell"><span class="dt">Data.Maybe</span></code>, <code class="sourceCode haskell"><span class="dt">Test.QuickCheck</span></code>, etc. dès que vous vous doutez qu’elle peut vous apporter une aide.</p>
+<h2 id="arbres-binaires">Arbres binaires</h2>
+<p>Commençons par choisir leur type. Comme nous allons vouloir mettre des couleurs sur les nœuds, ces arbres seront paramétrés par deux types, un type de couleur et un type de valeur<a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp-arbres.html#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>.</p>
+<ol type="1">
+<li><p>Déclarez un type <code class="sourceCode haskell"><span class="dt">Arbre</span></code> pour les arbres binaires. Ce type sera paramétré par le type des couleurs et le type des valeurs des nœuds.</p>
+<p>Votre déclaration pourra donc ressembler à&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Arbre</span> coul val <span class="fu">=</span> …
+                      <span class="kw">deriving</span> <span class="dt">Show</span></code></pre></div>
+<p>Les feuilles ne porteront pas de valeur, seuls les nœuds en auront.</p></li>
+</ol>
+<p>Comme toujours, ayant défini une nouvelle structure de données, nous allons définir les parcours.</p>
+<p>Et, comme toujours, vous commencerez votre définition de fonction par son type.</p>
+<ol start="2" type="1">
+<li><p>Définissez les fonctions <code class="sourceCode haskell">map</code> et <code class="sourceCode haskell">fold</code> pour votre <code class="sourceCode haskell"><span class="dt">Arbre</span></code>.<br>
+<em>Ne bloquez pas sur la définition de <code class="sourceCode haskell">fold</code>&nbsp;: si vous ne voyez pas vraiment comment la définir, passez et essayez de voir dans la suite quelle fonction générique permettrait de raccourcir la définition des fonctions spécifiques demandées.</em></p></li>
+<li><p>Définissez les fonctions qui calculent la <code class="sourceCode haskell">hauteur</code> (nombre maximal de nœuds entre une feuille et la racine) et la <code class="sourceCode haskell">taille</code> (nombre total de nœuds) d’un arbre.</p>
+<p>Vous définirez ces fonctions de deux façons différentes&nbsp;: par récursivité et en utilisant les fonctions <code class="sourceCode haskell">fold</code> et/ou <code class="sourceCode haskell">map</code>.</p></li>
+</ol>
+<p>On appelle <em>peigne à gauche</em> un arbre dont tous les sous-arbres droits sont des feuilles. Notez qu’un <em>peigne</em> est équivalent à une liste.</p>
+<figure>
+<img src="./Des arbres et des couleurs_files/arbrePeigne.png" alt="Peigne avec trois nœuds"><figcaption>Peigne avec trois nœuds</figcaption>
+</figure>
+<ol start="4" type="1">
+<li>Définissez une fonction <code class="sourceCode haskell"><span class="ot">peigneGauche ::</span> [(c,a)] <span class="ot">-&gt;</span> <span class="dt">Arbre</span> c a</code> qui prend une liste de paires de couleur et valeur et crée le peigne à gauche correspondant.</li>
+</ol>
+<p>Vous allez utiliser <code class="sourceCode haskell">quickCheck</code> pour vérifier quelques propriétés de votre code. Pour cela, vous pourrez&nbsp;:</p>
+<ul>
+<li>soit indiquer à GHCi que vous avez besoin de QuickCheck en tapant&nbsp;: <code>:module + Test.QuickCheck</code>,</li>
+<li>soit ajouter au début de votre fichier source&nbsp;: <code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Test.QuickCheck</span></code>.</li>
+</ul>
+<p>Cela vous permettra d’écrire quelques fonctions qui vérifient une propriété que votre code doit respecter et faire vérifier qu’elle est satisfaite sur une série de cas générés aléatoirement par QuickCheck.</p>
+<ol start="5" type="1">
+<li><p>Ajouter la fonction suivante à votre code source&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">prop_hauteurPeigne xs <span class="fu">=</span> length xs <span class="fu">==</span> hauteur (peigneGauche xs)</code></pre></div>
+<p>Que vérifie-t-elle&nbsp;?</p>
+<p>Vérifiez avec QuickCheck qu’elle est satisfaite<a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp-arbres.html#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> en appelant <code class="sourceCode haskell">quickCheck</code>&nbsp;:</p>
+<pre><code>ghci&gt; quickCheck prop_hauteurPeigne
++++ OK, passed 100 tests.</code></pre>
+<p>Si QuickCheck trouve un cas de test sur lequel la propriété n’est pas vraie, il vous donne le cas qu’il a trouvé&nbsp;:</p>
+<pre><code>ghci&gt; quickCheck prop_hauteurPeigne
+*** Failed! Falsifiable (after 1 test):
+[]</code></pre>
+<p>Vous pouvez alors regarder le <code class="sourceCode haskell">peigneGauche []</code> et comprendre pourquoi.</p></li>
+<li><p>Testez quelques propriétés sur <code class="sourceCode haskell">taille</code>, <code class="sourceCode haskell">map</code>, etc.</p></li>
+</ol>
+<p>On appelle arbre binaire <em>complet</em> (ou <em>parfait</em>) un arbre dont toutes les feuilles sont à la même distance de la racine. Ainsi l’arbre complet de hauteur&nbsp;0 est simplement une feuille. Les arbres complets de hauteur 1, 2, 3 et&nbsp;4 sont les suivants (où les feuilles ne sont pas explicitées)&nbsp;:</p>
+<figure>
+<img src="./Des arbres et des couleurs_files/arbreComplet1.png" alt="Arbre complet de hauteur 1"><figcaption>Arbre complet de hauteur 1</figcaption>
+</figure>
+<figure>
+<img src="./Des arbres et des couleurs_files/arbreComplet2.png" alt="Arbre complet de hauteur 2"><figcaption>Arbre complet de hauteur 2</figcaption>
+</figure>
+<figure>
+<img src="./Des arbres et des couleurs_files/arbreComplet3.png" alt="Arbre complet de hauteur 3"><figcaption>Arbre complet de hauteur 3</figcaption>
+</figure>
+<figure>
+<img src="./Des arbres et des couleurs_files/arbreComplet4.png" alt="Arbre complet de hauteur 4"><figcaption>Arbre complet de hauteur 4</figcaption>
+</figure>
+<ol start="7" type="1">
+<li><p>Définissez une fonction <code class="sourceCode haskell"><span class="ot">estComplet ::</span> <span class="dt">Arbre</span> c a <span class="ot">-&gt;</span> <span class="dt">Bool</span></code> qui vaut vrai si et seulement si son argument est un arbre complet.</p>
+<p>Pouvez-vous donner une définition récursive et une définition utilisant un <code class="sourceCode haskell">fold</code>&nbsp;?</p></li>
+<li><p>Quels sont les peignes à gauche complets&nbsp;? Pouvez-vous utiliser QuickCheck pour les trouver&nbsp;?</p></li>
+</ol>
+<p>Les exemples ci-dessus ont été générés par une fonction <code class="sourceCode haskell"><span class="ot">complet ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> [(c, a)] <span class="ot">-&gt;</span> <span class="dt">Arbre</span> c a</code> qui prend en argument une hauteur et une liste de paires de couleur et valeur.</p>
+<p>Un point auquel il faut faire attention est de savoir dans quel ordre vous utilisez les couleurs et étiquettes. Par exemple l’arbre de hauteur&nbsp;2 ci-dessus a été généré par <code class="sourceCode haskell">complet <span class="dv">2</span> [((),<span class="ch">'a'</span>),((),<span class="ch">'b'</span>),((),<span class="ch">'c'</span>)]</code>. Vous veillerez à utiliser les valeurs dans le même ordre&nbsp;: vous créerez le sous-arbre gauche avant le nœud central, avant le sous-arbre droit.</p>
+<ol start="9" type="1">
+<li><p>Définissez la fonction <code class="sourceCode haskell">complet</code>.</p>
+<p>Combien de nœuds et de feuilles a l’arbre complet de hauteur&nbsp;<span class="math inline"><em>n</em></span>&nbsp;? Concluez-en qu’il n’est <strong>pas raisonnable de construire des arbres complets de hauteur 20 ou plus</strong>&nbsp;! Il est sans doute même pertinent de se limiter à une profondeur&nbsp;17 au maximum. Prenez ça en compte en écrivant quelques tests avec QuickCheck.</p></li>
+</ol>
+<p>Notez au passage que nous avons utilisé <code class="sourceCode haskell">()</code> pour donner une valeur sans grand intérêt comme couleur&nbsp;: il s’agit du 0-uplet, très utile comme bouche-trou (quand il faut bien mettre quelque chose tout en exprimant que la valeur est sans intérêt).</p>
+<p>Pour utiliser <code class="sourceCode haskell">complet</code>, il vous faut fournir une liste des étiquettes et des couleurs. Pour des arbres un peu grand, c’est rapidement fastidieux.</p>
+<ol start="10" type="1">
+<li><p>Trouvez la fonction de type <code class="sourceCode haskell">a <span class="ot">-&gt;</span> [a]</code> qui vous donne une liste contenant une infinité de fois son argument.</p>
+<p>Redéfinissez cette fonction en utilisant <code class="sourceCode haskell">iterate</code>.</p></li>
+<li><p>En utilisant le fait que <code class="sourceCode haskell">[<span class="ch">'a'</span><span class="fu">..</span>]</code> est la liste de tous les caractères unicode à partir de <code class="sourceCode haskell"><span class="ch">'a'</span></code>, créez la liste contenant <code class="sourceCode haskell">[((),<span class="ch">'a'</span>), ((),<span class="ch">'b'</span>), <span class="fu">...</span>]</code>.</p></li>
+<li><p>Définissez la fonction <code class="sourceCode haskell"><span class="ot">aplatit ::</span> <span class="dt">Arbre</span> c a <span class="ot">-&gt;</span> [(c, a)]</code> qui calcule la liste des paires couleur-valeur présente dans les nœuds de l’arbre.</p>
+<p>Vous veillerez (et testerez avec QuickCheck) à ce que l’ordre dans la liste corresponde à l’ordre indiqué pour l’arbre complet. C’est-à-dire que, pour l’arbre complet de hauteur&nbsp;4 ci-dessus&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">map snd (aplatit complet4) <span class="fu">==</span> <span class="st">"abcdefghijklmno"</span></code></pre></div></li>
+<li><p>Définissez une fonction <code class="sourceCode haskell"><span class="ot">element ::</span> <span class="dt">Eq</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Arbre</span> c a <span class="ot">-&gt;</span> <span class="dt">Bool</span></code> qui calcule si un élément de valeur donnée est présent dans l’arbre.</p>
+<p>Vous pourrez vérifier des propriétés de cette fonction, par exemple exprimées par rapport à la version aplatie de l’arbre.</p></li>
+</ol>
+<h3 id="affichage-des-arbres">Affichage des arbres</h3>
+<p>Nous allons utiliser <a href="http://graphviz.org/">graphviz</a> pour obtenir un rendu visuel des arbres construits. Sa syntaxe de description des graphes est très simple. Par exemple, l’arbre complet de hauteur&nbsp;3 est décrit par les données suivantes&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode c"><code class="sourceCode c"><span class="co">/* Entête */</span>
+digraph <span class="st">"complet3"</span> {
+    node [fontname=<span class="st">"DejaVu-Sans"</span>, shape=circle]
+
+    <span class="co">/* Liste des nœuds */</span>
+    a
+    b
+    c
+    d
+    e
+    f
+    g
+
+    <span class="co">/* Liste des arcs */</span>
+    d -&gt; b
+    d -&gt; f
+    b -&gt; a
+    b -&gt; c
+    f -&gt; e
+    f -&gt; g
+}</code></pre></div>
+<p>que le programme <code>dot</code> convertit en une image. Par exemple, si vous mettez la description précédente dans un fichier <code>arbre.dot</code> et tapez <code>dot -Txlib arbre.dot</code>, dot vous affichera une fenêtre avec le dessin de l’arbre. <code>dot -Tpng arbre.dot &gt; arbre.png</code> vous donnera un fichier image.</p>
+<p>L’indentation n’est pas requise, vous pourrez vous passer de la générer. L’idée est donc juste de générer la liste des nœuds (dans l’ordre déjà choisi pour <code class="sourceCode haskell">aplatit</code>&nbsp;: l’ordre a un impact sur le placement des nœuds, les nœuds les plus à gauche doivent être déclarés avant les nœuds les plus à droite).</p>
+<p>Comme les nœuds ont des couleurs<a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp-arbres.html#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>, vous pouvez utiliser la syntaxe&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode c"><code class="sourceCode c">a [color=red, fontcolor=red]</code></pre></div>
+<p>pour faire un nœud rouge.</p>
+<p>Attention, les fonctions que nous proposons ici suppose que les nœuds ont des valeurs uniques qui peuvent être utilisées comme identifiants. En effet, deux nœuds d’un arbre ayant la même valeur seraient fusionnés dans le rendu graphviz.</p>
+<ol start="14" type="1">
+<li><p>Définissez une petite fonction <code class="sourceCode haskell"><span class="ot">noeud ::</span> (c <span class="ot">-&gt;</span> <span class="dt">String</span>) <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> <span class="dt">String</span>) <span class="ot">-&gt;</span> (c,a) <span class="ot">-&gt;</span> <span class="dt">String</span></code> qui transforme une entrée de la liste aplatie d’un arbre en une ligne de déclaration du nœud en utilisant une fonction qui génère une <code class="sourceCode haskell"><span class="dt">String</span></code> pour la couleur (du moins si vous voulez afficher la couleur) et une autre fonction qui génère une <code class="sourceCode haskell"><span class="dt">String</span></code> pour la valeur.</p></li>
+<li><p>Définissez une fonction <code class="sourceCode haskell"><span class="ot">arcs ::</span> <span class="dt">Arbre</span> c a <span class="ot">-&gt;</span> [(a,a)]</code> qui produit la liste de tous les arcs de l’arbre.</p></li>
+<li><p>Définissez une petite fonction <code class="sourceCode haskell"><span class="ot">arc ::</span> (a <span class="ot">-&gt;</span> <span class="dt">String</span>) <span class="ot">-&gt;</span> (a,a) <span class="ot">-&gt;</span> <span class="dt">String</span></code> qui transforme un arc de la liste précédente en une ligne graphviz en utilisant une fonction qui génère une <code class="sourceCode haskell"><span class="dt">String</span></code> pour une valeur.</p></li>
+<li><p>Finalement, définissez une fonction <code class="sourceCode haskell"><span class="ot">dotise ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> (c <span class="ot">-&gt;</span> <span class="dt">String</span>) <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> <span class="dt">String</span>) <span class="ot">-&gt;</span> <span class="dt">Arbre</span> c a <span class="ot">-&gt;</span> <span class="dt">String</span></code> qui prend en argument&nbsp;:</p>
+<ul>
+<li>le nom de l’arbre produit,</li>
+<li>une fonction de conversion pour les couleurs,</li>
+<li>une fonction de conversion pour les valeurs,</li>
+<li>un arbre,</li>
+</ul>
+<p>et calcule la chaîne de caractères représentant l’arbre.</p>
+<p>Cette fonction pourra avantageusement utiliser la fonction <code class="sourceCode haskell">unlines</code>.</p></li>
+</ol>
+<h3 id="enfin-de-la-couleur">Enfin de la couleur…&nbsp;!</h3>
+<p>Un arbre binaire <em>de recherche</em> est un arbre contenant des valeurs ordonnées de sorte que la valeur d’un nœud est supérieure à la valeur de tous les nœuds de son sous-arbre gauche, et inférieure à la valeur de tous les nœuds de son sous-arbre droit.</p>
+<ol start="18" type="1">
+<li>Définissez une fonction <code class="sourceCode haskell">elementR</code> qui cherche une valeur dans un arbre binaire de recherche. Au lieu de regarder «&nbsp;<code class="sourceCode haskell">taille</code>&nbsp;» nœuds, elle regardera au plus «&nbsp;<code class="sourceCode haskell">hauteur</code>&nbsp;» nœuds.</li>
+</ol>
+<p>Si l’arbre est complet, la hauteur est un logarithme de la taille, ce qui rend la recherche d’un élément particulièrement efficace. Mais il est dur d’obtenir un arbre complet par des ajouts successifs. Les arbres sont dits <em>équilibrés</em> quand ils assurent une recherche efficace même s’ils ne sont pas totalement complets.</p>
+<p>Il existe un type d’arbres binaires de recherche qui s’implémentent de façon particulièrement élégante en utilisant du filtrage de motifs&nbsp;: les <a href="https://fr.wikipedia.org/wiki/Arbre_rouge_et_noir">arbres rouges et noirs</a>.</p>
+<p>Les propriétés d’un arbre rouge et noir sont les suivantes&nbsp;:</p>
+<ul>
+<li>Tous les chemins de la racine à une feuille ont le même nombre de nœuds noirs.</li>
+<li>Un nœud rouge n’a pas de fils rouge.</li>
+<li>La racine est noire.</li>
+</ul>
+<p>Ces propriétés garantissent que le plus long chemin racine-feuille (qui aurait une alternance rouge-noir) ne pourrait pas être plus que deux fois plus long que le plus court (qui n’aurait que des nœuds noirs).</p>
+<p>L’insertion d’une valeur fonctionne de la façon suivante&nbsp;:</p>
+<ul>
+<li>si la valeur est déjà dans l’arbre, elle n’est pas ajoutée,</li>
+<li>si l’arbre est vide, l’arbre résultat contient un seul nœud, rouge, portant la valeur,</li>
+<li>si la valeur est inférieure à la racine de l’arbre, elle est ajoutée (récursivement) à gauche, sinon à droite et l’arbre résultant est rééquilibré.</li>
+</ul>
+<p>Tout repose sur la technique de rééquilibrage, quand on a un nœud rouge qui a un fils rouge. Plus concrètement, il suffit de rééquilibrer les arbres qui ont une des 4&nbsp;formes suivantes&nbsp;:</p>
+<figure>
+<img src="./Des arbres et des couleurs_files/arbresDesequilibres.png" alt="Arbres déséquilibrés"><figcaption>Arbres déséquilibrés</figcaption>
+</figure>
+<p>(où «&nbsp;a&nbsp;», «&nbsp;b&nbsp;», «&nbsp;c&nbsp;» et «&nbsp;d&nbsp;» sont des sous-arbres quelconques) en les transformant en l’arbre&nbsp;:</p>
+<figure>
+<img src="./Des arbres et des couleurs_files/arbreEquilibre.png" alt="Arbre rééquilibré"><figcaption>Arbre rééquilibré</figcaption>
+</figure>
+<p>Dans tous les autres cas, la fonction de rééquilibrage laisse l’arbre inchangé.</p>
+<ol start="19" type="1">
+<li><p>Déclarez un type de couleur pouvant être rouge ou noir.</p></li>
+<li><p>Définissez la fonction de rééquilibrage <code class="sourceCode haskell"><span class="ot">equilibre ::</span> <span class="dt">Arbre</span> c a <span class="ot">-&gt;</span> <span class="dt">Arbre</span> c a</code><a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp-arbres.html#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a>.</p>
+<p>Cette fonction se définit très simplement en filtrant les motifs possibles. Vous pourrez choisir des constructeurs pour vos arbres et vos couleurs de sorte que les motifs soient plus concis (j’ai utilisé les constructeurs <code class="sourceCode haskell"><span class="dt">N</span></code> et <code class="sourceCode haskell"><span class="dt">R</span></code> pour les couleurs, par exemple…).</p></li>
+<li><p>Définissez la fonction d’insertion d’une valeur dans un arbre rouge et noir.</p></li>
+<li><p>Identifiez et vérifiez avec QuickCheck quelques propriétés des arbres rouges et noirs.</p>
+<p>En particulier, quelle propriété pouvez-vous définir sur les aplatissements d’arbres rouges et noirs&nbsp;?</p></li>
+</ol>
+<h3 id="et-un-peu-danimation">… et un peu d’animation</h3>
+<p>Créez un fichier, par exemple <code>arbre.dot</code>, contenant&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode c"><code class="sourceCode c">digraph <span class="st">"arbre"</span> { }</code></pre></div>
+<p>et lancez <code>dot -Txlib arbre.dot</code>. <code>dot -Txlib</code> a le bon goût (normalement…) de surveiller les changements du fichier qu’il affiche. Nous allons donc pouvoir visualiser les ajouts des valeurs à l’arbre au fur et à mesure. Le but est d’obtenir une visualisation ressemblant aux figures suivantes.</p>
+<figure>
+<img src="./Des arbres et des couleurs_files/arbresAnimAlpha.gif" alt="Ajouts successifs de [&#39;a&#39;..&#39;z&#39;]"><figcaption>Ajouts successifs de <code class="sourceCode haskell">[<span class="ch">'a'</span><span class="fu">..</span><span class="ch">'z'</span>]</code></figcaption>
+</figure>
+<figure>
+<img src="./Des arbres et des couleurs_files/arbresAnimAlea.gif" alt="Ajouts successifs de &quot;gcfxieqzrujlmdoywnbakhpvst&quot;"><figcaption>Ajouts successifs de <code class="sourceCode haskell"><span class="st">"gcfxieqzrujlmdoywnbakhpvst"</span></code></figcaption>
+</figure>
+<ol start="23" type="1">
+<li>Définissez une fonction <code class="sourceCode haskell"><span class="ot">arbresDot ::</span> [a] <span class="ot">-&gt;</span> [<span class="dt">String</span>]</code> qui, pour une liste de valeurs retourne une liste des chaînes produites par <code class="sourceCode haskell">dotise</code>. À la position&nbsp;<span class="math inline"><em>i</em></span> de la liste résultat, il y aura ainsi la description au format graphviz de l’arbre obtenu par les ajouts successifs des éléments aux positions 0 à <span class="math inline"><em>i</em> − 1</span> dans la liste de valeurs.</li>
+</ol>
+<p>Ajoutez finalement le petit <code class="sourceCode haskell">main</code> magique suivant&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Control.Concurrent</span> (threadDelay)
+
+main <span class="fu">=</span> mapM_ ecrit arbres
+    <span class="kw">where</span> ecrit a <span class="fu">=</span> <span class="kw">do</span> writeFile <span class="st">"arbre.dot"</span> a
+                       threadDelay <span class="dv">1000000</span>
+          arbres  <span class="fu">=</span> arbresDot <span class="st">"gcfxieqzrujlmdoywnbakhpvst"</span></code></pre></div>
+<p>et <code>runghc arbres.hs</code> (si votre source s’appelle <code>arbres.hs</code>) devrait modifier le fichier arbre.dot toutes les secondes.</p>
+<h3 id="extensions-possibles">Extensions possibles</h3>
+<p>Deux idées d’extensions possibles.</p>
+<ol type="1">
+<li><p>L’implémentation suggérée ci-dessus suppose que le type des valeurs soit ordonné (de la classe <code class="sourceCode haskell"><span class="dt">Ord</span></code>). Faites une version des fonctions d’insertion et de test d’appartenance prenant une fonction d’ordre en argument.</p></li>
+<li><p>Les garanties de complexité des arbres rouges et noirs en font une bonne base pour implémenter un <a href="https://fr.wikipedia.org/wiki/Tableau_associatif">dictionnaire</a>. Adaptez votre implémentation pour en faire une.</p></li>
+</ol>
+<hr>
+<p>Référence&nbsp;: Chris Okasaki, <em>Purely functional data structures</em>. Cambridge University Press 1999.</p>
+<section class="footnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Nous pourrions bien entendu utiliser un type d’arbre paramétré par un seul type, de valeur, et utiliser <code class="sourceCode haskell">(<span class="dt">Couleur</span>,<span class="dt">Valeur</span>)</code> comme type de valeur pour les versions coloriées. Nous avons ici choisi de séparer explicitement les deux pour alléger l’écriture des fonctions qui traitent les nœuds suivant leur couleur.<a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp-arbres.html#fnref1">↩</a></p></li>
+<li id="fn2"><p>Satisfaite sur les cas aléatoires&nbsp;: comme toujours en test, on ne trouve que des erreurs, on n’obtient aucune preuve que le résultat sera correct dans tous les cas.<a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp-arbres.html#fnref2">↩</a></p></li>
+<li id="fn3"><p>pas encore très utilisées dans cet énoncé, il est vrai…<a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp-arbres.html#fnref3">↩</a></p></li>
+<li id="fn4"><p>Ou, légèrement plus efficace, une fonction <code class="sourceCode haskell"><span class="ot">equilibre ::</span> c <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Arbre</span> c a <span class="ot">-&gt;</span> <span class="dt">Arbre</span> c a <span class="ot">-&gt;</span> <span class="dt">Arbre</span> c a</code> c’est-à-dire ayant la même signature que votre constructeur de nœud mais évitant de construire un arbre déséquilibré juste pour le rééquilibrer.<a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp-arbres.html#fnref4">↩</a></p></li>
+</ol>
+</section>
+</div>
+<footer></footer>
+
+</body></html>

@@ -9,3 +9,5 @@ la branche master !**
 
 
 `git submodule foreach git pull origin master` pour pull tous les modules
+
+`git config core.ignorecase false` pour respecter la casse des noms de fichiers
