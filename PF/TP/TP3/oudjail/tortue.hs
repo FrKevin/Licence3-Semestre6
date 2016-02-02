@@ -48,19 +48,16 @@ symbolesTortue (_, _, _, _, s) = s
 
 avance :: Config -> EtatTortue -> EtatTortue
 avance c ((x, y), cap) = ((x', y'), cap)
-                        where
-                          x' = x + longueurPas c * cos cap
-                          y' = y + longueurPas c * sin cap
+                        where x' = x + longueurPas c * cos cap
+                              y' = y + longueurPas c * sin cap
 
 tourneAGauche :: Config -> EtatTortue -> EtatTortue
 tourneAGauche c (point, cap) = (point, cap')
-                        where
-                          cap' = cap + angle c
+                        where cap' = cap + angle c
 
 tourneADroite :: Config -> EtatTortue -> EtatTortue
 tourneADroite c (point, cap) = (point, cap')
-                        where
-                          cap' = cap - angle c
+                        where cap' = cap - angle c
 
 filtreSymbolesTortue :: Config -> Mot -> Mot
 filtreSymbolesTortue c m = [s | s <- m, s `elem` symbolesTortue c]

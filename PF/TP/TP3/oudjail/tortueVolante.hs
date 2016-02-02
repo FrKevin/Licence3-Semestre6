@@ -145,4 +145,4 @@ dessin :: Picture
 dessin = interpreteMot (((-150,0),0),100,1,pi/3,"F+-") "F+F--F+F"
 
 main :: IO ()
-main = animate (InWindow "L-systeme" (1000, 1000) (0, 0)) white brindilleAnime
+main = animate (InWindow "L-systeme" (1000, 1000) (0, 0)) white broussailleAnime
