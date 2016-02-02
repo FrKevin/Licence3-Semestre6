@@ -31,7 +31,7 @@ vonKoch '+' = "+"
 vonKoch '-' = "-"
 vonKoch 'F' = regle
 
--- lsysteme :: [Char] -> (Char -> [Char]) -> [[Char]] pour une meilleure compréhention
+-- lsysteme :: [Char] -> (Char -> [Char]) -> [[Char]] pour une meilleure compréhension
 lsysteme :: Axiome -> Regles -> LSysteme
 lsysteme a r = iterate (motSuivant r) a
 
