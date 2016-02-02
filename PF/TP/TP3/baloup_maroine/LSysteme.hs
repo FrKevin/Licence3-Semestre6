@@ -1,4 +1,4 @@
-module LSystem where
+module LSysteme where
 
 type Symbole  = Char
 type Mot      = [Symbole]
