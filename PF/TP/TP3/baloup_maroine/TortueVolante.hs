@@ -1,3 +1,5 @@
+-- MAROINE BALOUP TP3 Tortue Volante
+
 module TortueVolante where
 
 import Graphics.Gloss
@@ -64,9 +66,7 @@ filtreSymbolesTortue :: Config -> Mot -> Mot
 filtreSymbolesTortue c m = [s | s <- m, s `elem` symbolesTortue c]
 
 
-
-
-
+-- Nouvelle fonction d'interprêtation des symboles
 interpreteSymbole :: Config -> EtatDessin -> Symbole -> EtatDessin
 interpreteSymbole c (et:ets,p:ps) s | s == '['  = (et:et:ets, p:p:ps)
                                     | s == ']'  = (ets, p:ps)
@@ -76,17 +76,22 @@ interpreteSymbole c (et:ets,p:ps) s | s == '['  = (et:et:ets, p:p:ps)
                                                           | s == '-'  = tourneADroite c et
                                                           | otherwise = error "wrong symbol"
 
-
+-- Interprêtation des mots revisitée
 interpreteMot :: Config -> Mot -> Picture
 interpreteMot c m = line (head (snd (foldl (interpreteSymbole c) iE mF)))
     where iE = ([etatInitial c], [[fst (etatInitial c)]])
           mF = filtreSymbolesTortue c m
-          
+
 lsystemeAnime :: LSysteme -> Config -> Float -> Picture
 lsystemeAnime ls c t = interpreteMot conf (ls !! enieme)
   where enieme = round t `mod` 10
         conf = case c of
           (e, p, fE, a, s) -> (e, p * (fE ^ enieme), fE, a, s)
+
+--------------------------------------------------------------------------------
+---------------------------GENERATIONS DESSINS----------------------------------
+--------------------------------------------------------------------------------
+
 
 vonKoch1 :: LSysteme
 vonKoch1 = lsysteme "F" regles
@@ -109,7 +114,7 @@ dragon = lsysteme "FX" regles
     where regles 'X' = "X+YF+"
           regles 'Y' = "-FX-Y"
           regles  s  = [s]
-          
+
 brindille :: LSysteme
 brindille = lsysteme "F" regles
     where regles 'F' = "F[-F]F[+F]F"
@@ -119,6 +124,11 @@ broussaille :: LSysteme
 broussaille = lsysteme "F" regles
     where regles 'F' = "FF-[-F+F+F]+[+F-F-F]"
           regles  s  = [s]
+
+--------------------------------------------------------------------------------
+----------------------------AFFICHAGE DESSINS-----------------------------------
+--------------------------------------------------------------------------------
+
 
 vonKoch1Anime :: Float -> Picture
 vonKoch1Anime = lsystemeAnime vonKoch1 (((-400, 0), 0), 800, 1/3, pi/3, "F+-")

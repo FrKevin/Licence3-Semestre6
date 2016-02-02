@@ -1,3 +1,5 @@
+-- MAROINE BALOUP TP3 LSysteme
+
 module LSysteme where
 
 type Symbole  = Char
@@ -19,18 +21,20 @@ motSuivant' r m = concat [r i | i <- m]
 motSuivant'' :: Regles -> Mot -> Mot
 motSuivant'' = concatMap
 
+-- Regle pour le remplacement de F
 regle :: Axiome
 regle = "F-F++F-F"
 
+-- Déclaration des règles de vonKoch
 vonKoch :: Regles
 vonKoch '+' = "+"
 vonKoch '-' = "-"
 vonKoch 'F' = regle
 
+-- lsysteme :: [Char] -> (Char -> [Char]) -> [[Char]] pour une meilleure compréhention
 lsysteme :: Axiome -> Regles -> LSysteme
--- lsysteme :: [Char] -> (Char -> [Char]) -> [[Char]]
 lsysteme a r = iterate (motSuivant r) a
 
-
+-- Permet de voir la taille d'une exécution de vonKoch à un n donné
 tailleVonKoch :: Int -> Int
 tailleVonKoch n = length (lsysteme "F" vonKoch !! n)

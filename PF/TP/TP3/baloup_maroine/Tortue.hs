@@ -1,3 +1,5 @@
+-- MAROINE BALOUP TP3 Tortue
+
 module Tortue where
 
 import Graphics.Gloss
@@ -73,18 +75,24 @@ interpreteSymbole c (etat, path) '+' = (etat', path ++ [fst etat'])
 interpreteSymbole c (etat, path) '-' = (etat', path ++ [fst etat'])
                 where etat' = tourneADroite c etat
 
+interpreteSymbole _ _ _ = error "wrong symbol"
 
+-- Interprétation d'un mot
 interpreteMot :: Config -> Mot -> Picture
 interpreteMot c m = line (snd (foldl (interpreteSymbole c) iE mF))
     where iP = fst (etatInitial c)
           iE = (etatInitial c, [iP])
           mF = filtreSymbolesTortue c m
-          
+
 lsystemeAnime :: LSysteme -> Config -> Float -> Picture
 lsystemeAnime ls c t = interpreteMot conf (ls !! enieme)
   where enieme = round t `mod` 6
         conf = case c of
           (e, p, fE, a, s) -> (e, p * (fE ^ enieme), fE, a, s)
+
+--------------------------------------------------------------------------------
+---------------------------GENERATIONS DESSINS----------------------------------
+--------------------------------------------------------------------------------
 
 vonKoch1 :: LSysteme
 vonKoch1 = lsysteme "F" regles
@@ -107,6 +115,10 @@ dragon = lsysteme "FX" regles
     where regles 'X' = "X+YF+"
           regles 'Y' = "-FX-Y"
           regles  s  = [s]
+
+--------------------------------------------------------------------------------
+----------------------------AFFICHAGE DESSINS-----------------------------------
+--------------------------------------------------------------------------------
 
 vonKoch1Anime :: Float -> Picture
 vonKoch1Anime = lsystemeAnime vonKoch1 (((-400, 0), 0), 800, 1/3, pi/3, "F+-")
