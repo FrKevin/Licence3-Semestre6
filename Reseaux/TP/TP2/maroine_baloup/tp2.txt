@@ -1,0 +1,117 @@
+============CAPTURE DE TRAMES===============
+
+1. Cette commande permet de configurer des interfaces réseau
+
+2. Eth0 et Loopback
+
+3. Eth0
+
+4. IPv4 adr:192.168.5.59
+   HWaddr (MAC) 98:90:96:bb:7b:4f
+
+5. ping 192.168.5.60
+
+6. Le temps de l'aller retour pour l'envoi et la récéption du paquet ping
+
+7. L'adresse IP permet d'organiser de façon logique l'ensemble du réseau qui peut être changée pour une machine donnée.
+   L'adresse MAC est une adresse fixe permettant d'identifier une machine sur le réseaux de manière unique, elle est 	inchangeable. (2005).
+
+8. Ethernet II, IPv4 et ICMP
+
+9. Liaison et réseau
+
+10. ip.addr == 192.168.5.60 :D
+
+11. host 192.168.5.60 ;-)
+
+============ETHERNET===============
+
+1. Type: IP (0x0800)
+
+2. Adresse MAC destination et adresse MAC source
+
+3. Ces commandes permettent de savoir la configuration physique du réseau. La couche concernée est la couche physique.
+
+4. Avec mii-tool, la commande a pris du temps à s'exécuter, et ça renvoi "No link" pour eth0 à présent.
+   Avec ifconfig -a eth0 n'est plus en running
+
+5.
+
+============CONCENTRATEUR===============
+
+1. L'ordinateur spectateur reçoit les packets qui ne lui sont pas destinés. Le hub retransmet les packet à tout le monde, sans vérifier le destinataire des packets. La source ne reçoit pas ses propres paquets.
+
+2. Le mode promiscuous permet de capturer les packets même lorsqu'ils ne nous sont pas detinées
+
+3. Half Duplex : on ne peut pas envoyer en même temps que recevoir.
+
+4. Physique : étoile. Logique : bus.
+
+5. 218 erreurs, bande passante : 6.62 Mbits/s
+4 machines - 13 erreurs, bande passante 192Kb/s, collisions 181
+Re-test - 242 erreurs, bande passante 3.29Mb/s, collisions 467
+
+Un hub transmet tous les paquets et les renvoies à tous le monde, le débit est donc divisé et il y a un grand nombre de collision
+
+============COMMUTATEUR===============
+1. On reçoit uniquement les paquets concernant une fois le switch utilisé
+   On n'a pas d'erreur supplémentaire, la bande passante est meilleure
+
+2. Switch#show mac-address-table
+Dynamic Address Count:                 4
+Secure Address Count:                  0
+Static Address (User-defined) Count:   0
+System Self Address Count:             39
+Total MAC addresses:                   43
+Maximum MAC addresses:                 8192
+Non-static Address Table:
+Destination Address  Address Type  VLAN  Destination Port
+-------------------  ------------  ----  --------------------
+9890.96bb.7b4f       Dynamic          1  FastEthernet0/1
+9890.96bb.7fee       Dynamic          1  FastEthernet0/3
+9890.96bb.8070       Dynamic          1  FastEthernet0/5
+9890.96bb.807c       Dynamic          1  FastEthernet0/7
+
+Les requêtes effectués par les machines ont permis au switch de les identifier sur le réseau.
+
+Le switch reçoit les packet réseau et associe les adresses sources avec le port par lequel ils ont reçu le packet.
+Pour choisir le port de destination d'un packet, le switch recherche l'adresse de destination dans la table et envoi le packet uniquement au port concerné. Si l'adresse de destination ne se trouve pas dans la table, le packet est envoyé à tous les autres ports (sauf le port source).
+
+3. Oui il a besoin de connaître les adresses MAC afin de pouvoir identifier précisément les machines concernés, ils n'a pas besoin de connaître les adresses IP des paquets car il s'agit d'un réseau local.
+Les switchs et les hubs interviennent sur les couches liaisons.
+
+4. Le switch permet d'envoyer les paquets à la machine qui est concerné uniquement, il évite ainsi les collisions et les erreurs.
+
+5. Tous le monde reçoit les pings et tout le monde répond, celà s'appelle un Broadcast.
+
+============ROUTEUR===============
+ 
+6. Le ping passe par le routeur. L'adresse MAC source de la trame reçu est l'adresse MAC du routeur du côté de 192.168.1.0/24. L'adresse MAC de destination de la trame envoyée est l'adresse MAC du routeur du côté de 192.168.5.0/24.
+
+7. (voir PDF)
+
+8. Le ping ne passe pas par le routeur, mais tout le reste du réseau dans 192.168.5.0/24 (le routeur inclu) reçoit et répond au ping.
+
+9. Le ping broadcast est impossible vers un autre réseau. Cependant, le routeur répond au ping à la place.
+
+10. Le ping de broadcast destiné au réseau 192.168.5.0/24 arrive à destination des postes du réseau. Les adresses IP ne changent pas. L'option est désactivé par défaut pour éviter la surcharge réseau et pour la sécurité.
+
+11. Unicast : 1 machine vers 1 machine.
+    Diffusion limitée : Broadcast uniquement sur le réseau actuel.
+    Diffusion dirigée : Broadcast redirigée vers d'autres réseau via le routeur.  
+
+
+12. Un routeur ne transmet jamais les diffusions limitées (même reseaux)
+Un routeur transmet les unicast => diffusion dirigés 
+			@src       @dst
+	Mais pour des raisons de securité, ils sont en général configuré pour bloquer des diffusions dirigés
+
+===============ARP===============
+
+1. arp -s 192.168.5.59 98:90:96:bb:7f:ee
+
+2. Le ping se dirige vers voisin 1 au lieu de voisin 2. Voisin 2 ne répond pas au ping puisque qu'il n'est normalement pas destiné à lui. Le cache ARP permet de savoir a quelle adresse phisique correspond une adresse IP, pour pouvoir compléter l'adresse de destination dans la trame.
+
+3. 
+
+
