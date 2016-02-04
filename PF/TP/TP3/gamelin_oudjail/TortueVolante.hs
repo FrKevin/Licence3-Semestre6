@@ -64,14 +64,12 @@ filtreSymbolesTortue c m = [s | s <- m, s `elem` symbolesTortue c]
 
 
 interpreteSymbole :: Config -> EtatDessin -> Symbole -> EtatDessin
-interpreteSymbole cfg (et:ets,p:ps) s | s == '['  = (et:et:ets, p:p:ps)
-                                      | s == ']'  = (ets, p:ps)
-                                      | otherwise = (et':ets, (p ++ [fst et']):ps)
-    where et' | s == 'F'  = avance cfg et
-              | s == '+'  = tourneAGauche cfg et
-              | s == '-'  = tourneADroite cfg et
-              | otherwise = error "wrong symbol"
-interpreteSymbole _ _ _   = error "The parameter is not good"
+interpreteSymbole config (((p,a):xs),[]) 'F' = ((avance config (p,a):xs),[[p]])
+interpreteSymbole config (((p,a):xs),(path:xs')) 'F' = ((avance config (p,a):xs),((p:path):xs'))
+interpreteSymbole config (((p,a):xs),path) '+' = ((tourneAGauche config (p,a):xs),path)
+interpreteSymbole config (((p,a):xs),path) '-' = ((tourneADroite config (p,a):xs),path)
+interpreteSymbole config (((p,a):xs),path) '[' = (((p,a):(p,a):xs),path)
+interpreteSymbole config (((p,a):xs),path) ']' = ((xs),path)
 
 
 interpreteMot :: Config -> Mot -> Picture
@@ -145,4 +143,4 @@ dessin :: Picture
 dessin = interpreteMot (((-150,0),0),100,1,pi/3,"F+-") "F+F--F+F"
 
 main :: IO ()
-main = animate (InWindow "L-systeme" (1000, 1000) (0, 0)) white broussailleAnime
+main = animate (InWindow "L-systeme" (1000, 1000) (0, 0)) white brindilleAnime
