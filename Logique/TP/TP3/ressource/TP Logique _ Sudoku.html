@@ -1,0 +1,274 @@
+
+<!-- saved from url=(0058)http://www.thomaspietrzak.com/enseignement/logique/tp3.htm -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body><header>
+<meta charset="UTF-8">
+<title>TP Logique : Sudoku</title>
+<link rel="shortcut icon" href="http://www.thomaspietrzak.com/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="./TP Logique _ Sudoku_files/style.css">
+<meta name="keywords" content="electronique, microcontroleurs, mcu, stm32, stm32f4, tutoriel, uc-sdk">
+</header>
+
+<div id="header">
+<h1>TP Logique : Sudoku</h1>
+<h2>Licence 3 Informatique</h2>
+</div>
+<div id="contenu">
+
+<div class="paragraph">Cette fois nous allons nous attaquer à un jeu, un classique des TP Prolog : le fameux Sudoku. Vous trouverez sans doute des implémentations sur internet, mais elles ne sont pas détaillées et en général elles ne vous aideront pas à comprendre ce qui se passe. Je vous propose donc de suivre ce TP étape par étape, et la résolution des Sudoku par Prolog n'aura plus aucun secret pour vous.</div>
+
+
+<div class="tdm">
+<h3>Table des Matières</h3>
+<ul class="tdmlist">
+<li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp3.htm#introduction">Introduction</a></li>
+<li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp3.htm#structure">Vérification de la structure</a></li>
+<li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp3.htm#domaine">Vérification du domaine</a></li>
+<li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp3.htm#colonnes">Vérification des colonnes</a></li>
+<li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp3.htm#carres">Vérification des carrés</a></li>
+<li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp3.htm#solution">Solution</a></li>
+</ul>
+</div>
+
+
+
+<a name="introduction"><h3>Introduction</h3>
+
+<div class="paragraph">Pour ceux qui ne connaissent pas le Sudoku, il s'agit d'un puzzle consistant à remplir une grille avec des chiffres. Les chiffres ne peuvent cependant pas être choisis au hasard, il faut respecter certaines règles :</div>
+<ul>
+<li>Chaque chiffre n'apparait qu'une seule fois par ligne.</li>
+<li>Chaque chiffre n'apparait qu'une fois par colonne.</li>
+<li>Chaque chiffre n'apparait qu'une seule fois par carré.</li>
+</ul> 
+
+</a><div class="paragraph"><a name="introduction">Nous allons travailler avec les Sudoku sous leur forme la plus classique : une grille carrée de 9 cases de côté. Chaque ligne, colonne ou carré contenant donc les chiffres de 1 à 9. Il en existe des version plus simple, comme avec une grille de taille 4. Il existe des versions plus compliquées, avec une grille de taille 16 ou un cube de 9 voire 16 cases de côté ! Si vous avez du temps à perdre (c'est-à-dire après avoir fini le TP), essayez </a><a href="http://ksudoku.sourceforge.net/" target="_blank">ksudoku</a>. En attendant, voici une définition de grille sudoku en Prolog, utilisant une liste de listes :</div>
+
+<div class="code">grille([[_,_,_,_,_,_,_,_,_],
+        [_,_,_,_,_,3,_,8,5],
+        [_,_,1,_,2,_,_,_,_],
+        [_,_,_,5,_,7,_,_,_],
+        [_,_,4,_,_,_,1,_,_],
+        [_,9,_,_,_,_,_,_,_],
+        [5,_,_,_,_,_,_,7,3],
+        [_,_,2,_,1,_,_,_,_],
+        [_,_,_,_,4,_,_,_,9]]).
+</div>
+
+<div class="paragraph">Si vous essayez de visualiser cette grille dans l'interpréteur Prolog avec le but <div class="commande">grille(L).</div>, vous n'aurez pas un affichage lisible. Ça ne sera pas pratique pour vérifier si votre programme marche, ou pour avoir la solution tout simplement.</div>
+
+
+
+<div class="question">
+Définissez le prédicat <div class="commande">printline/1</div> qui affiche une ligne de grille Sudoku, représentée par une liste de nombres. Nous pouvons utiliser le prédicat <div class="commande">integer/1</div> pour déterminer si un élément est un nombre ou une variable non instanciée, let les prédicats <div class="commande">write/1</div> et <div class="commande">writeln/1</div> pour l'affichage.
+<h5>Exemple</h5>
+<div class="code">?- printline([_,_,_,_,_,3,_,8,5]).
+| | | | | |3| |8|5|
+true.</div>
+</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">print/1</div> qui affiche une grille Sudoku complète.
+<h5>Exemple</h5>
+<div class="code">?- grille(L), print(L).
+| | | | | | | | | |
+| | | | | |3| |8|5|
+| | |1| |2| | | | |
+| | | |5| |7| | | |
+| | |4| | | |1| | |
+| |9| | | | | | | |
+|5| | | | | | |7|3|
+| | |2| |1| | | | |
+| | | | |4| | | |9|
+L = [[_G56040, _G56043, _G56046, _G56049, _G56052, _G56055, _G56058, _G56061|...], 
+[_G56070, _G56073, _G56076, _G56079, _G56082, 3, _G56088|...], 
+[_G56100, _G56103, 1, _G56109, 2, _G56115|...], [_G56130, _G56133, _G56136, 5, _G56142|...], 
+[_G56160, _G56163, 4, _G56169|...], [_G56190, 9, _G56196|...], [5, _G56223|...], 
+[_G56250|...], [...|...]].</div>
+</div>
+
+<a name="structure"><h3>Vérifications de la structure</h3>
+
+<div class="paragraph">Pour résoudre notre Sudoku, il faut tout d'abord vérifier que le format de la table est correct.</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">bonnelongueur/2</div> qui vérifie qu'une liste a bien une longueur donnée.
+<h5>Exemple</h5>
+<div class="code">?- bonnelongueur([_,_,_,_,_,3,_,8,5], 9).
+true.</div>
+</div>
+
+<div class="question">
+Définissez le prédicat <div class="commande">bonnetaille/2</div> qui vérifie que chaque ligne d'une table a bien la bonne dimension.
+<h5>Exemple</h5>
+<div class="code">?- bonnetaille([[1,2,3],[4,5,6]], 3).
+true.</div>
+</div>
+
+</a><a name="domaine"><h3>Vérifications du domaine</h3>
+
+<div class="paragraph">Nous devons maintenant contraindre les valeurs de chaque case à être bien entre 1 et 9. Le problème a l'air simple au premier abord, il suffirait d'écrire quelque chose du genre :</div>
+
+<div class="code">verifier([]).
+verifier([X | L]) :- X &gt;= 1, X =&lt; 9, verifier(L).</div>
+
+<div class="paragraph">On peut vérifier que lorsque l'on donne une liste de nombres, ce prédicat vérifie bien si tous les nombres de la liste donnée sont bien entre 1 et 9 :</div>
+
+<div class="code">?- verifier([1,2,3]).
+true.
+?- verifier([1,42,3]).
+false.</div>
+
+<div class="paragraph">Le problème que nous allons rencontrer est que nous cherchons à trouver des nombres manquants, donc tous les éléments de la liste ne seront pas instanciés. Dans ce cas si nous essayons quelque chose de ce genre, nous aurons un souci :</div> 
+<div class="code">[debug]  ?- verifier([1,X,3]).
+ERROR: &gt;=/2: Arguments are not sufficiently instantiated
+   Exception: (8) _G56315&gt;=1 ? abort
+% Execution Aborted</div>
+
+<div class="paragraph">Ce message barbare nous explique que le prédicat <div class="commande">&gt;=</div> a besoin de paramètres instanciés. En effet : comment peut-on comparer deux valeurs si il nous en manque une ? Le problème est que Prolog ne sait pas définit les valeur possibles pour la variable. Quand il va chercher à unifier et donc retourner une valeur pour <div class="commande">X</div>, il ne saura pas comment les choisir. Nous aurions voulu que Prolog nous propose les solutions <div class="commande">X=1</div>, <div class="commande">X=2</div>, …, <div class="commande">X=9</div>.</div>
+
+La solution est la librairie <div class="commande">clpfd</div> (Constraint Logic Programming over Finite Domains), qui permet de manipuler des domaines finis. Nous chargerons cette librairie avec cette commande :
+
+<div class="code">:- use_module(library(clpfd)).</div>
+
+<div class="paragraph">Grâce à cette librairie, nous pouvons à la fois vérifier le domaine d'une valeur et spécifier le domaine d'une variable.</div>
+
+<div class="code">?- 4 in 1..9.
+true.
+
+?- 42 in 1..9.
+false.
+
+?- X in 1..9.
+X in 1..9.
+
+?- [1,2,3,4]&nbsp;ins 1..9.
+true.
+
+?- [1,2,3,4,42]&nbsp;ins 1..9.
+false.
+
+?- [1,2,3,X,3]&nbsp;ins 1..9.
+X in 1..9.
+
+?- [1,2,3,X,42]&nbsp;ins 1..9.
+false.</div>
+
+<div class="paragraph">La librairie <div class="commande">clpfd</div> permet de faire des manipulations sur ces domaines. Dans notre cas nous souhaitons aurons besoin de vérifier que des éléments d'une liste sont tous différents. C'est le rôle du prédicat <div class="commande">all_distinct/1</div>.</div>
+
+<div class="code">?- all_distinct([1,2,3,4]).
+true.
+
+?- all_distinct([2,2,3,4]).
+false.</div>
+
+<div class="question">
+Notre grille de Sudoku est une liste de lignes, chaque ligne étant une liste de nombres. Définissez le prédicat <div class="commande">verifie/1</div> qui prend une grille en paramètre et vérifie que chaque élément de chaque ligne est compris entre 1 et 9 et distinct des autres.
+<h5>Exemple</h5>
+<div class="code">?- verifie([[1,2,3,4], [5,6,7,8]]).
+true.
+
+?- verifie([[2,2,3,4], [5,6,7,8]]).
+false.
+
+?- verifie([[10,2,3,4], [5,6,7,8]]).
+false.</div>
+</div>
+
+</a><a name="colonnes"><h3>Vérifications des colonnes</h3>
+
+<div class="paragraph">Les lignes étaient faciles à vérifier car les données étaient disposées de manière adéquate. Pour vérifier les colonnes nous aurons besoin de transposer la matrice. Nous allons procéder en deux étapes. Je vous conseille de sortir une feuille de papier pour bien comprendre ce qu'il faut faire. N'ayez pas honte, moi-même je l'ai fait.</div>
+
+<div class="question">
+Écrivez le prédicat <div class="commande">eclate/3</div> qui prend en paramètre une liste <div class="commande">L</div> et une liste de liste <div class="commande">L'</div>, et qui ajoute chaque élément de la <div class="commande">L</div> aux listes de <div class="commande">L'</div>.
+<h5>Exemple</h5>
+<div class="code">?- eclate([1,2,3], [[4,7],[5,8],[6,9]], L).
+L = [[1, 4, 7], [2, 5, 8], [3, 6, 9]].</div>
+</div>
+
+<div class="question">
+Écrivez le prédicat <div class="commande">transp/2</div> qui prend en paramètre une matrice sous forme de liste de listes et retourne sa transposée.
+<h5>Exemple</h5>
+<div class="code">?- transp([[1,2,3],[4,5,6],[7,8,9]], L).
+L = [[1, 4, 7], [2, 5, 8], [3, 6, 9]].</div>
+</div>
+
+</a><a name="carres"><h3>Vérifications des carrés</h3>
+<div class="paragraph">La dernière vérification qu'il nous reste à faire concerne les carrés. La grille de Sudoku de taille 9 contient 9 carrés de taille 3, illustrés ci-dessous. Par exemple <div class="commande">[A1,B1,C1,A2,B2,C2,A3,B3,C3]</div> est un carré. Nous allons devoir créer une liste des 9 carrés à partir de la liste des lignes. Nous procéderons de nouveau en deux temps.</div>
+
+<table style="margin-left: auto; margin-right: auto;">
+<tbody><tr><td class="cell1">A1</td><td class="cell1">B1</td><td class="cell1">C1</td><td class="cell2">D1</td><td class="cell2">E1</td><td class="cell2">F1</td><td class="cell1">G1</td><td class="cell1">H1</td><td class="cell1">I1</td></tr>
+<tr><td class="cell1">A2</td><td class="cell1">B2</td><td class="cell1">C2</td><td class="cell2">D2</td><td class="cell2">E2</td><td class="cell2">F2</td><td class="cell1">G2</td><td class="cell1">H2</td><td class="cell1">I2</td></tr>
+<tr><td class="cell1">A3</td><td class="cell1">B3</td><td class="cell1">C3</td><td class="cell2">D3</td><td class="cell2">E3</td><td class="cell2">F3</td><td class="cell1">G3</td><td class="cell1">H3</td><td class="cell1">I3</td></tr>
+<tr><td class="cell2">A4</td><td class="cell2">B4</td><td class="cell2">C4</td><td class="cell1">D4</td><td class="cell1">E4</td><td class="cell1">F4</td><td class="cell2">G4</td><td class="cell2">H4</td><td class="cell2">I4</td></tr>
+<tr><td class="cell2">A5</td><td class="cell2">B5</td><td class="cell2">C5</td><td class="cell1">D5</td><td class="cell1">E5</td><td class="cell1">F5</td><td class="cell2">G5</td><td class="cell2">H5</td><td class="cell2">I5</td></tr>
+<tr><td class="cell2">A6</td><td class="cell2">B6</td><td class="cell2">C6</td><td class="cell1">D6</td><td class="cell1">E6</td><td class="cell1">F6</td><td class="cell2">G6</td><td class="cell2">H6</td><td class="cell2">I6</td></tr>
+<tr><td class="cell1">A7</td><td class="cell1">B7</td><td class="cell1">C7</td><td class="cell2">D7</td><td class="cell2">E7</td><td class="cell2">F7</td><td class="cell1">G7</td><td class="cell1">H7</td><td class="cell1">I7</td></tr>
+<tr><td class="cell1">A8</td><td class="cell1">B8</td><td class="cell1">C8</td><td class="cell2">D8</td><td class="cell2">E8</td><td class="cell2">F8</td><td class="cell1">G8</td><td class="cell1">H8</td><td class="cell1">I8</td></tr>
+<tr><td class="cell1">A9</td><td class="cell1">B9</td><td class="cell1">C9</td><td class="cell2">D9</td><td class="cell2">E9</td><td class="cell2">F9</td><td class="cell1">G9</td><td class="cell1">H9</td><td class="cell1">I9</td></tr>
+</tbody></table>
+
+<div class="question">
+Écrivez le prédicat <div class="commande">decoupe/4</div> qui prend en paramètre trois lignes, et qui retourne une liste de carrés. chacun des carrés contiendra 3 éléments successifs de chacune des 3 lignes.
+<h5>Exemple</h5>
+<div class="code">?- decoupe([1,2,3,4,5,6],[10,11,12,13,14,15],[19,20,21,22,23,24],L).
+L = [[1, 2, 3, 10, 11, 12, 19, 20, 21], [4, 5, 6, 13, 14, 15, 22, 23, 24]].</div>
+</div>
+
+<div class="question">
+Écrivez le prédicat <div class="commande">carres/2</div> qui prend en paramètre une matrice sous forme de liste de listes et retourne la liste de ses carrés.
+<h5>Exemple</h5>
+<div class="code">?- carres([[1,2,3,4,5,6],[7,8,9,10,11,12],[13,14,15,16,17,18]], L).
+L = [[1, 2, 3, 7, 8, 9, 13, 14, 15], [4, 5, 6, 10, 11, 12, 16, 17, 18]].</div>
+</div>
+
+
+</a><a name="solution"><h3>Solution</h3>
+<div class="paragraph">Nous avons maintenant tout ce dont nous avons besoin pour résoudre un sudoku.</div>
+
+<div class="question">
+Écrivez le prédicat <div class="commande">solution/1</div> qui prend en paramètre une grille de Sudoku, sous forme de liste de liste dont certains éléments ne sont pas instanciés, et qui va unifier toutes ces variables en respectant les contraintes définies par les règles du jeu :
+<ul>
+<li>Toutes les lignes sont de longueur 9.</li>
+<li>Toutes les colonnes sont de longueur 9.</li>
+<li>Chaque ligne contient des valeurs de 1 à 9 différentes.</li>
+<li>Chaque colonne contient des valeurs de 1 à 9 différentes.</li>
+<li>Chaque carré contient des valeurs de 1 à 9 différentes.</li>
+</ul>
+</div>
+
+<div class="paragraph">Vous pouvez vérifier que votre algorithme fonctionne avec ce but :</div>
+
+<div class="code">grille(L), solution(L), print(L).</div>
+
+</a><a name="variantes"><h3>Variantes</h3>
+
+Si vous obtenez la bonne réponse : félicitations, vous avez gagné le droit de vous amuser un peu. Je vous propose d'implémenter ces variantes :
+<div class="question">Crossdoku : ajout de la contrainte que les deux diagonales doivent avoir des valeurs différentes.</div>
+
+<div class="question">Minidoku : le sudoku de taille 4.
+<div class="code">grillehex([[2,_,_,3],
+           [_,_,2,_],
+           [_,4,1,_],
+           [1,_,_,_]]).</div></div>
+<div class="question">Maxidoku : le sudoku de taille 16.
+<div class="code">grillehex([[b,2,_,7,_,_,_,f,6,e,_,_,_,3,_,d],
+           [_,_,_,9,b,_,2,_,_,_,_,_,f,1,_,6],
+           [_,a,_,c,_,_,7,_,4,_,8,_,_,_,e,_],
+           [_,8,_,3,_,_,1,_,_,_,f,c,a,_,4,2],
+           [_,_,e,_,_,_,_,_,1,6,a,_,_,_,3,_],
+           [3,_,_,_,_,_,_,_,_,4,_,f,8,_,6,b],
+           [_,_,_,d,2,_,_,_,_,b,_,_,7,4,_,_],
+           [_,b,8,4,0,_,_,d,7,_,9,3,e,_,_,_],
+           [_,_,_,f,3,7,_,4,5,_,_,9,0,d,c,_],
+           [_,_,c,8,_,_,a,_,_,_,_,b,4,_,_,_],
+           [4,9,_,5,e,_,d,_,_,_,_,_,_,_,_,a],
+           [_,d,_,_,_,6,c,1,_,_,_,_,_,7,_,_],
+           [9,1,_,e,7,4,_,_,_,f,_,_,3,_,d,_],
+           [_,3,_,_,_,9,_,2,_,1,_,_,5,_,0,_],
+           [f,_,4,b,_,_,_,_,_,3,_,d,1,_,_,_],
+           [5,_,d,_,_,_,f,e,9,_,_,_,2,_,b,4]]).</div></div>
+<div class="question">3Ddku : le sudoku 3D. Commencez par un cube de taille 4. :)</div>
+
+</a></div><a name="variantes">
+
+
+</a></body></html>
