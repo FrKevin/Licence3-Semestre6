@@ -99,6 +99,6 @@ Voici un résumé de notre apprentissage sur Pharo :
     Wizard Battle arena, jeux 2D SDL
     cdb : structure de données [Lien crypto](http://cr.yp.to/cdb.html)
 		
-### 3	vendredi 29 jan :
+### vendredi 5 fév:
 	Compréhension du projet cdb
 	http://www.unixuser.org/~euske/doc/cdbinternals/
