@@ -1,7 +1,7 @@
-% Import
+
+/* Import */
 :- use_module(library(clpfd)).
 
-% ----------------------------
 grille([[_,_,_,_,_,_,_,_,_],
         [_,_,_,_,_,3,_,8,5],
         [_,_,1,_,2,_,_,_,_],
@@ -12,7 +12,6 @@ grille([[_,_,_,_,_,_,_,_,_],
         [_,_,2,_,1,_,_,_,_],
         [_,_,_,_,4,_,_,_,9]]).
 
-printline([]) :- writeln('|'), !.
 printline([X | L]) :- integer(X) ,!, write('|'), write(X) , printline(L).
 printline([_ | L]) :- !, write('|'), write(' '), printline(L).
 
@@ -35,3 +34,19 @@ eclate([X1 | L], [X2 | L2], [X3 | R]) :- eclate(L, L2, R), X3 = [X1 | X2].
 % TODO
 transp([], []).
 transp([L | G]) :-
+
+
+bonnetaille([], _) :- !.
+bonnetaille([X|R], Taille) :- !, bonnelongueur(X, Taille), bonnetaille(R, Taille).
+
+/*
+  1er verssion
+  verifier([]).
+  verifier([X | L]) :- X>= 1, X =< 9, verifier(L).
+*/
+
+/* 2e verssion */
+verifie([]) :- !.
+verifie([X|L]) :- !, X ins 1..9, all_distinct(X), verifie(L).
+
+eclate([], L, L) :- !.
