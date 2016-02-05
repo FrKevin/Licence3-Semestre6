@@ -33,5 +33,5 @@ eclate([], R, R).
 eclate([X1 | L], [X2 | L2], [X3 | R]) :- eclate(L, L2, R), X3 = [X1 | X2].
 
 % TODO
-transp([], []).
-transp([L | G]) :-
+transp([], []) :- !.
+transp([L | G], R) :- eclate(L, T, R), transp(G, T).

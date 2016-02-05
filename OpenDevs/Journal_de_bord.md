@@ -101,3 +101,4 @@ Voici un résumé de notre apprentissage sur Pharo :
 		
 ### 3	vendredi 29 jan :
 	Compréhension du projet cdb
+	http://www.unixuser.org/~euske/doc/cdbinternals/

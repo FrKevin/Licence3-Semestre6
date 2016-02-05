@@ -1,3 +1,4 @@
+
 /* Import */
 :- use_module(library(clpfd)).
 
@@ -11,15 +12,29 @@ grille([[_,_,_,_,_,_,_,_,_],
         [_,_,2,_,1,_,_,_,_],
         [_,_,_,_,4,_,_,_,9]]).
 
-printline([]) :- writeln('|'), !.
-printline([X|R]) :- integer(X), !, write(' | '),  write(X), printline(R).
-printline([_|R]) :- !, write(' '), printline(R).
+printline([X | L]) :- integer(X) ,!, write('|'), write(X) , printline(L).
+printline([_ | L]) :- !, write('|'), write(' '), printline(L).
+
 
 print([]) :- !.
-print([X|R]) :- !,printline(X), print(R).
+print([X | L]) :- !, printline(X), print(L).
 
 bonnelongueur([], 0) :- !.
-bonnelongueur( [_|R], Taille) :- bonnelongueur(R, Tmp), tmp is Taille + 1.
+bonnelongueur([_ | L], R) :- bonnelongueur(L, TMP), R is TMP + 1.
+
+bonnetaille([], _) :- !.
+bonnetaille([L | G], R) :- !, bonnelongueur(L, R), bonnetaille(G, R).
+
+verifie([]) :- !.
+verifie([X | L]) :- !, X ins 1..9, all_distinct(X), verifie(L).
+
+eclate([], R, R).
+eclate([X1 | L], [X2 | L2], [X3 | R]) :- eclate(L, L2, R), X3 = [X1 | X2].
+
+% TODO
+transp([], []).
+transp([L | G]) :-
+
 
 bonnetaille([], _) :- !.
 bonnetaille([X|R], Taille) :- !, bonnelongueur(X, Taille), bonnetaille(R, Taille).
@@ -34,4 +49,4 @@ bonnetaille([X|R], Taille) :- !, bonnelongueur(X, Taille), bonnetaille(R, Taille
 verifie([]) :- !.
 verifie([X|L]) :- !, X ins 1..9, all_distinct(X), verifie(L).
 
-eclate([], L, L) :- !. 
+eclate([], L, L) :- !.
