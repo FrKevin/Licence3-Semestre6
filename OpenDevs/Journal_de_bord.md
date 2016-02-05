@@ -97,7 +97,7 @@ Voici un résumé de notre apprentissage sur Pharo :
 	2 projets nous ont intéréssé :
 
     Wizard Battle arena, jeux 2D SDL
-    cdb : structure de données (lien : cr.yp.to/djbdns.html)
+    cdb : structure de données [Lien crypto](cr.yp.to/cdb.html)
 
 ### 3	vendredi 29 jan :
 	Compréhension du projet cdb
