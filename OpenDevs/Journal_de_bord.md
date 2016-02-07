@@ -92,13 +92,16 @@ Voici un résumé de notre apprentissage sur Pharo :
 
 ----------
 
-
-#### vendredi 22 jan: Choix des projets :
+###### vendredi 22 jan: Choix des projets :
 	2 projets nous ont intéréssé :
 
     Wizard Battle arena, jeux 2D SDL
     cdb : structure de données [Lien crypto](http://cr.yp.to/cdb.html)
 
-#### 3	vendredi 29 jan :
+###### vendredi 29 jan :
+
 	Compréhension du projet cdb
+
+###### vendredi 05 fevrier
+	envoie d'un mmail sur la mail list de user pharo
 	http://www.unixuser.org/~euske/doc/cdbinternals/
