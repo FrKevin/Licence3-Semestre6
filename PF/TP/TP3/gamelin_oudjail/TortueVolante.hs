@@ -1,4 +1,4 @@
-module Tortue where
+module TortueVolante where
 import  Graphics.Gloss
 import  LSysteme
 
@@ -10,7 +10,7 @@ type Config = (EtatTortue -- État initial de la tortue
               ,Float      -- Angle pour les rotations de la tortue
               ,[Symbole]) -- Liste des symboles compris par la tortue
 
-type EtatDessin = (EtatTortue, Path)
+type EtatDessin = ([EtatTortue], [Path])
 
 iEtat :: EtatTortue
 iEtat = ((-150.0, 0.0), 0.0)
@@ -25,7 +25,7 @@ iAngle :: Float
 iAngle = pi/3
 
 iSymboles :: [Symbole]
-iSymboles = "F+-"
+iSymboles = "F+-[]"
 
 iConfig :: Config
 iConfig = (iEtat, iLongueur, iFacteurE, iAngle, iSymboles)
@@ -62,18 +62,26 @@ tourneADroite c (point, cap) = (point, cap')
 filtreSymbolesTortue :: Config -> Mot -> Mot
 filtreSymbolesTortue c m = [s | s <- m, s `elem` symbolesTortue c]
 
+
 interpreteSymbole :: Config -> EtatDessin -> Symbole -> EtatDessin
-interpreteSymbole cfg (etat, path) s = (etat', path ++ [fst etat'])
-    where etat' | s == 'F'  = avance cfg etat
-                | s == '+'  = tourneAGauche cfg etat
-                | s == '-'  = tourneADroite cfg etat
-                | otherwise = error "wrong symbol"
+interpreteSymbole config (((p,a):xs),[]) 'F' = ((avance config (p,a):xs),[[p]])
+interpreteSymbole config (((p,a):xs),(path:xs')) 'F' = ((avance config (p,a):xs),((p:path):xs'))
+interpreteSymbole config (((p,a):xs),path) '+' = ((tourneAGauche config (p,a):xs),path)
+interpreteSymbole config (((p,a):xs),path) '-' = ((tourneADroite config (p,a):xs),path)
+interpreteSymbole config (((p,a):xs),path) '[' = (((p,a):(p,a):xs),path)
+interpreteSymbole config (((p,a):xs),path) ']' = ((xs),path)
+
 
 interpreteMot :: Config -> Mot -> Picture
-interpreteMot c m = line (snd (foldl (interpreteSymbole c) iE mF))
-    where iP = fst (etatInitial c)
-          iE = (etatInitial c, [iP])
+interpreteMot c m = line (head (snd (foldl (interpreteSymbole c) iE mF)))
+    where iE = ([etatInitial c], [[fst (etatInitial c)]])
           mF = filtreSymbolesTortue c m
+
+etatTest :: EtatDessin
+etatTest = ([etatInitial iConfig], [[fst (etatInitial iConfig)]])
+
+testInterpreteSymb :: EtatDessin
+testInterpreteSymb = interpreteSymbole iConfig etatTest 'm'
 
 vonKoch1 :: LSysteme
 vonKoch1 = lsysteme "F" regles
@@ -97,6 +105,16 @@ dragon = lsysteme "FX" regles
           regles 'Y' = "-FX-Y"
           regles  s  = [s]
 
+brindille :: LSysteme
+brindille = lsysteme "F" regles
+    where regles 'F' = "F[-F]F[+F]F"
+          regles  s  = [s]
+
+broussaille :: LSysteme
+broussaille = lsysteme "F" regles
+    where regles 'F' = "FF-[-F+F+F]+[+F-F-F]"
+          regles  s  = [s]
+
 lsystemeAnime :: LSysteme -> Config -> Float -> Picture
 lsystemeAnime ls c t = interpreteMot conf (ls !! enieme)
   where enieme = round t `mod` 10
@@ -115,8 +133,14 @@ hilbertAnime = lsystemeAnime hilbert (((-400, -400), 0), 800, 1/2, pi/2, "F+-")
 dragonAnime :: Float -> Picture
 dragonAnime = lsystemeAnime dragon (((0, 0), 0), 50, 1, pi/2, "F+-")
 
+brindilleAnime :: Float -> Picture
+brindilleAnime = lsystemeAnime brindille (((0, -400), pi/2), 800, 1/3, 25*pi/180, "F+-[]")
+
+broussailleAnime :: Float -> Picture
+broussailleAnime = lsystemeAnime broussaille (((0, -400), pi/2), 500, 2/5, 25*pi/180, "F+-[]")
+
 dessin :: Picture
 dessin = interpreteMot (((-150,0),0),100,1,pi/3,"F+-") "F+F--F+F"
 
 main :: IO ()
-main = animate (InWindow "L-systeme" (1000, 1000) (0, 0)) white hilbertAnime
+main = animate (InWindow "L-systeme" (1000, 1000) (0, 0)) white brindilleAnime
