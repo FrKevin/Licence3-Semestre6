@@ -1,0 +1,21 @@
+/* Entête */
+digraph "complet3" {
+    node [fontname="DejaVu-Sans", shape=circle]
+
+    /* Liste des nœuds */
+    a
+    b
+    c
+    d
+    e
+    f
+    g
+
+    /* Liste des arcs */
+    d -> b
+    d -> f
+    b -> a
+    b -> c
+    f -> e
+    f -> g
+}

@@ -29,9 +29,18 @@ bonnetaille([L | G], R) :- !, bonnelongueur(L, R), bonnetaille(G, R).
 verifie([]) :- !.
 verifie([X | L]) :- !, X ins 1..9, all_distinct(X), verifie(L).
 
-eclate([], R, R).
-eclate([X1 | L], [X2 | L2], [X3 | R]) :- eclate(L, L2, R), X3 = [X1 | X2].
+eclate([], R, R) :- !.
+eclate([X1 | L], [X2 | L2], [X3 | R]) :- !, eclate(L, L2, R), X3 = [X1 | X2].
 
 % TODO
-transp([], []) :- !.
-transp([L | G], R) :- eclate(L, T, R), transp(G, T).
+%transp([], []) :- !.
+%transp([L | G], R) :- transp(G, R2), eclate(L, T, R2).
+
+decoupe([], [], [], []) :- !.
+decoupe([Xa], [Ya], [Za], [[Xa,Ya,Za]]) :- !. % Optionnel
+decoupe([Xa,Xb], [Ya,Yb], [Za,Zb], [[Xa,Xb,Ya,Yb,Za,Zb]]) :- !. % Optionnel
+decoupe([Xa,Xb,Xc|XS], [Ya,Yb,Yc|YS], [Za,Zb,Zc|ZS], [[Xa,Xb,Xc,Ya,Yb,Yc,Za,Zb,Zc]|RS]) :- !, decoupe(XS,YS,ZS,RS).
+
+% question 9
+carres([], []) :- !.
+carres([X1,X2,X3|XS], [R1,R2|RS]) :- !, decoupe(X1, X2, X3, [R1,R2]), carres(XS, RS).
