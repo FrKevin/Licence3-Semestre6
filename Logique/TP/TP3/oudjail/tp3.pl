@@ -45,4 +45,10 @@ carres([], []) :- !.
 carres([X1,X2,X3|XS], [R1,R2|RS]) :- !, decoupe(X1, X2, X3, [R1,R2]), carres(XS, RS).
 
 % question 10
+% grille(X): On vérifique que X est une grille (optionel).
+% verifie(X): Toutes les lignes sont de longueur 9.
+% transp(X,Y), verifie(Y): Toutes les colonnes sont de longueur 9.
+% Chaque ligne contient des valeurs de 1 à 9 différentes.
+% Chaque colonne contient des valeurs de 1 à 9 différentes.
+% carres(Y, Z), verifie(Z): chaque carré contient des valeurs de 1 à 9 différentes.
 solution(X) :- grille(X), verifie(X), transp(X,Y), verifie(Y), carres(Y, Z), verifie(Z).
