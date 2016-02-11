@@ -30,11 +30,12 @@ verifie([]) :- !.
 verifie([X | L]) :- !, X ins 1..9, all_distinct(X), verifie(L).
 
 eclate([], R, R) :- !.
+eclate([X | L], [], [[X] | R]) :- !, eclate(L, [], R).
 eclate([X1 | L], [X2 | L2], [X3 | R]) :- !, eclate(L, L2, R), X3 = [X1 | X2].
 
 % TODO
-%transp([], []) :- !.
-%transp([L | G], R) :- transp(G, R2), eclate(L, T, R2).
+transp([], []) :- !.
+transp([X | L], R) :- transp(L, L1), eclate(X, L1, R).
 
 decoupe([], [], [], []) :- !.
 decoupe([Xa], [Ya], [Za], [[Xa,Ya,Za]]) :- !. % Optionnel
