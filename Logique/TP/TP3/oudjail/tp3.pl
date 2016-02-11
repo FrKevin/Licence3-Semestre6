@@ -32,9 +32,8 @@ verifie([X | L]) :- !, X ins 1..9, all_distinct(X), verifie(L).
 eclate([], R, R) :- !.
 eclate([X1 | L], [X2 | L2], [X3 | R]) :- !, eclate(L, L2, R), X3 = [X1 | X2].
 
-% TODO
-%transp([], []) :- !.
-%transp([L | G], R) :- transp(G, R2), eclate(L, T, R2).
+% Question 6
+transp(X, Y) :- transpose(X, Y).
 
 decoupe([], [], [], []) :- !.
 decoupe([Xa], [Ya], [Za], [[Xa,Ya,Za]]) :- !. % Optionnel
@@ -44,3 +43,6 @@ decoupe([Xa,Xb,Xc|XS], [Ya,Yb,Yc|YS], [Za,Zb,Zc|ZS], [[Xa,Xb,Xc,Ya,Yb,Yc,Za,Zb,Z
 % question 9
 carres([], []) :- !.
 carres([X1,X2,X3|XS], [R1,R2|RS]) :- !, decoupe(X1, X2, X3, [R1,R2]), carres(XS, RS).
+
+% question 10
+solution(X) :- grille(X), verifie(X), transp(X,Y), verifie(Y), carres(Y, Z), verifie(Z).
