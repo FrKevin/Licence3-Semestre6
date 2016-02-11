@@ -16,34 +16,43 @@ foldrArbre:: (v -> a -> a -> a) -> a -> Arbre c v -> a
 foldrArbre _  acc Feuille = acc
 foldrArbre op acc (Noeud v c g d) = op v (foldrArbre op acc g) (foldrArbre op acc d)
 
-hauteur_rec:: Arbre c v -> Int
-hauteur_rec Feuille = 0
-hauteur_rec (Noeud _ _ g d) = 1 + max (hauteur_rec g) (hauteur_rec d)
+hauteurRec:: Arbre c v -> Int
+hauteurRec Feuille = 0
+hauteurRec (Noeud _ _ g d) = 1 + max (hauteurRec g) (hauteurRec d)
 
-hauteur_f :: Arbre c a -> Int
-hauteur_f = foldrArbre (\ _ y z -> 1 + max y z) 0
+hauteurF :: Arbre c a -> Int
+hauteurF = foldrArbre (\ _ y z -> 1 + max y z) 0
 
-taille_rec:: Arbre c v -> Int
-taille_rec Feuille = 0
-taille_rec (Noeud _ _ g d) = 1 + (taille_rec g) + (taille_rec d)
+tailleRec:: Arbre c v -> Int
+tailleRec Feuille = 0
+tailleRec (Noeud _ _ g d) = 1 + tailleRec g + tailleRec d
 
-taille_f :: Arbre c v -> Int
-taille_f = foldrArbre (\ _ y z -> 1 + y + z) 0
+tailleF :: Arbre c v -> Int
+tailleF = foldrArbre (\ _ y z -> 1 + y + z) 0
 
 peigneGauche :: [(c,v)] -> Arbre c v
 peigneGauche [] = Feuille
-peigneGauche (x:xs) =  Noeud {valeur= snd(x), couleur= fst(x), gauche= (peigneGauche xs), droit= Feuille}
+peigneGauche (x:xs) =  Noeud {valeur= snd x, couleur= fst x, gauche= peigneGauche xs, droit= Feuille}
 
 estComplet :: Arbre c a -> Bool
 estComplet Feuille = True
-estComplet (Noeud _ _ g d) = taille_rec g == taille_rec d
+estComplet (Noeud _ _ g d) = (hauteurF g == hauteurF d) && estComplet g && estComplet d
 
+complet :: Int -> [(c, a)] -> Arbre c a
+complet 0 _ = Feuille
+
+--Q10 repeat
+repeat':: a -> [a]
+repeat'= iterate id
+
+--Q11
+listeTuple =foldr (\ x y -> ( (), x) : y) [] ['a'..]
 -- tests
-prop_hauteurPeigne_with_rec xs = length xs == hauteur_rec (peigneGauche xs)
-prop_hauteurPeigne_with_fold xs = length xs == hauteur_f (peigneGauche xs)
+prop_hauteurPeigne_with_rec xs = length xs == hauteurRec (peigneGauche xs)
+prop_hauteurPeigne_with_fold xs = length xs == hauteurF (peigneGauche xs)
 
-prop_taille_width_rec xs = length xs ==  taille_rec (peigneGauche xs)
-prop_taille_width_fold xs = length xs ==  taille_f (peigneGauche xs)
+prop_taille_width_rec xs = length xs ==  tailleRec (peigneGauche xs)
+prop_taille_width_fold xs = length xs ==  tailleF (peigneGauche xs)
 
 main :: IO ()
 main = do
