@@ -44,12 +44,17 @@ decoupe([Xa,Xb,Xc|XS], [Ya,Yb,Yc|YS], [Za,Zb,Zc|ZS], [[Xa,Xb,Xc,Ya,Yb,Yc,Za,Zb,Z
 
 % question 9
 carres([], []) :- !.
-carres([X1,X2,X3|XS], [R1,R2|RS]) :- !, decoupe(X1, X2, X3, [R1,R2]), carres(XS, RS).
-
+%carres([X1,X2,X3|XS], [R1,R2|RS]) :- !, decoupe(X1, X2, X3, [R1,R2]), carres(XS, RS).
+carres([X1,X2,X3|XS], [R1,R2,R3|RS]) :- decoupe(X1, X2, X3, [R1, R2, R3]),
+										carres(XS, RS).
 % question 10
 % verifie(X): Toutes les lignes sont de longueur 9.
 % transp(X,Y), verifie(Y): Toutes les colonnes sont de longueur 9.
 % Chaque ligne contient des valeurs de 1 à 9 différentes.
 % Chaque colonne contient des valeurs de 1 à 9 différentes.
 % carres(Y, Z), verifie(Z): chaque carré contient des valeurs de 1 à 9 différentes.
-solution(X) :- verifie(X), transp(X,Y), verifie(Y), carres(Y, Z), verifie(Z).
+%solution(X) :- verifie(X), transp(X,Y), verifie(Y), carres(X, Z), verifie(Z).
+
+solution(X) :- grille(X), verifie(X),
+				transp(X,Y), verifie(Y),
+				carres(Y, Z), verifie(Z).
