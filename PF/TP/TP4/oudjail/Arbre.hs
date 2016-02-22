@@ -124,6 +124,13 @@ arcs (Noeud _ v Feuille d@(Noeud _ vd _ _))            = (v,vd):arcs d
 arcs (Noeud _ v g@(Noeud _ vg _ _) Feuille)            = (v,vg):arcs g
 arcs (Noeud _ v g@(Noeud _ vg _ _) d@(Noeud _ vd _ _)) = (v,vg):(v,vd):arcs g ++ arcs d
 
+arcs' :: Arbre c a -> [(a,a)]
+arcs' Feuille         = []
+arcs' (Noeud _ v g d) = parser v g ++ parser v d ++ arcs' g ++ arcs' d
+  where parser _ Feuille         = []
+        parser x (Noeud _ y _ _) = [(x, y)]
+
+
 arc :: (a -> String) -> (a,a) -> String
 arc pS (v1, v2) = pS v1 ++ " -> " ++ pS v2
 
@@ -167,7 +174,7 @@ insertion v abr@(Noeud c r g d) | elementR v abr = abr
 -- Non tester
 arbresDot :: String -> [String]
 arbreDot ""      = []
-arbresDot (e:l)  = let enc l' abr = case l' of "" -> []
+arbresDot (e:l)  = let enc l' abr = case l' of ""     -> []
                                                (x:xs) -> dotise "arbre" couleurToString id insAbr : enc xs insAbr
                                                  where insAbr = insertion [x] abr
                    in enc l (Noeud N [e] Feuille Feuille)
