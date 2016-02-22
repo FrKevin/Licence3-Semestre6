@@ -3,7 +3,7 @@ digraph "complet3" {
     node [fontname="DejaVu-Sans", shape=circle]
 
     /* Liste des nœuds */
-    a
+    a [color=red, fontcolor=red]
     b
     c
     d
