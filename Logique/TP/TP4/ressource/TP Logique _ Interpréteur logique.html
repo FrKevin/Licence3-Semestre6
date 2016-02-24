@@ -1,0 +1,241 @@
+
+<!-- saved from url=(0058)http://www.thomaspietrzak.com/enseignement/logique/tp4.htm -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body><header>
+<meta charset="UTF-8">
+<title>TP Logique : Interpréteur logique</title>
+<link rel="shortcut icon" href="http://www.thomaspietrzak.com/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="./TP Logique _ Interpréteur logique_files/style.css">
+<meta name="keywords" content="electronique, microcontroleurs, mcu, stm32, stm32f4, tutoriel, uc-sdk">
+</header>
+
+<div id="header">
+<h1>TP Logique : Interpréteur logique</h1>
+<h2>Licence 3 Informatique</h2>
+</div>
+<div id="contenu">
+
+<div class="paragraph">Pour ce TP nous nous passerons de Prolog, et allons implémenter un petit interpréteur logique directement en JAVA. suivez le guide.</div>
+
+
+<div class="tdm">
+<h3>Table des Matières</h3>
+<ul class="tdmlist">
+<li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp4.htm#introduction">Introduction</a></li>
+<li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp4.htm#vl">Variables Libres</a></li>
+<li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp4.htm#subst">Substitutions</a></li>
+<li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp4.htm#fnc">Forme Normale Conjonctive</a></li>
+<li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp4.htm#verite">Table de vérité</a></li>
+<li><a href="http://www.thomaspietrzak.com/enseignement/logique/tp4.htm#dp">Davis-Puttnam</a></li>
+</ul>
+</div>
+
+
+
+<a name="introduction"><h3>Introduction</h3>
+
+</a><div class="paragraph"><a name="introduction">Vous trouverez dans </a><a href="http://www.thomaspietrzak.com/enseignement/logique/logicline.zip">cette archive</a> le squelette d'application. Il contient un lexer écrit en JFlex et un parser écrit en CUP. Souvenez-vous de vos TP d'AEL, vous pourrez examiner les fichiers .lex et .cup dans le répertoire spec si le sujet vous intéresse. Nous allons cependant nous concentrer sur le modèle sémantique. La grammaire des formules de ce langage est :
+<div class="code">formule ::= formule2 "=&gt;" formule1 	(implication)
+	| formule2 "&lt;=&gt;" formule1 	(équivalence)
+	|&nbsp;formule2 
+
+formule2 ::= formule3 "+" formule2 	(ou)
+	| formule3 "*" formule2 	(et)
+	| formule3
+
+formule3 ::= "-"" formule3 
+	| "(" formule1 ")" 		(parenthèses)
+ 	| id 				(variable)
+ 	| "T" 				(vrai)
+ 	| "F"   			(faux)</div>
+</div>
+
+<div class="question">Écrivez les classes <div class="commande">Et</div>, <div class="commande">Ou</div>, <div class="commande">Non</div>, <div class="commande">Implique</div>, <div class="commande">Equivalence</div>, <div class="commande">Constante</div> et <div class="commande">Variable</div> dans le répertoire <div class="commande">src/logicline/modeleSemantique/</div>. Pour le moment mettez un corps vide ou <div class="commande">return null;</div> pour les méthodes abstraites à implémenter. Les classes doivent donc hériter de la classe <div class="commande">Formule</div> et déclarer <div class="commande">package logicline.modeleSemantique</div> en début de fichier. Vous pouvez tenter un <div class="commande">make</div> et faire en sorte que le tout compile.</div>
+
+<div class="question">Le premier test consitera à afficher les formules propositionnelles. Pour cela il vous suffit d'implémenter la méthode <div class="commande">toString</div> dans les classes de chaque connecteur logique. En cadeau, voici des jolis caractères UTF-8 : <div class="commande">¬ ∨ ∧ ⇒ ⇔ T ⊥</div>. N'hésitez pas à afficher les parenthèses inutiles. On ne vous demande pas de faire une distinction des cas où elles sont utiles. <br>
+
+Vous pouvez maintenant tester votre programme avec la commande <div class="commande">./execSurFichierAnalyseurSyntaxique.sh test/formules</div>. Vous devriez obtenir ceci :<h5>Exemple</h5>
+<div class="code">./execSurFichierAnalyseurSyntaxique.sh test/formules
+(A) ∨ (¬(B))
+((a) ⇒ (b)) ⇒ (((b) ⇒ (c)) ⇒ ((a) ⇒ (c)))
+(¬((A) ∨ (B))) ⇔ ((¬(A)) ∧ (¬(B)))</div>
+Vous pouvez aussi utiliser l'interpréteur en ligne pour des tests rapides : <div class="commande">./execEnLigneAnalyseurSyntaxique.sh</div>. Validez votre phrase avec <div class="commande">Ctrl + D</div> deux fois.
+</div>
+
+<a name="vl"><h3>Variables Libres</h3>
+
+</a><div class="paragraph"><a name="vl">Nous aurons besoin par la suite de connaître les variables libres d'une formule. Nous représenterons un ensemble de variables libres par un <div class="commande">Set&lt;String&gt;</div>, que vous instancerez avec des </a><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html" target="_blank">HashSet</a>. Dans notre cas aucun connecteur ne lie de variable, donc toutes les variables sont libres.</div>
+
+<div class="question">Implémentez la méthode <div class="commande">variablesLibres</div> pour chaque type de formule. Pour les connecteurs ayant deux sous-formules, vous pouvez utiliser la méthode <div class="commande"><a href="http://docs.oracle.com/javase/7/docs/api/java/util/AbstractCollection.html#addAll(java.util.Collection)" target="_blank">addall</a></div> de la classe <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html" target="_blank">HashSet</a> pour fusionner les deux ensembles.
+<h5>Exemple</h5>
+<div class="code">$ ./execSurFichierAnalyseurSyntaxique.sh test/vl 
+A B 
+b c a 
+A B </div>
+</div>
+
+<a name="subst"><h3>Substitutions</h3>
+
+<div class="paragraph">Nous nous intéressons maintenant aux substitutions. Je vous rappelle qu'une substitution consiste à remplacer les occurrences libres de variables par des formules spécifiées. Je vous rappelle que dans notre cas toutes les variables sont libres. Les substitutions utiliseront la classe <div class="commande">Substitution</div> qui permet de gérer une liste de substitutions à travers deux méthodes :
+<ul>
+<li><div class="commande">public void set(String v, Formule f)</div> qui permet de remplacer la variable <div class="commande">v</div> par la formule <div class="commande">f</div>.</li>
+<li><div class="commande">public Formule get(String v)</div> qui permet de récupérer la formule substituée à <div class="commande">v</div>.</li>
+</ul>
+Dans notre langage, les substitutions sont définies par la grammaire suivante :
+<div class="code">substitution ::= "[" id "&lt;=" formule1 listesub "]"
+
+listesub ::= "," id "&lt;=" formule1 listesub
+	| 
+</div></div>
+
+<div class="question">Implémentez la méthode <div class="commande">substitue</div> qui va réaliser le substitution sur une formule.
+<h5>Exemple</h5>
+<div class="code">$ ./execSurFichierSyntaxique.sh test/substitution 
+(A) ∨ (¬(⊤))
+((¬(b)) ⇒ ((d) ∨ (e))) ⇒ ((((d) ∨ (e)) ⇒ (c)) ⇒ ((¬(b)) ⇒ (c)))
+(¬(((C) ⇔ ((D) ⇒ (⊥))) ∨ (B))) ⇔ ((¬((C) ⇔ ((D) ⇒ (⊥)))) ∧ (¬(B)))</div>
+</div>
+
+
+</a><a name="fnc"><h3>Forme Normale Conjonctive</h3>
+
+<div class="paragraph">Les FNC sont très utiles pour chercher les valuations qui satisfont des formules logiques. Rappelez-vous du cours, la mise en FNC consiste à
+<ul>
+<li>Supprimer les implications</li>
+<li>Entrer les négations</li>
+<li>Entrer les disjonctions</li>
+</ul>
+</div>
+
+<div class="question">Implémentez la méthode <div class="commande">supprImplications</div>, qui va supprimer les implications et les équivalences grâce aux propriétés logiques suivantes :
+<ul>
+<li><div class="commande">A ⇒ B ≣ ¬A ∨ B</div></li>
+<li><div class="commande">A ⇔ B ≣ (¬A ∨ B) ∧ (A ∨ ¬B)</div></li>
+</ul>
+<h5>Exemple</h5>
+<div class="code">$ ./execEnLigneAnalyseurSyntaxique.sh 
+Entrez le texte à analyser :
+fnc A =&gt; B.
+(¬(A)) ∨ (B)
+</div>
+Vous pouvez ignorer les exceptions pour le moment. Elles viennent du comportement par défaut des méthodes ci-dessous, implémentées dans la classe <div class="commande">Formule</div>.
+</div>
+
+<div class="question">Pour entrer les négations, nous devons savoir quel type de formule est sous la négation. Pour éviter d'utiliser la méthode <div class="commande">instanceof</div>, nous allons donc commencer par écrire une méthode <div class="commande">negation</div> qui retourne la négation d'une formule. Elle utilisera les propriétés suivantes pour faire quelques simplifications :
+<ul>
+<li><div class="commande">¬¬A ≣ A</div></li>
+<li><div class="commande">¬(A ∨ B) ≣ ¬A ∧ ¬B</div></li>
+<li><div class="commande">¬(A ∧ B) ≣ ¬A ∨ ¬B</div></li>
+</ul>
+<h5>Exemple</h5>
+<div class="code">Formule f = new Et(a,b);
+Formule f2 = f.negation();
+System.out.println(f2);
+
+((¬A) ∨ (¬B))
+</div>
+</div>
+
+<div class="question">Écrivez maintenant la méthode <div class="commande">entrerNegations</div> qui va effectivement entrer les négations à l'intérieur de la formule.
+
+<h5>Exemple</h5>
+<div class="code">$ ./execEnLigneAnalyseurSyntaxique.sh 
+Entrez le texte à analyser :
+fnc -(A + B).
+(¬(A)) ∧ (¬(B))
+</div></div>
+
+<div class="paragraph">Entrer les disjonctions et sortir les conjonctions est un peu plus compliqué car nous travaillons sur deux sous-formules et deux types de connecteurs. Nous utiliserons la propriété suivante : <br>A ∨ (B ∧ C) ≣ (A ∨ B) ∧ (A ∨ C)</div>
+
+<div class="question">Écrivez la méthode <div class="commande">contientEt</div> qui retourne <div class="commande">true</div> si la formule contient un <div class="commande">Et</div>.</div>
+
+<div class="question">Nous allons maintenant examiner les cas possibles selon les sous-formules. Prenez une feuille de papier pour examiner les cas possibles. Implémentez ensuite les méthodes <div class="commande">ougauche</div> et <div class="commande">oudroite</div> qui retournent une formule qui remontent les <div class="commande">Et</div> en faisant descendre les <div class="commande">Ou</div> à gauche et à droite.</div>
+
+<div class="question">Vous pouvez maintenant implémenter la méthode <div class="commande">entrerDisjonctions</div> qui va utiliser les méthodes <div class="commande">contientEt</div>, <div class="commande">ougauche</div> et <div class="commande">oudroite</div> pour achever la transformation en FNC. Nous supposerons que les étapes précédentes de transformation en FNC sont effectuées, c'est-à-dire qu'il n'y a plus de'implications, ni d'équivalences, et que les non sont juste au dessus des variables.</div>
+
+<div class="paragraph">Pour achever le travail, nous allons transformer une formule en FNC sous forme de liste de clauses. Plus tard nous les utiliserons pour trouver des valuations qui satisfont les formules. Pour le moment ça nous permet d'obtenir un affichage plus lisible des formules en FNC.</div>
+
+<div class="question">Implémentez la méthode <div class="commande">clauses</div> qui retourne une liste de clauses de type <div class="comamnde">ListeClauses</div>. La formule sur laquelle cette méthode est appelée est censée être en FNC. Si elle ne l'est pas, levez l'exception <div class="commande">NotFNCException</div>. En principe le travail est déjà fait dans la classe <div class="commande">Formule</div>. Si une clause est vraie (il suffit qu'un de ses littéraux le soit, ou qu'un littéral et sa négation soit dans la clause), on lèvera l'exception <div class="commande">TrueClauseException</div>. De même si une clause est fausse, on lèvera l'exception <div class="commande">FalseClauseException</div>. Ça nous permettra de faire quelques simplifications. De même vous pouvez utiliser l'exception <div class="commande">VariableClauseException</div> pour faire remonter la variable en sous-formule.</div>
+
+</a><a name="verite"><h3>Table de vérité</h3>
+
+<div class="paragraph">Nous cherchons maintenant à afficher la table de vérité d'une formule. Pour cela nous devons évaluer la formule pour toute valuation de ses variables libres. Nous avons déjà écrit une méthode qui retourne les variables libres. Nous devons maintenant évaluer les formules, et générer toutes les valuations.</div>
+
+<div class="question">Implémentez la méthode <div class="commande">valeur</div> qui calcule la valeur d'une formule close. Cette méthode lève l'exception <div class="commande">VariableLibreException</div> si la formule contient une variable libre.</div>
+
+<div class="question">Nous pouvons maintenant afficher la table de vérité d'une formule en calculant toutes ses valuations possibles. Implémentez la méthode <div class="commande">tableVerite</div>, directement dans la classe <div class="commande">Formule</div>. Commencez par chercher la liste des variables libres. Construisez ensuite une liste de <div class="commande">Substitution</div> contenant toutes les valuations possibles. Chaque variable peut être soit la <div class="commande">Constante</div> ⊤ soit la <div class="commande">Constante</div> ⊥.
+
+<h5>Exemple</h5>
+<div class="code">$ ./execSurFichierAnalyseurSyntaxique.sh test/tableverite 
+A   |B  |(A) ∨ (¬(B))
+⊥   |⊥  |⊤
+⊥   |⊤  |⊥
+⊤   |⊥  |⊤
+⊤   |⊤  |⊤
+
+b   |c  |a  |((a) ⇒ (b)) ⇒ (((b) ⇒ (c)) ⇒ ((a) ⇒ (c)))
+⊥   |⊥  |⊥  |⊤
+⊤   |⊥  |⊥  |⊤
+⊥   |⊥  |⊤  |⊤
+⊤   |⊥  |⊤  |⊤
+⊥   |⊤  |⊥  |⊤
+⊤   |⊤  |⊥  |⊤
+⊥   |⊤  |⊤  |⊤
+⊤   |⊤  |⊤  |⊤
+
+A   |B  |(¬((A) ∨ (B))) ⇔ ((¬(A)) ∧ (¬(B)))
+⊥   |⊥  |⊤
+⊥   |⊤  |⊤
+⊤   |⊥  |⊤
+⊤   |⊤  |⊤</div>
+</div>
+
+</a><a name="dp"><h3>Davis-Puttnam</h3>
+
+</a><div class="paragraph"><a name="dp">Notre aventure touche à sa fin. Il ne vous reste maintenant qu'à trouver une valuation qui satisfait votre formule. Pour celà nous utiliserons l'algorithme DPLL vu en cours. Je vous conseille de </a><a href="http://thomaspietrzak.com/download.php?f=CoursSAT.pdf" target="_blank">bien le relire</a> et de le garder à porter de main. Nous travaillerons désormais sur des <div class="commande">ListeClauses</div>.</div>
+
+<div class="question">Implémentez la méthode <div class="commande">simplifieClause</div> de la classe <div class="commande">ListeClauses</div>, qui simplifie une liste de clauses dans laquelle on considère que le <div class="commande">litteral</div> donné vaut <div class="commande">valeur</div>. Elle lèvera donc une exception <div class="commande ">NotSatisfiableException</div> si son littéral opposé forme une clause unitaire, supprimera les clauses contenant le littéral, et supprimera son opposé des autres clauses.
+</div>
+
+<div class="question">Implémentez la méthode dpll, qui va réaliser les 3 opérations phases de l'algorithme DPLL :
+<ul>
+<li>Éliminer les clauses unitaires tant qu’il y en a 
+<div class="code">a ⋀ ¬a ⋀ ... ≣ ⊥ ➔ Formule non satisfiable
+a ⋀ (¬a⋁b1 ⋁...⋁bn) ⋀ (a⋁c1 ⋁...⋁cn) ⋀ R ➔ ((b1 ⋁...⋁bn) ⋀ R)[a/⊤] 
+¬a ⋀ (¬a⋁b1 ⋁...⋁bn) ⋀ (a⋁c1 ⋁...⋁cn) ⋀ R ➔ ((c1 ⋁...⋁cn) ⋀ R)[a/⊥]</div>
+</li>
+<li>Éliminer les littéraux purs
+<div class="code">(a⋁b1 ⋁...⋁bn) ⋀ (a⋁c1 ⋁...⋁cn) ⋀ (d1 ⋁...⋁dn) ⋀ R ➔ ((d1 ⋁...⋁dn) ⋀ R)[a/⊤] 
+(¬a⋁b1 ⋁...⋁bn) ⋀ (¬a⋁c1 ⋁...⋁cn) ⋀ (d1 ⋁...⋁dn) ⋀ R ➔ ((d1 ⋁...⋁dn) ⋀ R)[a/⊥]</div>
+</li>
+<li>Simplifier les résultantes
+<div class="code">(a⋁b1 ⋁b2 ⋁...⋁bn) ⋀ (¬a⋁d1 ⋁d2 ⋁...⋁dn) ⋀ R 
+    ➔ ((b1 ⋁b2 ⋁...⋁bn) ⋀ R)[a/⊥]
+    ➔ ((d1 ⋁d2 ⋁...⋁dn) ⋀ R)[a/⊤]</div>
+</li>
+</ul>
+À chaque opération, simplifiez, appelez <div class="commande">dpll</div> récursivement, puis ajoutez la substitution à celles de l'appel récursif. Lisez attentivement l'implémentation de la classe <div class="commande">clause</div>, elle contient des méthodes bien utiles.
+
+<h5>Exemple</h5>
+<div class="code">$ ./execSurFichierAnalyseurSyntaxique.sh test/dpll
+Formule en FNC : 
+(a) ∨ (b)
+Liste de clauses : 
+(b ∨ a)
+[b ← ⊤]
+Formule en FNC : 
+((a) ∨ (¬(b))) ∧ ((b) ∨ (c))
+Liste de clauses : 
+(¬b ∨ a) ∧ (b ∨ c)
+[a ← ⊤, b ← ⊤]
+Formule en FNC : 
+(a) ∧ (((b) ∨ ((c) ∨ (¬(d)))) ∧ (((b) ∨ ((¬(c)) ∨ (e))) ∧ (((b) ∨ (¬(f))) ∧ 
+                                                          (((d) ∨ (¬(e))) ∧ ((¬(d)) ∨ (¬(e)))))))
+Liste de clauses : 
+(a) ∧ (¬d ∨ b ∨ c) ∧ (e ∨ b ∨ ¬c) ∧ (¬f ∨ b) ∧ (d ∨ ¬e) ∧ (¬d ∨ ¬e)
+[a ← ⊤, b ← ⊤, e ← ⊥]</div>
+</div>
+
+</div>
+
+
+</body></html>
