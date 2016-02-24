@@ -1,0 +1,19 @@
+/* #CMD> dot -Tpng reequilibre1.dot > reequilibre1.png */
+
+digraph "reequilibre1" {
+node [fontname="DejaVu-Sans", shape=circle]
+a [color=black, fontcolor=black]
+x [color=black, fontcolor=black]
+b [color=black, fontcolor=black]
+y [color=red, fontcolor=red]
+c [color=black, fontcolor=black]
+z [color=black, fontcolor=black]
+d [color=black, fontcolor=black]
+y -> x
+y -> z
+x -> a
+x -> b
+z -> c
+z -> d
+
+}
