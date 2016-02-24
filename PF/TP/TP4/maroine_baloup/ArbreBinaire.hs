@@ -1,5 +1,5 @@
 module ArbreBinaire where
-
+import Control.Concurrent (threadDelay)
 import Test.QuickCheck
 
 -- question 1
@@ -158,7 +158,7 @@ testArbre = do
 
 
 -- question 18
-elementR :: Eq a => a -> Arbre c a -> Bool -- reprends la signature de la question 13
+elementR :: (Eq a, Ord a) => a -> Arbre c a -> Bool -- reprends la signature de la question 13
 elementR v Feuille = False
 elementR a (Noeud _ v g d)  | a == v = True
                             | a < v  = elementR a g
@@ -166,12 +166,54 @@ elementR a (Noeud _ v g d)  | a == v = True
 
 
 -- question 19
-type Couleur = Rouge | Noir
+data Couleur = R | N
+                deriving (Show, Eq)
 
 couleurToString :: Couleur -> String
-couleurToString Rouge = "red"
-couleurToString Noir = "black"
+couleurToString R = "red"
+couleurToString N = "black"
 
 
 
 -- question 20
+equilibre :: Arbre Couleur a -> Arbre Couleur a
+equilibre Feuille = Feuille
+equilibre (Noeud _ z (Noeud R y (Noeud R x a b) c) d) = Noeud R y (Noeud N x a b) (Noeud N z c d)
+equilibre (Noeud _ z (Noeud R x a (Noeud R y b c)) d) = Noeud R y (Noeud N x a b) (Noeud N z c d)
+equilibre (Noeud _ x a (Noeud R z (Noeud R y b c) d)) = Noeud R y (Noeud N x a b) (Noeud N z c d)
+equilibre (Noeud _ x a (Noeud R y b (Noeud R z c d))) = Noeud R y (Noeud N x a b) (Noeud N z c d)
+equilibre abr = abr
+
+-- question 21
+ajouterValeurArbre :: (Eq a, Ord a) => a -> Arbre Couleur a -> Arbre Couleur a
+ajouterValeurArbre v Feuille = (Noeud N v Feuille Feuille) -- cas de l'arbre initial vide
+ajouterValeurArbre v (Noeud c a Feuille d) | v < a = Noeud c a (Noeud R v Feuille Feuille) d -- les deux cas où on arrive à remplacer une feuille
+ajouterValeurArbre v (Noeud c a g Feuille) | v > a = Noeud c a g (Noeud R v Feuille Feuille)  -- par la nouvelle valeur.
+ajouterValeurArbre v abr@(Noeud c a g d) | v < a = equilibre (Noeud c a (ajouterValeurArbre v g) d)
+                                     | v > a = equilibre (Noeud c a g (ajouterValeurArbre v d))
+                                     | otherwise = abr -- on ajoute pas deux fois la même valeur
+
+
+
+
+seqArbres :: (Eq a, Ord a) => [a] -> Arbre Couleur a -> [Arbre Couleur a]
+seqArbres [] a = [a]
+seqArbres (e:l) a = a : (seqArbres l (ajouterValeurArbre e a))
+
+
+arbresDot :: String -> [String]
+arbresDot s = map (dotise "ABR" couleurToString (\x -> [x])) (seqArbres s Feuille)
+
+main = mapM_ ecrit arbres
+    where ecrit a = do writeFile "arbre.dot" a
+                       threadDelay 1000000
+          arbres  = arbresDot "gcfxieqzrujlmdoywnbakhpvst"
+
+
+-- cette version du main crée des fichier .dot séparé
+main' :: IO ()
+main' = mapM_ ecrit abrs
+    where ecrit a = do writeFile ("dot/arbre" ++ (show (taille a)) ++ ".dot") (dotise "ABR" couleurToString (\x -> [x]) a)
+                       threadDelay 100000
+          abrs  = seqArbres "gcfxieqzrujlmdoywnbakhpvst" Feuille
+
