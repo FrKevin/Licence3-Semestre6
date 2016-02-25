@@ -59,5 +59,5 @@
 ## Taches
 - Coordinateur: Marc Baloup
 - rapport: Kevin Gamelin
-- configuration routeur: Maxime Maroine  & Dorian (RJ1), Veis Oudjail (RJ3), Charles & Kevin Gallet  (RJ2)
-- Montage: Kevin Morlet, Pierre, Jeremy, Lucile, Antoine
+- configuration routeur: Maxime Maroine & Dorian Ongenae (RJ1), Veis Oudjail (RJ3), Charles Vaneenoo & Kevin Gallet  (RJ2)
+- Montage: Kevin Morlet, Pierre Hequette, Jeremy , Lucile Duthoit, Antoine Blondin
