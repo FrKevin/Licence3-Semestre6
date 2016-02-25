@@ -1,0 +1,136 @@
+package logicline.analyseurs;
+
+import java_cup.runtime.*;
+import java.util.*;
+import logicline.modeleSemantique.*;
+
+parser code {: 
+
+private boolean erreurSyntaxique;
+private String messageErreur;
+
+/** Redéfinition de la méthode parse() pour levée de 
+  * ParserException() en cas d'erreur syntaxique.
+  * @throws ParserException en cas d'erreur syntaxique.
+  */ 
+public Symbol parse() throws Exception, ParserException {
+   Symbol s = null;
+   try {    
+     s = super.parse();
+   } catch (Exception e) {
+   	   if (this.erreurSyntaxique)
+     	      throw new ParserException(this.messageErreur); 
+           else throw e;
+   }
+   return s;
+} 
+
+/** Redéfinition de syntax_error() pour qu'elle affiche
+  * le symbole courant.
+  */
+public void syntax_error(Symbol symboleCourant) {
+    this.erreurSyntaxique = true;
+    this.messageErreur = "erreur syntaxique sur le symbole " 
+    + ((Symbole)symboleCourant).getRepresentationTextuelle() 
+    + " ligne " + (symboleCourant.left + 1) 
+    + " colonne " + (symboleCourant.right + 1);
+}
+
+:} // parser code
+
+
+/* terminaux (symboles retournés par l'analyseur lexical) */
+
+terminal String VARIABLE;
+terminal TRUE, FALSE, NON, ET, OU, IMPL, EQUIV, TABLE, FNC, VL, DPLL, PO, PF, CO, CF, AFF, VIR, POINT;
+
+/* non-terminaux de la grammaire */
+
+non terminal commande, listecommandes;
+non terminal Formule formule, form1, form2, form3;
+non terminal Substitution substitution, listesub;
+
+start with listecommandes;
+
+listecommandes ::= commande listecommandes
+  |
+;
+
+commande ::= TABLE formule:e POINT {: e.tableVerite(); :}
+  | FNC formule:f POINT {: 
+      Formule f2 = f.fnc();
+      System.out.println("Formule en FNC : \n" + f2.toString());
+      System.out.println("Liste de clauses : ");
+      try
+      {
+        ListeClauses l = f2.clauses();
+        System.out.println(l);
+      }
+      catch(TrueClauseException e)
+      {
+        System.out.println("⊤"); 
+      }
+      catch(FalseClauseException e)
+      {
+        System.out.println("⊥"); 
+      }
+    :}
+  | VL formule:f POINT {: Set<String> set = f.variablesLibres() ; for (String s : set) System.out.print(s + " "); System.out.println();:}
+  | DPLL formule:f POINT {:
+      Formule f2 = f.fnc();
+      System.out.println("Formule en FNC : \n" + f2.toString());
+      System.out.println("Liste de clauses : ");
+      ListeClauses l = null;
+      try
+      {
+        l = f2.clauses();
+        System.out.println(l);
+      }
+      catch(TrueClauseException e)
+      {
+        System.out.println("Tautologie"); 
+      }
+      catch(FalseClauseException e)
+      {
+        System.out.println("Non satisfiable"); 
+      }
+      try
+      {
+        Substitution s = l.dpll();
+        System.out.println(s);
+      }
+      catch(NotSatisfiableException e)
+      {
+        System.out.println("Non satisfiable"); 
+      }
+    :}
+  | formule:f POINT {: System.out.println(f); :}
+;
+
+formule ::= form1:f {: RESULT = f; :}
+  | form1:f substitution:s {: RESULT = f.substitue(s); :}
+;
+
+form1 ::= form2:fg IMPL form1:fd {: RESULT = new Implique(fg, fd); :}
+  | form2:fg EQUIV form1:fd {: RESULT = new Equivalence(fg, fd); :}
+  | form2:f {: RESULT = f; :}
+;
+
+form2 ::= form3:fg OU form2:fd {: RESULT = new Ou(fg, fd); :}
+  | form3:fg ET form2:fd {: RESULT = new Et(fg, fd); :}
+  | form3:f {: RESULT = f; :}
+;
+
+form3 ::= NON form3:f {: RESULT = new Non(f); :}
+  | PO form1:f PF {: RESULT = f; :}
+  | VARIABLE:v {: RESULT = new Variable(v); :}
+  | TRUE {: RESULT = new Constante(true); :}
+  | FALSE {: RESULT = new Constante(false); :}
+;
+
+substitution ::= CO VARIABLE:v AFF form1:f listesub:l CF {: l.set(v, f); RESULT = l; :}
+;
+
+listesub ::= VIR VARIABLE:v AFF form1:f listesub:l {: l.set(v, f); RESULT = l; :}
+  | {: RESULT = new Substitution(); :}
+;

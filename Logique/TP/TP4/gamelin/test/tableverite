@@ -1,0 +1,3 @@
+table A + -B.
+table (a => b) => ((b => c) => (a => c)).
+table -(A + B) <=> -A * -B.
