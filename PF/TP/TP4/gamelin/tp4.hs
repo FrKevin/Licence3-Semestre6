@@ -84,6 +84,9 @@ dotise s pcs pvs abr = unlines (header ++ map (noeud pcs pvs) (aplatit abr) ++ l
         lArcs  = map (arc pvs) (arcs abr)
         footer = ["}"]
 
+--Q52
+id' :: a -> a
+id' x = x
 
 -- tests
 prop_hauteurPeigne_with_rec xs = length xs == hauteurRec (peigneGauche xs)
