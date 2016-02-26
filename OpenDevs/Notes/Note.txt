@@ -77,6 +77,15 @@ Structure de controle :
         action();
       }
 
+Lecture dans un fichier en déplacant la tête:
+|stream|
+  stream := FileStream forceNewFileNamed: 'foo.txt'. 
+  stream nextPutAll: 'This text is written in a file named '; 
+  print: stream localName.
+  stream position: 80.
+  Transcript  show: stream peek. 
+  stream close.
+Renvoie null si l'index a dépassé la capacité maximale du fichier.
 
 Notion avancé :
   Customisation de classe :
