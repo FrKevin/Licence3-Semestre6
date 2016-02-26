@@ -154,7 +154,7 @@ Pas de colisions, pas d'erreur.
 ## ROUTEUR
 1. Le ping passe par le routeur. L'adresse MAC source de la trame reçu est l'adresse MAC du routeur du côté de 192.168.1.0/24. L'adresse MAC de destination de la trame envoyée est l'adresse MAC du routeur du côté de 192.168.5.0/24.
 
-2. (voir PDF)
+2. (voir image)
 
 3. Le ping ne passe pas par le routeur, mais tout le reste du réseau dans 192.168.5.0/24 (le routeur inclu) reçoit et répond au ping.
 
