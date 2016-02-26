@@ -73,9 +73,12 @@ Structure de controle :
     De meme que pour les conditions, les structures iteratif sont des methodes de l'objet Boolean
     Par exemple
       JAVA                                   PHARO
-      while (condition) {                    (condition) whileTrue : ["action"]
+      while (condition) {                    [condition] whileTrue : ["action"]
         action();
       }
+
+Les crochets [] représentent un block !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 Lecture dans un fichier en déplacant la tête:
 |stream|
