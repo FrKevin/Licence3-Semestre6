@@ -1,0 +1,47 @@
+No.     Time           Source                Destination           Protocol Length Info
+     24 34.195951000   Dell_bb:7b:4f         Dell_bb:7f:ee         ARP      42     Who has 192.168.5.60?  Tell 192.168.5.59
+
+Frame 24: 42 bytes on wire (336 bits), 42 bytes captured (336 bits) on interface 0
+Ethernet II, Src: Dell_bb:7b:4f (98:90:96:bb:7b:4f), Dst: Dell_bb:7f:ee (98:90:96:bb:7f:ee)
+    Destination: Dell_bb:7f:ee (98:90:96:bb:7f:ee)
+    Source: Dell_bb:7b:4f (98:90:96:bb:7b:4f)
+    Type: ARP (0x0806)
+Address Resolution Protocol (request)
+    Hardware type: Ethernet (1)
+    Protocol type: IP (0x0800)
+    Hardware size: 6
+    Protocol size: 4
+    (2o) Opcode: request (1)
+    (6o) Sender MAC address: Dell_bb:7b:4f (98:90:96:bb:7b:4f)
+    (4o) Sender IP address: 192.168.5.59 (192.168.5.59)
+    (6o) Target MAC address: 00:00:00_00:00:00 (00:00:00:00:00:00)
+    (4o) Target IP address: 192.168.5.60 (192.168.5.60)
+
+0000  98 90 96 bb 7f ee 98 90 96 bb 7b 4f 08 06 00 01   ..........{O....
+0010  08 00 06 04 00 01 98 90 96 bb 7b 4f c0 a8 05 3b   ..........{O...;
+0020  00 00 00 00 00 00 c0 a8 05 3c                     .........<
+
+No.     Time           Source                Destination           Protocol Length Info
+     25 34.196187000   Dell_bb:7f:ee         Dell_bb:7b:4f         ARP      60     192.168.5.60 is at 98:90:96:bb:7f:ee
+
+Frame 25: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+Ethernet II, Src: Dell_bb:7f:ee (98:90:96:bb:7f:ee), Dst: Dell_bb:7b:4f (98:90:96:bb:7b:4f)
+    Destination: Dell_bb:7b:4f (98:90:96:bb:7b:4f)
+    Source: Dell_bb:7f:ee (98:90:96:bb:7f:ee)
+    Type: ARP (0x0806)
+    Padding: 000000000000000000000000000000000000
+Address Resolution Protocol (reply)
+    (2o) Hardware type: Ethernet (1)
+    (2o) Protocol type: IP (0x0800)
+    (1o) Hardware size: 6
+    (1o) Protocol size: 4
+    (2o) Opcode: reply (2)
+    (6o) Sender MAC address: Dell_bb:7f:ee (98:90:96:bb:7f:ee)
+    (4o) Sender IP address: 192.168.5.60 (192.168.5.60)
+    (6o) Target MAC address: Dell_bb:7b:4f (98:90:96:bb:7b:4f)
+    (4o) Target IP address: 192.168.5.59 (192.168.5.59)
+
+0000  98 90 96 bb 7b 4f 98 90 96 bb 7f ee 08 06 00 01   ....{O..........
+0010  08 00 06 04 00 02 98 90 96 bb 7f ee c0 a8 05 3c   ...............<
+0020  98 90 96 bb 7b 4f c0 a8 05 3b 00 00 00 00 00 00   ....{O...;......
+0030  00 00 00 00 00 00 00 00 00 00 00 00               ............
