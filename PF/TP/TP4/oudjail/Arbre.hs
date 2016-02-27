@@ -5,7 +5,7 @@ data Arbre c v = Noeud { coul :: c
                               , val :: v
                               , gauche :: Arbre c v
                               , droite :: Arbre c v }
-                      | Feuille
+                | Feuille
                       deriving (Show, Eq, Ord)
 
 mapArbre :: (a -> b) -> Arbre c a -> Arbre c b
@@ -158,29 +158,41 @@ couleurToString R = "red"
 couleurToString N = "black"
 
 equilibre :: Arbre Couleur a -> Arbre Couleur a
-equilibre Feuille                                     = Feuille
 equilibre (Noeud N z (Noeud R y (Noeud R x a b) c) d) = Noeud R y (Noeud N x a b) (Noeud N z c d)
 equilibre (Noeud N z (Noeud R x a (Noeud R y b c)) d) = Noeud R y (Noeud N x a b) (Noeud N z c d)
 equilibre (Noeud N x a (Noeud R z (Noeud R y b c) d)) = Noeud R y (Noeud N x a b) (Noeud N z c d)
 equilibre (Noeud N x a (Noeud R y b (Noeud R z c d))) = Noeud R y (Noeud N x a b) (Noeud N z c d)
 equilibre abr                                         = abr
 
--- Non tester
 insertion :: Ord a => a -> Arbre Couleur a -> Arbre Couleur a
 insertion v Feuille                              = Noeud R v Feuille Feuille
 insertion v abr@(Noeud c r g d) | elementR v abr = abr
-                                | v < r          = Noeud c r (insertion v g) d
+                                | v < r          = equilibre (Noeud c r (insertion v g) d)
                                 | otherwise      = equilibre (Noeud c r g (insertion v d))
--- Non tester
-arbresDot :: String -> [String]
-arbreDot ""      = []
-arbresDot (e:l)  = let enc l' abr = case l' of ""     -> []
-                                               (x:xs) -> dotise "arbre" couleurToString id insAbr : enc xs insAbr
-                                                 where insAbr = insertion [x] abr
-                   in enc l (Noeud N [e] Feuille Feuille)
 
+
+arbresDot :: String -> [String]
+arbresDot chaine  = f chaine Feuille
+  where f "" _       = []
+        f (x:xs) abr = dotise "arbre" couleurToString id newAbr : f xs newAbr
+          where newAbr = insertion [x] abr
+
+arbresDot' :: String -> [String]
+arbresDot' []            = []
+arbresDot' chaine@(r:_)  = f chaine (Noeud N [r] Feuille Feuille)
+  where f "" _       = []
+        f (x:xs) abr = dotise "arbre" couleurToString id newAbr : f xs newAbr
+          where newAbr = insertion [x] abr
+
+
+-- Windows :
+-- cmd> touch arbre.ps
+-- cmd> evince arbre.ps
+-- cmd> dot -Tps arbre.dot -o arbre.ps
+-- cmd> ...
 main :: IO ()
 main = mapM_ ecrit arbres
     where ecrit a = do writeFile "arbre.dot" a
                        threadDelay 1000000
-          arbres  = arbresDot "gcfxieqzrujlmdoywnbakhpvs"
+          arbres  = arbresDot "gcfxie"
+                            --"gcfxieqzrujlmdoywnbakhpvs"
