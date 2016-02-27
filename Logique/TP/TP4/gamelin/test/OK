@@ -1,0 +1,12 @@
+A + -B.
+(a => b) => ((b => c) => (a => c)).
+-(A + B) <=> -A * -B.
+vl A + -B.
+vl (a => b) => ((b => c) => (a => c)).
+vl -(A + B) <=> -A * -B.
+fnc A + -B.
+fnc (a => b) => ((b => c) => (a => c)).
+fnc -(A + B) <=> -A * -B.
+table A + -B.
+table (a => b) => ((b => c) => (a => c)).
+table -(A + B) <=> -A * -B.
