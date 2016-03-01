@@ -223,4 +223,3 @@ main' = mapM_ ecrit abrs
     where ecrit a = do writeFile ("dot/arbre" ++ (show (taille a)) ++ ".dot") (dotise "ABR" couleurToString (\x -> [x]) a)
                        threadDelay 100000
           abrs  = seqArbres "gcfxieqzrujlmdoywnbakhpvst" Feuille
-

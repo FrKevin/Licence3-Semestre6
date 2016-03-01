@@ -141,6 +141,7 @@ dotise n pcs pvs abr = unlines (header ++ map (noeud pcs pvs) (aplatit abr) ++ l
         lArcs  = map (arc pvs) (arcs abr)
         footer = ["}"]
 
+
 elementR :: Ord a => a -> Arbre c a -> Bool
 elementR _ Feuille                       = False
 elementR a (Noeud _ v g d)  | a == v     = True
@@ -158,41 +159,39 @@ couleurToString R = "red"
 couleurToString N = "black"
 
 equilibre :: Arbre Couleur a -> Arbre Couleur a
-equilibre (Noeud N z (Noeud R y (Noeud R x a b) c) d) = Noeud R y (Noeud N x a b) (Noeud N z c d)
-equilibre (Noeud N z (Noeud R x a (Noeud R y b c)) d) = Noeud R y (Noeud N x a b) (Noeud N z c d)
-equilibre (Noeud N x a (Noeud R z (Noeud R y b c) d)) = Noeud R y (Noeud N x a b) (Noeud N z c d)
-equilibre (Noeud N x a (Noeud R y b (Noeud R z c d))) = Noeud R y (Noeud N x a b) (Noeud N z c d)
+equilibre (Noeud _ z (Noeud R y (Noeud R x a b) c) d) = Noeud R y (Noeud N x a b) (Noeud N z c d)
+equilibre (Noeud _ z (Noeud R x a (Noeud R y b c)) d) = Noeud R y (Noeud N x a b) (Noeud N z c d)
+equilibre (Noeud _ x a (Noeud R z (Noeud R y b c) d)) = Noeud R y (Noeud N x a b) (Noeud N z c d)
+equilibre (Noeud _ x a (Noeud R y b (Noeud R z c d))) = Noeud R y (Noeud N x a b) (Noeud N z c d)
 equilibre abr                                         = abr
 
-insertion :: Ord a => a -> Arbre Couleur a -> Arbre Couleur a
-insertion v Feuille                              = Noeud R v Feuille Feuille
-insertion v abr@(Noeud c r g d) | elementR v abr = abr
-                                | v < r          = equilibre (Noeud c r (insertion v g) d)
-                                | otherwise      = equilibre (Noeud c r g (insertion v d))
+racineToujoursNoir :: Arbre Couleur a -> Arbre Couleur a
+racineToujoursNoir Feuille         = Feuille
+racineToujoursNoir (Noeud _ r g d) = Noeud N r g d
 
+insertion :: Ord a => a -> Arbre Couleur a -> Arbre Couleur a
+insertion valeur arbre = racineToujoursNoir (ins valeur arbre)
+  where ins v Feuille                              = Noeud R v Feuille Feuille
+        ins v abr@(Noeud c r g d) | elementR v abr = abr
+                                  | v < r          = equilibre (Noeud c r (ins v g) d)
+                                  | otherwise      = equilibre (Noeud c r g (ins v d))
 
 arbresDot :: String -> [String]
 arbresDot chaine  = f chaine Feuille
   where f "" _       = []
-        f (x:xs) abr = dotise "arbre" couleurToString id newAbr : f xs newAbr
+        f (x:xs) abr = dotise "Arbre" couleurToString id newAbr : f xs newAbr
           where newAbr = insertion [x] abr
-
-arbresDot' :: String -> [String]
-arbresDot' []            = []
-arbresDot' chaine@(r:_)  = f chaine (Noeud N [r] Feuille Feuille)
-  where f "" _       = []
-        f (x:xs) abr = dotise "arbre" couleurToString id newAbr : f xs newAbr
-          where newAbr = insertion [x] abr
-
 
 -- Windows :
 -- cmd> touch arbre.ps
 -- cmd> evince arbre.ps
 -- cmd> dot -Tps arbre.dot -o arbre.ps
 -- cmd> ...
+
 main :: IO ()
 main = mapM_ ecrit arbres
-    where ecrit a = do writeFile "arbre.dot" a
-                       threadDelay 1000000
-          arbres  = arbresDot "gcfxie"
-                            --"gcfxieqzrujlmdoywnbakhpvs"
+    where ecrit a = do writeFile "Arbre.dot" a
+                       threadDelay 10
+                                -- 1000000
+          arbres  = arbresDot "gcfxieqzrujlmdoywnbakhpvst"
+                           -- ['a'..'z']
