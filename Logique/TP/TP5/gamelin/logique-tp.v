@@ -3,15 +3,25 @@
    "Proof. [tactiques] Qed." adequats. *)
 
 (* partie 1 *)
-
 Lemma hilbertS (A B C : Prop) :
   (A -> B -> C) -> (A -> B) -> A -> C.
-Abort.
+intros abc ab a.
+apply abc .
+exact a.
+apply ab.
+exact a.
+Show Proof.
+Qed.
 
 (* partie 2.1 *)
 
 Lemma exo1 (P Q : Prop) : P -> (Q -> P).
-Abort.
+Proof.
+intros p.
+intros q.
+exact p.
+Show Proof.
+Qed.
 
 Lemma exo2 (P Q : Prop) : P -> ( ~ P -> Q).
 Abort.
