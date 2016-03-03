@@ -2,6 +2,10 @@ module ArbreBinaire where
 import Control.Concurrent (threadDelay)
 import Test.QuickCheck
 
+-- TP4 PF
+-- Maxime Maroine
+-- Marc Baloup
+
 -- question 1
 data Arbre c v = Noeud { coul :: c
                               , val :: v
@@ -185,11 +189,14 @@ equilibre (Noeud _ x a (Noeud R y b (Noeud R z c d))) = Noeud R y (Noeud N x a b
 equilibre abr = abr
 
 -- question 21
-ajouterValeurArbre :: (Eq a, Ord a) => a -> Arbre Couleur a -> Arbre Couleur a
-ajouterValeurArbre v Feuille = (Noeud N v Feuille Feuille) -- cas de l'arbre initial vide
-ajouterValeurArbre v (Noeud c a Feuille d) | v < a = Noeud c a (Noeud R v Feuille Feuille) d -- les deux cas où on arrive à remplacer une feuille
-ajouterValeurArbre v (Noeud c a g Feuille) | v > a = Noeud c a g (Noeud R v Feuille Feuille)  -- par la nouvelle valeur.
-ajouterValeurArbre v abr@(Noeud c a g d) | v < a = equilibre (Noeud c a (ajouterValeurArbre v g) d)
+-- ajouterValeurArbre v abr = (Noeud N a g d)
+--                         where (Noeud _ a g d) = ajouterValeurArbre' v abr
+
+ajouterValeurArbre' :: (Eq a, Ord a) => a -> Arbre Couleur a -> Arbre Couleur a
+ajouterValeurArbre' v Feuille = (Noeud N v Feuille Feuille) -- cas de l'arbre initial vide
+ajouterValeurArbre' v (Noeud c a Feuille d) | v < a = Noeud c a (Noeud R v Feuille Feuille) d -- les deux cas où on arrive à remplacer une feuille
+ajouterValeurArbre' v (Noeud c a g Feuille) | v > a = Noeud c a g (Noeud R v Feuille Feuille)  -- par la nouvelle valeur.
+ajouterValeurArbre' v abr@(Noeud c a g d) | v < a = equilibre (Noeud c a (ajouterValeurArbre v g) d)
                                      | v > a = equilibre (Noeud c a g (ajouterValeurArbre v d))
                                      | otherwise = abr -- on ajoute pas deux fois la même valeur
 
@@ -216,4 +223,3 @@ main' = mapM_ ecrit abrs
     where ecrit a = do writeFile ("dot/arbre" ++ (show (taille a)) ++ ".dot") (dotise "ABR" couleurToString (\x -> [x]) a)
                        threadDelay 100000
           abrs  = seqArbres "gcfxieqzrujlmdoywnbakhpvst" Feuille
-
