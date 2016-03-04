@@ -90,6 +90,16 @@ Lecture dans un fichier en déplacant la tête:
   stream close.
 Renvoie null si l'index a dépassé la capacité maximale du fichier.
 
+Lire dans un fichier Binaire:
+| file data size |
+file := FileStream fileNamed: '/home/l3/gamelin/Documents/Licence3-Semestre6/OpenDevs/Ressources/example/basefile.cdb'.
+file binary.
+ 
+data := ByteArray new: 100000.
+size := file readInto:  data startingAt: 1  count: 100000.
+size. 
+
+
 Notion avancé :
   Customisation de classe :
   Concept qui permet de copier une classe dans un package specifique et de redefinir les methodes neccessaire
