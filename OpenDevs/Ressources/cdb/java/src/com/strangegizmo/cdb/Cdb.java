@@ -132,21 +132,25 @@ public class Cdb {
 	 * @param key The key to compute the hash value for.
 	 * @return The hash value of <code>key</code>.
 	 */
-	static final int hash(byte[] key) {
+	public static final int hash(byte[] key) {
 		/* Initialize the hash value. */
 		long h = 5381;
 
 		/* Add each byte to the hash value. */
 		for (int i = 0; i < key.length; i++ ) {
+			System.out.println("key size: "+ key.length);
 //			h = ((h << 5) + h) ^ key[i];
 			long l = h << 5;
 			h += (l & 0x00000000ffffffffL);
+			System.out.println("h1 = "+ h);
 			h = (h & 0x00000000ffffffffL);
-
+			System.out.println("h2 = "+ h);
 			int k = key[i];
 			k = (k + 0x100) & 0xff;
-
+			System.out.println("k = "+ k);
 			h = h ^ k;
+			System.out.println(2^2);
+			System.out.println("h3 = "+ h);
 		}
 
 		/* Return the hash value. */

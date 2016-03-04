@@ -16,7 +16,7 @@ espacesP:: String -> Parser ()
 espacesP ""  = return ()
 espacesP (c:cs) = if c == ' ' then
                     espacesP cs
-                  else return ()
+                  else return () 
 
 
 

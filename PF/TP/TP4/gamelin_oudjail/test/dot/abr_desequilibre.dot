@@ -1,0 +1,49 @@
+/* #CMD> dot -Tpng abr_desequilibre.dot > abr_desequilibre.png */
+/* Entête */
+digraph "abr_desequilibre" {
+    node [fontname="DejaVu-Sans", shape=circle]
+
+    /* Liste des nœuds */
+    r
+    g
+    d
+    gg
+    gd
+    ggg
+    ggd
+    gdg
+    gdd
+    dg
+    dd
+    dgg
+    dgd
+    ddg
+    ddd
+
+    /* Liste des arcs */
+    r -> g
+    r -> d
+    g -> gg
+    g -> gd
+    d -> dg
+    d -> dd
+    gg -> ggg
+    gg -> ggd
+    gd -> gdg
+    gd -> gdd
+    dg -> dgg
+    dg -> dgd
+    dd -> ddg
+    dd -> ddd
+
+}
+
+/*
+-- Haskell :
+where (Noeud cg vg gg gd)     = g
+      (Noeud cd vd dg dd)     = d
+      (Noeud cgg vgg ggg ggd) = gg
+      (Noeud cgd vgd gdg gdd) = gd
+      (Noeud cdg vdg dgg dgd) = dg
+      (Noeud cdd vdd ddg ddd) = dd
+*/
