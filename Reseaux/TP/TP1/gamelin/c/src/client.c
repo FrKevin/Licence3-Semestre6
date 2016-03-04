@@ -104,21 +104,10 @@ int main(int argc, char **argv) {
     }
 
     printf("Envoi ok\n");
-    printf("En cours de recption");
-    n_octet = recvfrom(sock, buffer, 10, 0, (SOCKADDR *)&to, &tosize);
-    printf("reception finis.\n");
-    if(n_octet < 0) {
-        perror("recvfrom()");
-        exit(errno);
-    }
-
-    buffer[11] = '\0';
-    printf("message reçue %s\n", buffer);
 
     printf("Begin end()\n");
     end(sock);
     printf("end() ok \n");
 
-    return 1;
     exit(EXIT_SUCCESS);
 }
