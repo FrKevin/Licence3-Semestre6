@@ -1,4 +1,4 @@
-package rsx.tp3.udp;
+package rsx.tp3;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
