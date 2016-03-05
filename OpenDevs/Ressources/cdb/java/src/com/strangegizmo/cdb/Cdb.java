@@ -314,7 +314,8 @@ public class Cdb {
 				| ((in.read() & 0xff) <<  8)
 				| ((in.read() & 0xff) << 16)
 				| ((in.read() & 0xff) << 24);
-
+		System.out.println("eod =" + eod);
+		
 		/* Skip the rest of the hashtable. */
 		in.skip(2048 - 4);
 
