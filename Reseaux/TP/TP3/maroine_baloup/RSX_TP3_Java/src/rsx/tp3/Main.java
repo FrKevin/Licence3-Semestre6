@@ -3,7 +3,7 @@ package rsx.tp3;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-public class DNS {
+public class Main {
 	
 	
 	
@@ -15,17 +15,19 @@ public class DNS {
 	
 	
 	public static void main(String[] args) throws Exception {
-		DNSPacket query = DNSPacket.createSimpleQuery("www.univ-lille1.fr");
-
-		DatagramSocket socket = new DatagramSocket();
+		System.out.println("---------- Requête : ----------");
+		DNSPacket query = DNSPacket.createSimpleQuery("www.google.fr");
 		
+		query.displayData();
+		
+		DatagramSocket socket = new DatagramSocket();
 		query.send(socket, InetAddress.getByName("8.8.8.8"), 53);
 		
 		DNSPacket response = query.waitForDNSResponse(socket);
 		
-		// TODO afficher la réponse
-		System.out.println("Données en Hexa :");
-		System.out.println(bytesToHexaString(response.toByte()));
+		System.out.println("\n\n\n---------- Réponse : ----------\n");
+		
+		response.displayData();
 		
 	}
 	
@@ -43,7 +45,7 @@ public class DNS {
 		String rep = "";
 		
 		for (byte b : bytes) {
-			if (b >= 0 && b <= 16)
+			if (b >= 0 && b < 16)
 				rep += "0";
 			rep += Integer.toHexString(b&0xff)+" ";
 		}
