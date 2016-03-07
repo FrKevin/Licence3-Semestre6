@@ -64,36 +64,49 @@ void create_simple_query(char* hostname){
     add_question(hostname, A, IN);
 }
 
+unsigned char toByte(unsigned char bits[]) {
+  unsigned char b = 0;
+  int i =0;
+  for (i=0; i<8; i++) {
+    b = (unsigned char) ((b << 1) + ((bits[i]) ? 1 : 0));
+  }
+  return b;
+}
+
 unsigned char*  get_bytes_query(){
     static unsigned char buffer[16384];
     int j =20;
     int i=0;
     char buffer_bin[8] ={0,0,0,0,0,0,0,0};
+    unsigned char byts[8];
 
     /* Insert id */
     buffer[0] = id[0];
     buffer[1] = id[2];
 
     /* Insert QR*/
-    buffer[2] = qr;
+    byts[0] = qr;
 
     /* Insert OPCODE*/
     itoa(op_code, buffer_bin, 2);
-    buffer[3] = buffer_bin[4];
-    buffer[4] = buffer_bin[5];
-    buffer[5] = buffer_bin[6];
-    buffer[6] = buffer_bin[7];
+    byts[1] = buffer_bin[4];
+    byts[2] = buffer_bin[5];
+    byts[3] = buffer_bin[6];
+    byts[4] = buffer_bin[7];
 
     memset(&buffer_bin[0], 0, sizeof(buffer_bin));
 
     /* Insert a authoritative_answer */
-    buffer[7] = authoritative_answer;
+    byts[5] = authoritative_answer;
 
     /* insert truncated*/
-    buffer[8] = tc;
+    byts[6] = tc;
 
     /* Insert recursion_desired */
-    buffer[9] = recursion_desired;
+    byts[7] = recursion_desired;
+
+
+    buffer[2] = toByte(byts);
 
     /* Insert recursion_available */
     buffer[10] = recursion_available;

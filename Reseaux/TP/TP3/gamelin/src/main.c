@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 
+#include "common.h"
 #include "packet.h"
 
 int main(int argc, char **argv) {
@@ -12,7 +13,7 @@ int main(int argc, char **argv) {
     init();
     set_op_code(IQUERY);
     printf("op_code= %u\n", op_code);
-    itoa(1,buffer,2);
+    itoa(255,buffer,2);
     printf("buffer = %s\n", buffer);
     printf("buffer 0e: %c\n", buffer[0]);
     if( buffer[1] == 0){

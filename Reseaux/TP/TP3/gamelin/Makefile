@@ -27,7 +27,7 @@ DNS_Solveur: $(OBJS)
 common.o: common.c
 question.o: question.c common.h
 packet.o: packet.c question.h
-main.o: main.c packet.h
+main.o: main.c common.h packet.h
 
 # misc
 .PHONY: clean realclean

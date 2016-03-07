@@ -9,7 +9,7 @@ enum type_of_request
 {
     QUERY=      0x0,    /*\brief   0 a standard query (QUERY)         */
     IQUERY=     0x1,    /*\brief   1 an inverse query (IQUERY)        */
-    STATUS=     0x1     /*\brief   2 server status request (STATUS)    */
+    STATUS=     0x2     /*\brief   2 server status request (STATUS)   */
 };
 typedef enum type_of_request type_of_request;
 
@@ -195,6 +195,8 @@ extern void set_recursion_available(unsigned char ra);
     \brief Crate a simple query
 */
 extern void create_simple_query();
+
+extern unsigned char toByte(unsigned char bits[]); 
 
 /*!
     \brief Create a byte array width an query
