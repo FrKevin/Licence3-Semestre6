@@ -4,11 +4,15 @@
 #include "common.h"
 #include "question.h"
 
-#define MAXQUESTIONS      255              /* max question at DNS packet */
+/*!
+    \brief Contains all question, present in DNS packet
+*/
 static question questions[MAXQUESTIONS];
 
+/*!
+    \brief The index of the question's array
+*/
 unsigned int index_question = 0;
-
 
 void set_name(int index, char* n){
     assert_message(n != NULL, "The name of the question is null.");

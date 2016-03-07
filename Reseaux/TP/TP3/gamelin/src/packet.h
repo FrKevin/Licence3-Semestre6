@@ -1,42 +1,46 @@
 /*!
-    \file Packet.h
+    \file packet.h
+    \author Kevin Gamelin
+    \date 2016
     \brief Définie un paquet DNS
 */
 #ifndef _packet_H_
 #define _packet_H_
 
+/*!
+    \enum type_of_request
+    \brief Enum of type of request
+*/
 enum type_of_request
 {
-    QUERY=      0x0,    /*\brief   0 a standard query (QUERY)         */
-    IQUERY=     0x1,    /*\brief   1 an inverse query (IQUERY)        */
-    STATUS=     0x2     /*\brief   2 server status request (STATUS)   */
+    QUERY=      0x0,    /*!<   0 a standard query (QUERY)         */
+    IQUERY=     0x1,    /*!<   1 an inverse query (IQUERY)        */
+    STATUS=     0x2     /*!<  2 server status request (STATUS)   */
 };
+/*! \brief Create a  type_of_request type */
 typedef enum type_of_request type_of_request;
 
-
-enum response_code
-{
-    /*\brief 0 No error condition*/
-    NO_ERROR= 0x0,
-    /*\brief  Format error - The name server was unable to interpret the query. */
-    FORMAT_ERROR= 0x1,
-    /*\brief
-        Server failure - The name server was
-        unable to process this query due to a
-        problem with the name server.
-    */
-    SERVER_FAILURE= 0x2,
-    /*\brief
-        Name Error - Meaningful only for
-        responses from an authoritative name
-        server, this code signifies that the
-        domain name referenced in the query does
-        not exist.
-    */
-    NAME_ERROR= 0x3,
-    /*\brief Not Implemented - The name server does not support the requested kind of query.*/
-    NOT_IMPLEMENTED= 0x4,
-    /*\brief
+/*!
+    \enum response_code
+    \brief Enum of response code
+*/
+enum response_code {
+    NO_ERROR= 0x0,/*!< 0 No error condition*/
+    FORMAT_ERROR= 0x1,/*!<  Format error - The name server was unable to interpret the query. */
+    SERVER_FAILURE= 0x2, /*!<
+            Server failure - The name server was
+            unable to process this query due to a
+            problem with the name server.
+        */
+    NAME_ERROR= 0x3, /*!<
+            Name Error - Meaningful only for
+            responses from an authoritative name
+            server, this code signifies that the
+            domain name referenced in the query does
+            not exist.
+        */
+    NOT_IMPLEMENTED= 0x4, /*!< Not Implemented - The name server does not support the requested kind of query.*/
+    REFUSED= 0x5, /*!<
         Refused - The name server refuses to
         perform the specified operation for
         policy reasons.  For example, a name
@@ -45,11 +49,11 @@ enum response_code
         or a name server may not wish to perform
         a particular operation (e.g., zone transfer) for particular data.
     */
-    REFUSED= 0x5,
-    /*\brief  Answer only */
-    UNDEFINED= 255
+    UNDEFINED= 255 /*!<  Answer only */
 };
+/*! \brief Create a  response_code type */
 typedef enum response_code response_code;
+
 /*!
     \brief
         A 16 bit identifier assigned by the program that
@@ -158,36 +162,47 @@ extern void init();
 
 /*!
     \brief Set an id
+    \param b1 the first identifier's octet
+    \param b2 the first identifier's octet
 */
 extern void set_id(unsigned char b1, unsigned char b2);
 
 /*!
     \brief Set type: Answer or response
+    \param type the type of querry.\n
+        Must be 1 (for query) or 0 (for answer)
 */
 extern void set_qerry_type(unsigned char type);
 
 /*!
-    \brief Set type
+    \brief Set op_code
+    \param op the type of request.
 */
 extern void set_op_code(type_of_request op);
 
 /*!
-    \brief Set type
+    \brief Set authoritative_answer
+    \param aa the authoritative answer, only if the type of packet is answer
 */
 extern void set_authoritative_answer(unsigned char aa);
 
 /*!
-    \brief  Set TrunCation
+    \brief  Set truncated
+    \param t  the truncated mode.\n
+        Must be 1 or 0
 */
 extern void set_truncated(unsigned char t);
 
 /*!
     \brief  Set recursion_desired
+    \param rd the recursion desired mode.\n
+        Must be 1 or 0
 */
 extern void set_recursion_desired(unsigned char rd);
 
 /*!
     \brief  Set recursion_available
+    \param ra the recursion available of packet, only if the type of packet is answer
 */
 extern void set_recursion_available(unsigned char ra);
 
@@ -199,6 +214,6 @@ extern void create_simple_query();
 /*!
     \brief Create a byte array width an query
 */
-unsigned char*  get_bytes_query();
+unsigned char* get_bytes_query();
 
 #endif
