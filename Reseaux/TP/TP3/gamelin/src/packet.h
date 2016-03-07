@@ -196,8 +196,6 @@ extern void set_recursion_available(unsigned char ra);
 */
 extern void create_simple_query();
 
-extern unsigned char toByte(unsigned char bits[]); 
-
 /*!
     \brief Create a byte array width an query
 */

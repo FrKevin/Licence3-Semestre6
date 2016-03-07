@@ -8,26 +8,36 @@
 #include "packet.h"
 
 int main(int argc, char **argv) {
-    char buffer[8] ={ 0,0,0,0,0,0,0,0};
+    unsigned char byts[512];
+    char * label;
+    int len;
+    int index = 0;
+    int i = 0;
 
-    init();
-    set_op_code(IQUERY);
-    printf("op_code= %u\n", op_code);
-    itoa(255,buffer,2);
-    printf("buffer = %s\n", buffer);
-    printf("buffer 0e: %c\n", buffer[0]);
-    if( buffer[1] == 0){
-        printf("asaa \n");
+    char message[] ="wwww.google.fr";
+    label = strtok (message, ".");
+
+
+    while (label != NULL) {
+        printf("index= %i\n", index);
+        len = strlen(label);
+        printf("len = %d\n", len);
+        assert_message( len != 0 , "The label of domaine name is empty.");
+        assert_message( len < 63, "The label of domaine name is bigger than 63 octets.");
+        byts[index++] = len & 0x3f;
+
+        printf("index= %i\n", index);
+        for(i =0; i< len; i++){
+            printf("char = %c\n", label[i]);
+            byts[index++] = label[i] & 0xffff;
+            printf("val = %c\n",  label[i] & 0xffff );
+        }
+        label = strtok (NULL, ".");
+        printf("####################################################################\n");
     }
-    printf("buffer 11e: %u\n", buffer[1]);
-    printf("buffer 2e: %c\n", buffer[2]);
-    printf("buffer 22e: %u\n", buffer[2]);
-    printf("buffer 3e: %c\n", buffer[3]);
 
-    printf("buffer 4e: %cssss\n", buffer[4]);
-    printf("buffer 5e: %c\n", buffer[5]);
-    printf("buffer 6e: %c\n", buffer[6]);
-    printf("buffer 7e: %c\n", buffer[7]);
-
+    for (i = 0; i < 17; i++) {
+        printf("byts[%i] =int: %d char: %c\n", i, byts[i], byts[i]);
+    }
     exit(EXIT_SUCCESS);
 }

@@ -64,79 +64,68 @@ void create_simple_query(char* hostname){
     add_question(hostname, A, IN);
 }
 
-unsigned char toByte(unsigned char bits[]) {
-  unsigned char b = 0;
-  int i =0;
-  for (i=0; i<8; i++) {
-    b = (unsigned char) ((b << 1) + ((bits[i]) ? 1 : 0));
-  }
-  return b;
-}
-
 unsigned char*  get_bytes_query(){
     static unsigned char buffer[16384];
-    int j =20;
-    int i=0;
+    int index_of_buffer = 0;
+    int i=0, j = 0, offset = 0;
     char buffer_bin[8] ={0,0,0,0,0,0,0,0};
+    char buffer_label[512];
     unsigned char byts[8];
 
     /* Insert id */
-    buffer[0] = id[0];
-    buffer[1] = id[2];
+    buffer[index_of_buffer++] = id[0];
+    buffer[index_of_buffer++] = id[2];
 
-    /* Insert QR*/
-    byts[0] = qr;
-
-    /* Insert OPCODE*/
+    /* Insert  1er flags*/
     itoa(op_code, buffer_bin, 2);
+    byts[0] = qr;
     byts[1] = buffer_bin[4];
     byts[2] = buffer_bin[5];
     byts[3] = buffer_bin[6];
     byts[4] = buffer_bin[7];
+    byts[5] = authoritative_answer;
+    byts[6] = tc;
+    byts[7] = recursion_desired;
+    buffer[index_of_buffer++] = toByte(byts);
 
     memset(&buffer_bin[0], 0, sizeof(buffer_bin));
+    memset(&byts[0], 0, sizeof(byts));
 
-    /* Insert a authoritative_answer */
-    byts[5] = authoritative_answer;
-
-    /* insert truncated*/
-    byts[6] = tc;
-
-    /* Insert recursion_desired */
-    byts[7] = recursion_desired;
-
-
-    buffer[2] = toByte(byts);
-
-    /* Insert recursion_available */
-    buffer[10] = recursion_available;
-
-    /* Insert Z (for more info see rfc1035.txt line 1473)*/
-    buffer[11] = 0; buffer[12] = 0; buffer[13] = 0;
-
-    /* Insert RCODE */
+    /* Insert  2e flags*/
     itoa(r_code, buffer_bin, 2);
-    buffer[14] = buffer_bin[4];
-    buffer[15] = buffer_bin[5];
-    buffer[16] = buffer_bin[6];
-    buffer[17] = buffer_bin[7];
+    byts[0] = recursion_available;
+    byts[1] = 0; /* Insert Z (for more info see rfc1035.txt line 1473)*/
+    byts[2] = 0; /* Insert Z (for more info see rfc1035.txt line 1473)*/
+    byts[3] = 0; /* Insert Z (for more info see rfc1035.txt line 1473)*/
+    byts[4] = buffer_bin[4];
+    byts[5] = buffer_bin[5];
+    byts[6] = buffer_bin[6];
+    byts[7] = buffer_bin[7];
+    buffer[index_of_buffer++] = toByte(byts);
+
+    memset(&buffer_bin[0], 0, sizeof(buffer_bin));
+    memset(&byts[0], 0, sizeof(byts));
 
     /* Insert QDCOUNT */
-    buffer[18] = get_index_question() & 0xffff;
+    buffer[index_of_buffer++] = get_index_question() & 0xffff;
 
     /* Insert an_count */
-    buffer[19] = an_count & 0xffff;
+    buffer[index_of_buffer++] = an_count & 0xffff;
 
     /* Insert ns_count */
-    buffer[19] = ns_count & 0xffff;
+    buffer[index_of_buffer++] = ns_count & 0xffff;
 
     /* Insert ar_count */
-    buffer[19] = ar_count & 0xffff;
-
+    buffer[index_of_buffer++] = ar_count & 0xffff;
 
     /* Insert all Questions */
     for(i=0; i< get_index_question(); i++){
-        j++;
+        offset = convert_donmaine_name_to_label(get_name(i), buffer_label);
+        for( j = 0; j < offset; j++){
+            buffer[index_of_buffer++] = buffer_label[j];
+        }
+        buffer[index_of_buffer++] = get_type(i) & 0xffff;
+        buffer[index_of_buffer++] = get_class(i) & 0xffff;
     }
     return buffer;
 }

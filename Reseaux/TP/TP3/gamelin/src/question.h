@@ -58,17 +58,33 @@ typedef struct st_question question;
 /*
     \brief Set a name for question
 */
-extern void setName(int index, char* name);
+extern void set_name(int index, char* name);
+
+/*
+    \brief get a name for question n°index
+*/
+extern char* get_name(int index);
 
 /*
     \brief Set a type for question
 */
-extern void setType(int index, q_types t);
+extern void set_type(int index, q_types t);
+
+/*
+    \brief get a type for question n°index
+*/
+extern q_types get_type(int index);
 
 /*
     \brief Set a class for question
 */
-extern void setClass(int index, q_class c);
+extern void set_class(int index, q_class c);
+
+/*
+    \brief get a class for question n°index
+*/
+extern q_class get_class(int index);
+
 
 /*!
     \brief add question in a packet
