@@ -16,11 +16,11 @@ void assert_message(int cond, char* message){
     }
 }
 
-void int_to_bin(unsigned int value, unsigned char buffer_bin[8]) {
+void int_to_byte(unsigned int value, unsigned char buffer_byte[8]) {
   int i;
 
   for (i = 7; i >= 0; i--) {
-    buffer_bin[i] = value & 1;
+    buffer_byte[i] = value & 1;
     value >>= 1;
   }
 }

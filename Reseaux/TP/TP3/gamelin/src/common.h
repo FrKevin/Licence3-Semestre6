@@ -22,7 +22,7 @@ extern void assert_message(int cond, char* message);
     \param str the buffer
     \param radix the base
 */
-extern void int_to_bin(unsigned int value, unsigned char buffer_bin[8]);
+extern void int_to_byte(unsigned int value, unsigned char buffer_byte[8]);
 
 /*!
     \brief Put Array of unisgned char to a single (unsigned) char

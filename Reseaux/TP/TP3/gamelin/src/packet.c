@@ -96,7 +96,7 @@ unsigned char*  get_bytes_query(){
     static unsigned char buffer[16384];
     int index_of_buffer = 0;
     int i=0, j = 0, offset = 0;
-    unsigned char buffer_bin[8] ={0,0,0,0,0,0,0,0};
+    unsigned char buffer_byte[8] ={0,0,0,0,0,0,0,0};
     char buffer_label[512];
     unsigned char bits[8];
 
@@ -105,33 +105,33 @@ unsigned char*  get_bytes_query(){
     buffer[index_of_buffer++] = id[2];
 
     /* Insert  1er flags*/
-    int_to_bin(op_code, buffer_bin);
+    int_to_byte(op_code, buffer_byte);
     bits[0] = qr;
-    bits[1] = buffer_bin[4];
-    bits[2] = buffer_bin[5];
-    bits[3] = buffer_bin[6];
-    bits[4] = buffer_bin[7];
+    bits[1] = buffer_byte[4];
+    bits[2] = buffer_byte[5];
+    bits[3] = buffer_byte[6];
+    bits[4] = buffer_byte[7];
     bits[5] = authoritative_answer;
     bits[6] = tc;
     bits[7] = recursion_desired;
     buffer[index_of_buffer++] = toByte(bits);
 
-    memset(&buffer_bin[0], 0, sizeof(buffer_bin));
+    memset(&buffer_byte[0], 0, sizeof(buffer_byte));
     memset(&bits[0], 0, sizeof(bits));
 
     /* Insert  2e flags*/
-    int_to_bin(r_code, buffer_bin);
+    int_to_byte(r_code, buffer_byte);
     bits[0] = recursion_available;
     bits[1] = 0; /* Insert Z (for more info see rfc1035.txt line 1473)*/
     bits[2] = 0; /* Insert Z (for more info see rfc1035.txt line 1473)*/
     bits[3] = 0; /* Insert Z (for more info see rfc1035.txt line 1473)*/
-    bits[4] = buffer_bin[4];
-    bits[5] = buffer_bin[5];
-    bits[6] = buffer_bin[6];
-    bits[7] = buffer_bin[7];
+    bits[4] = buffer_byte[4];
+    bits[5] = buffer_byte[5];
+    bits[6] = buffer_byte[6];
+    bits[7] = buffer_byte[7];
     buffer[index_of_buffer++] = toByte(bits);
 
-    memset(&buffer_bin[0], 0, sizeof(buffer_bin));
+    memset(&buffer_byte[0], 0, sizeof(buffer_byte));
     memset(&bits[0], 0, sizeof(bits));
 
     /* Insert QDCOUNT */
