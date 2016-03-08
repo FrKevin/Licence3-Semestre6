@@ -49,10 +49,9 @@ extern id_t id;
 /* QUESTION */
 /* A construire */
 
-
 /* DNS */
 
-extern byte_t * packet_dns;
+extern byte_t *packet_dns;
 
 
 #endif

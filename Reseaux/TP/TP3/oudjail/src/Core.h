@@ -1,5 +1,11 @@
-#ifndef __CORE_H__
+/*!
+  \file common.h
+  \author Oudjail & El Kathib
+  \date 2016
+  \brief define and debug's methodes && define type of project
+*/
 
+#ifndef __CORE_H__
 #define __CORE_H__
 
 
@@ -11,13 +17,13 @@
 void assert_message(cond, char *message);
 
 
-
-typedef unsigned char byte_t;
-typedef uint16_t id_t;
-
 /*!
   \brief List of type used : [byte]
 */
+typedef unsigned char byte_t;
+typedef uint16_t id_t;
+
+
 
 
 #endif

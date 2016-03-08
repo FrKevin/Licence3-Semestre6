@@ -1,4 +1,4 @@
-#include "core.h"
+#include "Core.h"
 
 void assert_message(int cond, char* message) {
     if (cond == 0 ) {
