@@ -6,8 +6,13 @@
 
 void assert_message(int cond, char* message){
     if(cond == 0 ){
-        printf("%s\n", message);
-        exit(EXIT_FAILURE);
+      #ifdef WIN32
+        fprintf(stdout, "%s\n", msg);
+      #endif
+      #ifdef UNIX
+        fprintf(stdout, "%s: %s\n", msg, strerror(errno));
+      #endif
+      exit(EXIT_FAILURE);
     }
 }
 

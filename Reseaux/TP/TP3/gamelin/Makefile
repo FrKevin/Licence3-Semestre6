@@ -10,8 +10,8 @@ CFLAGS  = -g
 CFLAGS += -Wall -Werror -ansi -pedantic
 CFLAGS += -D_XOPEN_SOURCE=500
 LDFLAGS = -g
-SRCS    = common.c question.c packet.c main.c
-OBJS    = common.o question.o packet.o main.o
+SRCS    = common.c question.c packet.c udp_sender.c main.c
+OBJS    = common.o question.o packet.o udp_sender.o main.o
 EXEC    = DNS_Solveur
 
 # main entries
@@ -27,6 +27,7 @@ DNS_Solveur: $(OBJS)
 common.o: common.c
 question.o: question.c common.h
 packet.o: packet.c question.h
+udp_sender.o: udp_sender.c common.h
 main.o: main.c common.h packet.h
 
 # misc
