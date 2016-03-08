@@ -3,7 +3,7 @@ VPATH = src
 OBJ = ./bin
 
 TP=3
-NOM1=ElKathib
+NOM1=ElKhatib
 NOM2=Oudjail
 
 CC      = gcc

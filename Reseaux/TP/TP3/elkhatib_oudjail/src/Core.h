@@ -1,6 +1,6 @@
 /*!
   \file common.h
-  \author Oudjail & El Kathib
+  \author Oudjail & El Khatib
   \date 2016
   \brief define and debug's methodes && define type of project
 */
