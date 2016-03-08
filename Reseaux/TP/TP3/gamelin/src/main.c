@@ -6,14 +6,16 @@
 
 #include "packet.h"
 #include "common.h"
-  int main(int argc, char **argv) {
-    int i=0;
-  unsigned char buffer_byte[8];
+#include "udp_sender.h"
 
-  int_to_byte(3, buffer_byte);
-  for(i=0; i<8; i++){
-        printf("bits[%i] = %i \n",i, buffer_byte[i]);
-  }
+int main(int argc, char **argv) {
 
+    printf("begin create_simple_query() \n");
+        create_simple_query("wwww.google.com");
+    printf("create_simple_query() ok \n");
+
+    printf("begin send_packet()  \n");
+    send_packet("8.8.8.8", 53, get_bytes_query());
+    printf("send_packet() ok \n");
     exit(EXIT_SUCCESS);
 }

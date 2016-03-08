@@ -23,12 +23,13 @@ all: $(EXEC)
 DNS_Solveur: $(OBJS)
 	$(CC) ${CFLAGS} $(OBJS) -o $@
 
+#-lws2_32
 # gcc -MM generated dependencies
 common.o: common.c
 question.o: question.c common.h
 packet.o: packet.c question.h
 udp_sender.o: udp_sender.c common.h
-main.o: main.c common.h packet.h
+main.o: main.c common.h packet.h udp_sender.h
 
 # misc
 .PHONY: clean realclean

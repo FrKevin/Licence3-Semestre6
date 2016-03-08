@@ -121,5 +121,15 @@ extern void add_question(char* name, q_types type, q_class class);
 */
 extern unsigned int get_index_question();
 
+/*
+ \brief display One questions
+ \param index the index to array
+*/
+extern void display_question(int index);
+
+/*
+ \brief display all questions
+*/
+extern void display_questions();
 
 #endif

@@ -64,36 +64,30 @@ void create_simple_query(char* hostname){
     add_question(hostname, A, IN);
 }
 
-void print(){
+void display_packet(){
     printf("DNS packet details :");
 		printf("\tTransaction Id: %s ", id);
 		printf("\tType of packet: %i", qr);
 		printf("\t The OpCode : %i", op_code);
-		if (qr == 0) {
-			printf("\tIs authoritative : %c", authoritative_answer);
+	if (qr == 0) {
+			printf("\tIs authoritative: %c", authoritative_answer);
     }
-		printf("\tIs truncated : %c ", tc);
-		printf("\tIs recursion desired : %c ", recursion_desired);
+		printf("\tIs truncated: %c ", tc);
+		printf("\tIs recursion desired: %c ", recursion_desired);
 		if (qr == 0 ) {
-			printf("\tIs recursion available : %c ", recursion_available);
+			printf("\tIs recursion available: %c ", recursion_available);
     }
 		if (qr == 0) {
-			printf("\tResponse code : %c "+r_code);
+			printf("\tResponse code: %c "+r_code);
     }
 
-	/*	System.out.println(" Nb of query : "+queries.size()); */
-		/* les questions */
-    /*display_questions
-		for (Query query : queries) {
-			System.out.println("  Query "+(i++)+" :");
-			System.out.println("     Name : "+query.qName);
-			System.out.println("     Type : "+query.qType);
-			System.out.println("     Class : "+query.qClass);
-		}*/
+    printf("\t Number of query: %i", get_index_question() );
+
+    display_questions();
 }
 
-unsigned char*  get_bytes_query(){
-    static unsigned char buffer[16384];
+char*  get_bytes_query(){
+    static char buffer[16384];
     int index_of_buffer = 0;
     int i=0, j = 0, offset = 0;
     unsigned char buffer_byte[8] ={0,0,0,0,0,0,0,0};

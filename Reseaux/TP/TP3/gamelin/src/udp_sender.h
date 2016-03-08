@@ -32,6 +32,9 @@ typedef struct sockaddr sockaddr;
 /*! \brief Create a IN_ADDR type */
 typedef struct in_addr in_addr;
 
+#ifdef __WIN32__
+    typedef int socklen_t;
+#endif
 
 /*!
   \brief The socket
@@ -52,6 +55,11 @@ sockaddr_in receiver;
     \brief initialize a socket
 */
 extern void initialize_socket();
+
+/*!
+    \brief The hostname
+*/
+char* hostname;
 
 /*!
     \brief initialize hostinfo and conver the hostname to address IP

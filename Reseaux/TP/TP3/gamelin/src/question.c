@@ -55,3 +55,18 @@ void add_question(char* name, q_types type, q_class class){
 unsigned int get_index_question(){
     return index_question;
 }
+
+void display_question(int index){
+    assert_message(index < index_question, "Cannot display question");
+    printf("\tQuery %i:"+(index++));
+    printf("\t\tName: %s", get_name(index));
+    printf("\t\tType: %i", get_type(index));
+    printf("\t\tClass: %i", get_class(index));
+}
+
+extern void display_questions(){
+    int i = 0;
+    for (i = 0; i < index_question; i++) {
+        display_question(i);
+    }
+}

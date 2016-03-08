@@ -5,6 +5,7 @@
 #ifdef __WIN32__ /* si vous êtes sous Windows */
   #include <windows.h>
   #include <winsock.h>
+
 #else
   #include <sys/socket.h>
   #include <netinet/in.h>
@@ -24,6 +25,7 @@
 
 void initialize_socket(){
   #ifdef __WIN32__
+  int err;
     WORD versionWanted = MAKEWORD(1, 1);
     WSADATA wsaData;
     err = WSAStartup(versionWanted, &wsaData);
@@ -34,20 +36,24 @@ void initialize_socket(){
   assert_message(sockfd != -1, "Cannot initialize socket");
 }
 
-void initialize_hostname(char* hostname){
+void initialize_hostname(char* h){
+  hostname = h;
   hostinfo = gethostbyname(hostname);
   assert_message( hostinfo != NULL, "Unknown hos hostname");
 }
 
 void initialize_sockaddr_in(int port){
+  #ifdef __WIN32__
+      int tmp_windows;
+  #endif
+
   memset((char *) &receiver, 0, sizeof(receiver));
   receiver.sin_family = AF_INET;
   receiver.sin_port = htons(port);
 
   #ifdef __WIN32__
-    int tmp_windows;
-    tmp_windows = inet_addr(receiver->h_name);
-    assert_message( tmp_windows != -1, "inet_addr() error")
+    tmp_windows = inet_addr(hostname);
+    assert_message( tmp_windows != -1, "inet_addr() error");
     receiver.sin_addr.s_addr = tmp_windows;
   #else
     memcpy(&receiver.sin_addr, hostinfo->h_addr, hostinfo->h_length);
