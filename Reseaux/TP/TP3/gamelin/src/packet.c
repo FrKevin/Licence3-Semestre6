@@ -64,58 +64,89 @@ void create_simple_query(char* hostname){
     add_question(hostname, A, IN);
 }
 
+void print(){
+    printf("DNS packet details :");
+		printf("\tTransaction Id: %s ", id);
+		printf("\tType of packet: %i", qr);
+		printf("\t The OpCode : %i", op_code);
+		if (qr == 0) {
+			printf("\tIs authoritative : %c", authoritative_answer);
+    }
+		printf("\tIs truncated : %c ", tc);
+		printf("\tIs recursion desired : %c ", recursion_desired);
+		if (qr == 0 ) {
+			printf("\tIs recursion available : %c ", recursion_available);
+    }
+		if (qr == 0) {
+			printf("\tResponse code : %c "+r_code);
+    }
+
+	/*	System.out.println(" Nb of query : "+queries.size()); */
+		/* les questions */
+    /*display_questions
+		for (Query query : queries) {
+			System.out.println("  Query "+(i++)+" :");
+			System.out.println("     Name : "+query.qName);
+			System.out.println("     Type : "+query.qType);
+			System.out.println("     Class : "+query.qClass);
+		}*/
+}
+
 unsigned char*  get_bytes_query(){
     static unsigned char buffer[16384];
     int index_of_buffer = 0;
     int i=0, j = 0, offset = 0;
-    char buffer_bin[8] ={0,0,0,0,0,0,0,0};
+    unsigned char buffer_byte[8] ={0,0,0,0,0,0,0,0};
     char buffer_label[512];
-    unsigned char byts[8];
+    unsigned char bits[8];
 
     /* Insert id */
     buffer[index_of_buffer++] = id[0];
     buffer[index_of_buffer++] = id[2];
 
     /* Insert  1er flags*/
-    itoa(op_code, buffer_bin, 2);
-    byts[0] = qr;
-    byts[1] = buffer_bin[4];
-    byts[2] = buffer_bin[5];
-    byts[3] = buffer_bin[6];
-    byts[4] = buffer_bin[7];
-    byts[5] = authoritative_answer;
-    byts[6] = tc;
-    byts[7] = recursion_desired;
-    buffer[index_of_buffer++] = toByte(byts);
+    int_to_byte(op_code, buffer_byte);
+    bits[0] = qr;
+    bits[1] = buffer_byte[4];
+    bits[2] = buffer_byte[5];
+    bits[3] = buffer_byte[6];
+    bits[4] = buffer_byte[7];
+    bits[5] = authoritative_answer;
+    bits[6] = tc;
+    bits[7] = recursion_desired;
+    buffer[index_of_buffer++] = toByte(bits);
 
-    memset(&buffer_bin[0], 0, sizeof(buffer_bin));
-    memset(&byts[0], 0, sizeof(byts));
+    memset(&buffer_byte[0], 0, sizeof(buffer_byte));
+    memset(&bits[0], 0, sizeof(bits));
 
     /* Insert  2e flags*/
-    itoa(r_code, buffer_bin, 2);
-    byts[0] = recursion_available;
-    byts[1] = 0; /* Insert Z (for more info see rfc1035.txt line 1473)*/
-    byts[2] = 0; /* Insert Z (for more info see rfc1035.txt line 1473)*/
-    byts[3] = 0; /* Insert Z (for more info see rfc1035.txt line 1473)*/
-    byts[4] = buffer_bin[4];
-    byts[5] = buffer_bin[5];
-    byts[6] = buffer_bin[6];
-    byts[7] = buffer_bin[7];
-    buffer[index_of_buffer++] = toByte(byts);
+    int_to_byte(r_code, buffer_byte);
+    bits[0] = recursion_available;
+    bits[1] = 0; /* Insert Z (for more info see rfc1035.txt line 1473)*/
+    bits[2] = 0; /* Insert Z (for more info see rfc1035.txt line 1473)*/
+    bits[3] = 0; /* Insert Z (for more info see rfc1035.txt line 1473)*/
+    bits[4] = buffer_byte[4];
+    bits[5] = buffer_byte[5];
+    bits[6] = buffer_byte[6];
+    bits[7] = buffer_byte[7];
+    buffer[index_of_buffer++] = toByte(bits);
 
-    memset(&buffer_bin[0], 0, sizeof(buffer_bin));
-    memset(&byts[0], 0, sizeof(byts));
+    memset(&buffer_byte[0], 0, sizeof(buffer_byte));
+    memset(&bits[0], 0, sizeof(bits));
 
     /* Insert QDCOUNT */
     buffer[index_of_buffer++] = get_index_question() & 0xffff;
 
     /* Insert an_count */
+    buffer[index_of_buffer++] = ( an_count >> 8 ) & 0xffff;
     buffer[index_of_buffer++] = an_count & 0xffff;
 
     /* Insert ns_count */
+    buffer[index_of_buffer++] = (ns_count >> 8) & 0xffff;
     buffer[index_of_buffer++] = ns_count & 0xffff;
 
     /* Insert ar_count */
+    buffer[index_of_buffer++] = ( ar_count >> 8) & 0xffff;
     buffer[index_of_buffer++] = ar_count & 0xffff;
 
     /* Insert all Questions */
@@ -124,7 +155,10 @@ unsigned char*  get_bytes_query(){
         for( j = 0; j < offset; j++){
             buffer[index_of_buffer++] = buffer_label[j];
         }
+        buffer[index_of_buffer++] = (get_type(i) >> 8) & 0xffff;
         buffer[index_of_buffer++] = get_type(i) & 0xffff;
+
+        buffer[index_of_buffer++] = ( get_class(i) >> 8) & 0xffff;
         buffer[index_of_buffer++] = get_class(i) & 0xffff;
     }
     return buffer;

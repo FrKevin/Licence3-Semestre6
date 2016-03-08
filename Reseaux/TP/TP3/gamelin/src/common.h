@@ -9,7 +9,7 @@
 #define _COMMON_H_
 
 /*!
-    brief Check error and print this
+    \brief Check error and print this
     \param cond the condition to abort
     \param message the message
 */
@@ -17,14 +17,12 @@ extern void assert_message(int cond, char* message);
 
 /*!
     \brief
-        Convert integer to string
-        Converts an integer value to a null-terminated string using the specified base and stores the result in the array given by str parameter.
-        If base is 10 and value is negative, the resulting string is preceded with a minus sign (-). With any other base, value is always considered unsigned.
+        Convert integer to binary
     \param value the integer value
     \param str the buffer
     \param radix the base
 */
-extern char* itoa(int value, char* str, int radix);
+extern void int_to_byte(unsigned int value, unsigned char buffer_byte[8]);
 
 /*!
     \brief Put Array of unisgned char to a single (unsigned) char
