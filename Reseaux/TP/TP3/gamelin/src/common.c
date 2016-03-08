@@ -10,7 +10,7 @@ void assert_message(int cond, char* message){
         fprintf(stdout, "%s\n", msg);
       #endif
       #ifdef UNIX
-        fprintf(stdout, "%s: %s\n", msg, strerror(errno));
+        perror(message);
       #endif
       exit(EXIT_FAILURE);
     }
