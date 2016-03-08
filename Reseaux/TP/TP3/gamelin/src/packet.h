@@ -212,8 +212,14 @@ extern void set_recursion_available(unsigned char ra);
 extern void create_simple_query();
 
 /*!
+  \brief Print the packet
+*/
+extern void print();
+
+/*!
     \brief Create a byte array width an query
 */
 unsigned char* get_bytes_query();
+
 
 #endif
