@@ -7,7 +7,7 @@
 void assert_message(int cond, char* message){
     if(cond == 0 ){
       #ifdef WIN32
-        fprintf(stdout, "%s\n", msg);
+        printf("%s\n", message);
       #endif
       #ifdef UNIX
         perror(message);
@@ -39,10 +39,10 @@ int convert_donmaine_name_to_label(char domaine_name[], char byts[]){
     int len;
     int index = 0;
     int i = 0;
+    char* domaine_name_cp = strdup(domaine_name);
 
     assert_message( domaine_name != NULL, "Conot convert the domaine name, because its null.");
-
-    label = strtok (domaine_name, ".");
+    label = strtok (domaine_name_cp, ".");
     while (label != NULL) {
         len = strlen(label);
         assert_message( len != 0 , "The label of domaine name is empty.");

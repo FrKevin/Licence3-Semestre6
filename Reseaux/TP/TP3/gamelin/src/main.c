@@ -9,13 +9,18 @@
 #include "udp_sender.h"
 
 int main(int argc, char **argv) {
+    udp_packet packet;
+    char buffer[16384];
 
-    printf("begin create_simple_query() \n");
-        create_simple_query("wwww.google.com");
-    printf("create_simple_query() ok \n");
+    initialize(&packet, "8.8.8.8", 53);
 
-    printf("begin send_packet()  \n");
-    send_packet("8.8.8.8", 53, get_bytes_query());
-    printf("send_packet() ok \n");
+    create_simple_query("www.google.fr");
+
+    display_packet();
+
+    get_bytes_query(buffer);
+    send_packet(&packet, (char *) buffer);
+
+    clear(&packet);
     exit(EXIT_SUCCESS);
 }

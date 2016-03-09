@@ -20,6 +20,9 @@ all: $(EXEC)
 		 mkdir $(OBJ)
 		 mv -f $(OBJS) $(OBJ)
 
+windows: $(OBJS)
+	$(CC) ${CFLAGS} $(OBJS) -o $@ -lws2_32
+
 DNS_Solveur: $(OBJS)
 	$(CC) ${CFLAGS} $(OBJS) -o $@
 
