@@ -1,7 +1,7 @@
 #ifndef __DNS_H__
 #define __DNS_H__
 
-#include "core.h"
+#include "Core.h"
 
 /* ----------- HEADER ------------------- */
 #define HEADER_LENGHT 96
@@ -25,9 +25,9 @@
 
 
 typedef enum {
-  QUERY = 0,
-  IQUERY = 1,
-  STATUS = 2
+  QUERY,
+  IQUERY,
+  STATUS
 } OPCODE_RESPONSE;
 
 typedef enum {
@@ -42,9 +42,19 @@ typedef enum {
 
 extern byte_t packet_header[HEADER_LENGHT];
 
+
+/* ID of header DNS */
 extern id_t id;
 
+extern bool qr;
 
+extern byte_t op_code;
+
+extern bool aa;
+
+extern bool rd;
+
+extern bool ra;
 
 /* QUESTION */
 /* A construire */
