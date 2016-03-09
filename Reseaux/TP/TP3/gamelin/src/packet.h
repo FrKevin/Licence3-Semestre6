@@ -40,7 +40,7 @@ enum response_code {
             not exist.
         */
     NOT_IMPLEMENTED= 0x4, /*!< Not Implemented - The name server does not support the requested kind of query.*/
-    REFUSED= 0x5, /*!<
+    REFUSED= 0x5 /*!<
         Refused - The name server refuses to
         perform the specified operation for
         policy reasons.  For example, a name
@@ -49,7 +49,6 @@ enum response_code {
         or a name server may not wish to perform
         a particular operation (e.g., zone transfer) for particular data.
     */
-    UNDEFINED= 255 /*!<  Answer only */
 };
 /*! \brief Create a  response_code type */
 typedef enum response_code response_code;
@@ -156,11 +155,6 @@ unsigned int ns_count;
 unsigned int ar_count;
 
 /*!
-    \brief Initialize packet
-*/
-extern void init();
-
-/*!
     \brief Set an id
     \param b1 the first identifier's octet
     \param b2 the first identifier's octet
@@ -219,7 +213,7 @@ extern void display_packet();
 /*!
     \brief Create a byte array width an query
 */
-char* get_bytes_query();
+extern void get_bytes_query(char buffer[16384]);
 
 
 #endif

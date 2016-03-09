@@ -15,8 +15,6 @@ static question questions[MAXQUESTIONS];
 unsigned int index_question = 0;
 
 void set_name(int index, char* n){
-    assert_message(n != NULL, "The name of the question is null.");
-    assert_message(strcmp(n, "") != 0, "The name of the question is empty.");
     questions[index].name = n;
 }
 
@@ -57,11 +55,12 @@ unsigned int get_index_question(){
 }
 
 void display_question(int index){
+    int tmp = index +1;
     assert_message(index < index_question, "Cannot display question");
-    printf("\tQuery %i:"+(index++));
-    printf("\t\tName: %s", get_name(index));
-    printf("\t\tType: %i", get_type(index));
-    printf("\t\tClass: %i", get_class(index));
+    printf("\tQuery %i:\n", tmp);
+    printf("\t\tName: %s\n", get_name(index));
+    printf("\t\tType: %i\n", get_type(index));
+    printf("\t\tClass: %i\n", get_class(index));
 }
 
 extern void display_questions(){

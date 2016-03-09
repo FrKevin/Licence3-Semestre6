@@ -20,67 +20,40 @@
 */
 #define closesocket(s) close(s)
 
-/*! \brief Create int_socket type */
-typedef int int_socket;
-
-/*! \brief Create a sockaddr_in type */
-typedef struct sockaddr_in sockaddr_in;
-
-/*! \brief Create a SOCKADDR type */
-typedef struct sockaddr sockaddr;
-
-/*! \brief Create a IN_ADDR type */
-typedef struct in_addr in_addr;
-
 #ifdef __WIN32__
     typedef int socklen_t;
 #endif
 
-/*!
-  \brief The socket
-*/
-int_socket sockfd;
 
 /*!
-  \brief  The hostent struct
+    \brief Create a structure in order to send an udp packet
 */
-struct hostent *hostinfo = NULL;
+typedef struct udp_packet_st {
+   int  sockfd; /*!< The socket id */
+   char* hostname; /*!< The hostname */
+   struct hostent *hostinfo; /*!< The structure contains many informations of hostname */
+   struct sockaddr_in *receiver; /*!< The structure represent the receiver */
+} udp_packet;
 
 /*!
-  \brief The receiver of paquet
+    \brief clear all entry in the structure
+    \param packet The udp_packet structure
+    \param hostname The hostname where send upd packet
+    \param port The port
 */
-sockaddr_in receiver;
+extern void initialize(udp_packet* packet, char* hostname, int port);
 
 /*!
-    \brief initialize a socket
+    \brief clear all entry in the structure
+    \param packet The udp_packet structure
 */
-extern void initialize_socket();
-
-/*!
-    \brief The hostname
-*/
-char* hostname;
-
-/*!
-    \brief initialize hostinfo and conver the hostname to address IP
-    \param hostname the receiver hostname
-*/
-extern void initialize_hostname(char* hostname);
-
-/*!
-  \brief initialize receiver
-*/
-extern void initialize_sockaddr_in(int port);
-
-/*!
-    \brief close socket
-    \param sock socket id
-*/
-extern void close_socket();
+extern void clear(udp_packet* packet);
 
 /*!
   \brief Send UDP packet
+  \param packet The udp_packet structure
+  \param message The message to send
 */
-extern void send_packet(char* hostname, int port, char* message);
+extern void send_packet(udp_packet* packet, char* message);
 
 #endif
