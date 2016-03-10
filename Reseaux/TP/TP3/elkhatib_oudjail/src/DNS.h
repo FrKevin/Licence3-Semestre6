@@ -28,7 +28,7 @@ typedef enum {
   QUERY,
   IQUERY,
   STATUS
-} OPCODE_RESPONSE;
+} opcode_t;
 
 typedef enum {
   NO_ERROR_CONDITION,
@@ -37,24 +37,10 @@ typedef enum {
   NAME_ERROR,
   NOT_IMPLEMENTED,
   REFUSED
-} RCODE_RESPONSE;
+} rcode_t;
 
 
 extern byte_t packet_header[HEADER_LENGHT];
-
-
-/* ID of header DNS */
-extern id_t id;
-
-extern bool qr;
-
-extern byte_t op_code;
-
-extern bool aa;
-
-extern bool rd;
-
-extern bool ra;
 
 /* QUESTION */
 /* A construire */

@@ -14,6 +14,10 @@
 */
 typedef unsigned char byte_t;
 typedef uint16_t id_t;
+typedef uint16_t qdcount_t;
+typedef uint16_t ancount_t;
+typedef uint16_t nscount_t;
+typedef uint16_t arcount_t;
 
 
 
