@@ -54,6 +54,6 @@ extern void clear(udp_packet* packet);
   \param packet The udp_packet structure
   \param message The message to send
 */
-extern void send_packet(udp_packet* packet, char* message);
+extern void send_packet(udp_packet* packet, int offset, char* message);
 
 #endif

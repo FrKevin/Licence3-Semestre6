@@ -88,7 +88,7 @@ void display_packet(){
     display_questions();
 }
 
-void  get_bytes_query(char buffer[16384]){
+int  get_bytes_query(char buffer[16384]){
     int index_of_buffer = 0;
     int i=0, j = 0, offset = 0;
     unsigned char buffer_byte[8] ={0,0,0,0,0,0,0,0};
@@ -158,4 +158,5 @@ void  get_bytes_query(char buffer[16384]){
     for (i = 0; i < index_of_buffer; i++) {
         printf("buffer[%i] = %04x\n",i, buffer[i]);
     }
+    return index_of_buffer;
 }
