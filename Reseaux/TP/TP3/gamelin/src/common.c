@@ -33,23 +33,15 @@ unsigned char toByte(unsigned char bits[]) {
   }
   return b;
 }
-char* strndup(const char*  s)
-{
-    size_t slen = (size_t)strlen(s);
-    char* copy;
-    int n;
-        n = slen;
+#ifdef __WIN32__
+  char *strdup (const char *s) {
+      char *d = malloc (strlen (s) + 1);   /* Space for length plus nul */
+      if (d == NULL) return NULL;          /* No memory */
+      strcpy (d,s);                        /* Copy the characters */
+      return d;                            /* Return the new string */
+  }
+#endif
 
-    copy = malloc(n+1);
-
-    if (copy)
-    {
-        memcpy(copy, s, n);
-        copy[n] = 0;
-    }
-
-    return copy;
-}
 int convert_donmaine_name_to_label(char domaine_name[], char byts[]){
     char * label;
     int len;

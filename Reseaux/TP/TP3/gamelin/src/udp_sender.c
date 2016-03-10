@@ -3,16 +3,15 @@
 #endif
 
 #ifdef __WIN32__ /* si vous êtes sous Windows */
-#include <windows.h>
-#include <winsock.h>
-
+  #include <windows.h>
+  #include <winsock.h>
 #else
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netdb.h> /* gethostbyname */
-#include <linux/limits.h> /* const PATH_MAX */
-#include <string.h>
+  #include <sys/socket.h>
+  #include <netinet/in.h>
+  #include <arpa/inet.h>
+  #include <netdb.h> /* gethostbyname */
+  #include <linux/limits.h> /* const PATH_MAX */
+  #include <string.h>
 #endif
 
 #include <stdio.h>
@@ -50,7 +49,7 @@ void initialize_hostname(udp_packet* packet, char* h){
 
 void initialize_sockaddr_in(udp_packet* packet, int port){
     #ifdef __WIN32__
-        int tmp_windows;
+        unsigned long tmp_windows = INADDR_NONE;
     #endif
     struct sockaddr_in receiver_st;
 
@@ -61,7 +60,7 @@ void initialize_sockaddr_in(udp_packet* packet, int port){
 
     #ifdef __WIN32__
         tmp_windows = inet_addr(packet->hostname);
-        assert_message( tmp_windows != -1, "inet_addr() error");
+        assert_message( tmp_windows != INADDR_NONE, "inet_addr() error");
         receiver_st.sin_addr.s_addr = tmp_windows;
     #else
         memcpy(&receiver_st.sin_addr, packet->hostinfo->h_addr, packet->hostinfo->h_length);
@@ -86,13 +85,12 @@ void initialize(udp_packet* packet, char* hostname, int port){
 }
 
 
-void send_packet(udp_packet* packet, char* message) {
+void send_packet(udp_packet* packet, int offset, char* message) {
     int sendto_check;
     struct sockaddr_in receiver_st;
 
     receiver_st = *(packet->receiver);
-    printf("%s\n", message);
-    sendto_check = sendto(packet->sockfd, message, strlen(message), 0, (struct sockaddr *)&receiver_st, (socklen_t) sizeof(receiver_st) );
+    sendto_check = sendto(packet->sockfd, message, offset, 0, (struct sockaddr *)&receiver_st, (socklen_t) sizeof(receiver_st) );
     assert_message((sendto_check != -1), "sendto() error ");
 }
 

@@ -213,7 +213,7 @@ extern void display_packet();
 /*!
     \brief Create a byte array width an query
 */
-extern void get_bytes_query(char buffer[16384]);
+extern int get_bytes_query(char buffer[16384]);
 
 
 #endif
