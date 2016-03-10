@@ -11,6 +11,7 @@
 int main(int argc, char **argv) {
     udp_packet packet;
     char buffer[16384];
+    int offset = 0;
 
     initialize(&packet, "8.8.8.8", 53);
 
@@ -18,8 +19,8 @@ int main(int argc, char **argv) {
 
     display_packet();
 
-    get_bytes_query(buffer);
-    send_packet(&packet, (char *) buffer);
+    offset = get_bytes_query(buffer);
+    send_packet(&packet, offset, (char *) buffer);
 
     clear(&packet);
     exit(EXIT_SUCCESS);

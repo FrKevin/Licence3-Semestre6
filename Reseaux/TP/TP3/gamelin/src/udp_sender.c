@@ -86,13 +86,13 @@ void initialize(udp_packet* packet, char* hostname, int port){
 }
 
 
-void send_packet(udp_packet* packet, char* message) {
+void send_packet(udp_packet* packet, int size, char* message) {
     int sendto_check;
     struct sockaddr_in receiver_st;
 
     receiver_st = *(packet->receiver);
     printf("%s\n", message);
-    sendto_check = sendto(packet->sockfd, message, strlen(message), 0, (struct sockaddr *)&receiver_st, (socklen_t) sizeof(receiver_st) );
+    sendto_check = sendto(packet->sockfd, message, size, 0, (struct sockaddr *)&receiver_st, (socklen_t) sizeof(receiver_st) );
     assert_message((sendto_check != -1), "sendto() error ");
 }
 
