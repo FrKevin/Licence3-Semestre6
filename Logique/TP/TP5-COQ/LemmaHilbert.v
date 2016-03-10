@@ -83,7 +83,43 @@ exact p.
 Qed.
 
 
+Lemma exo6 (P : Prop) : 
+  ~ ~ P -> P.
+Proof.
+intros p.
+apply bottom_c.
+intros pf.
+apply p.
+exact pf.
+Qed.
 
+Lemma exo7 (P : Prop) : 
+  P -> ~ ~ P.
+Proof.
+intros p.
+apply bottom_c.
+intros p'''.
+apply p'''.
+intro p''.
+apply p''.
+exact p.
+Qed.
 
+Lemma exo8 (P Q R : Prop) : 
+  (P -> (Q -> R)) -> (P /\ Q -> R).
+Proof.
+intros pqr.
+intros p_qr.
+apply pqr.
+- apply p_qr.
+- apply p_qr.
+Qed.
 
-
+Lemma exo9 (P Q R : Prop) : 
+  (P /\ Q -> R) -> (P -> (Q -> R)).
+Proof.
+intros pqr.
+intros p.
+intros q.
+apply pqr.
+split.

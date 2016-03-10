@@ -1,4 +1,3 @@
-# mshell - a job manager
 VPATH = src
 OBJ = ./bin
 
