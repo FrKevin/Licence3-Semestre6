@@ -82,8 +82,25 @@ apply np.
 exact p.
 Qed.
 
+Lemma exemple134 (A B C : Prop) : (A /\ B -> C) <-> (A -> B -> C).
+Proof.
+split.
+  intros ab.
+  intros ab'.
+  intros ab''.
+  apply ab.
+  split.
+  exact ab'.
+  exact ab''.
+  intros abc.
+  intros abc'.
+  apply abc.
+  destruct abc'.
+  exact H.
+  destruct abc'.
+  exact H0.
+Qed.
 
-
-
-
-
+Lemma exemple135 (A B C : Prop) : (C -> A) \/ (C -> B) -> (C -> A \/ B).
+Proof.
+intros ab.

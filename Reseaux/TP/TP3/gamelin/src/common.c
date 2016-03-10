@@ -33,7 +33,23 @@ unsigned char toByte(unsigned char bits[]) {
   }
   return b;
 }
+char* strndup(const char*  s)
+{
+    size_t slen = (size_t)strlen(s);
+    char* copy;
+    int n;
+        n = slen;
 
+    copy = malloc(n+1);
+
+    if (copy)
+    {
+        memcpy(copy, s, n);
+        copy[n] = 0;
+    }
+
+    return copy;
+}
 int convert_donmaine_name_to_label(char domaine_name[], char byts[]){
     char * label;
     int len;
