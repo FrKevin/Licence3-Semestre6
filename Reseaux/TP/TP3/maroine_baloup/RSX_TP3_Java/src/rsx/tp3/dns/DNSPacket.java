@@ -1,4 +1,4 @@
-package rsx.tp3;
+package rsx.tp3.dns;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -11,6 +11,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
+
+import rsx.tp3.BitArray;
+import rsx.tp3.Main;
+import rsx.tp3.dns.QType.ResponseDataDecoder;
 
 /**
  * Implémentation du protocole DNS basé sur la RFC1035.
@@ -31,6 +35,47 @@ public class DNSPacket {
 		packet.addQuery(new Query(hostName, QType.A, DNSClass.IN));
 		return packet;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Récupère l'adresse IP correspondant au nom de domaine passé en paramètre
+	 * 
+	 * @param hostName le nom de domaine à chercher
+	 * @param dnsHost l'adresse du serveur DNS
+	 * @return l'adresse IP récupérée, ou null si le serveur DNS n'a pas retourné d'adresse IP.
+	 * @throws Exception si une erreur réseau ou de décodage survient.
+	 */
+	public static InetAddress getAddressFromHostName(String hostName, String dnsHost, boolean display) throws Exception {
+		DNSPacket query = DNSPacket.createSimpleQuery(hostName);
+		if (display)
+			query.displayData();
+		
+		DatagramSocket socket = new DatagramSocket();
+		query.send(socket, InetAddress.getByName(dnsHost), 53);
+		
+		DNSPacket response = query.waitForDNSResponse(socket);
+		
+		if (display) {
+			System.out.println("\n\n\n\n");
+			response.displayData();
+		}
+		
+		for (ResourceRecord rr : response.answersRR) {
+			if (rr.getDecodedData() instanceof InetAddress)
+				return (InetAddress) rr.getDecodedData();
+		}
+		
+		return null;
+		
+	}
+	
+	
 	
 	
 	
@@ -109,6 +154,7 @@ public class DNSPacket {
 				rr.decodedData = rr.rType.decoder.decode(buff, dataSize);
 			} catch (Exception e) {
 				new RuntimeException("Erreur lors du décodage des données d'un ResourceRecord", e).printStackTrace();
+				try { rr.decodedData = ResponseDataDecoder.defaultDecoder.decode(buff, dataSize); } catch (Exception e1) { }
 			}
 			
 			buff.position(posToSave);
@@ -379,244 +425,6 @@ public class DNSPacket {
 	
 	
 	
-	public static enum PacketType {
-		QUERY(false),
-		RESPONSE(true);
-		
-		private final boolean bitValue;
-		
-		private PacketType(boolean b) {
-			bitValue = b;
-		}
-		
-		private static PacketType getFromBoolean(boolean b) {
-			return b ? RESPONSE : QUERY;
-		}
-	}
-	
-	public static enum OpCode {
-		QUERY((byte)0x0),
-		IQUERY((byte)0x1),
-		STATUS((byte)0x2),
-		UNDEFINED(null);
-		
-		private final Byte fourBitsValue;
-		
-		private OpCode(Byte b) {
-			fourBitsValue = b;
-		}
-		
-		private static OpCode getFromValue(byte v) {
-			for (OpCode ev : values())
-				if (ev.fourBitsValue != null && v == ev.fourBitsValue) return ev;
-			return UNDEFINED;
-		}
-	
-	}
-	
-	public static enum ResponseCode {
-		NO_ERROR((byte)0x0),
-		FORMAT_ERROR((byte)0x1),
-		SERVER_FAILURE((byte)0x2),
-		NAME_ERROR((byte)0x3),
-		NOT_IMPLEMENTED((byte)0x4),
-		REFUSED((byte)0x5),
-		UNDEFINED(null);
-		
-		private final Byte fourBitsValue;
-		
-		private ResponseCode(Byte b) {
-			fourBitsValue = b;
-		}
-		
-		private static ResponseCode getFromValue(byte v) {
-			for (ResponseCode ev : values())
-				if (ev.fourBitsValue != null && v == ev.fourBitsValue) return ev;
-			return UNDEFINED;
-		}
-	}
-	
-	/**
-	 * Permet d'implémenter une façon de décoder les données dans un ResourceRecord
-	 * selon le type de donnée qu'il contient
-	 * @param <T>
-	 */
-	@FunctionalInterface
-	private interface ResponseDataDecoder<T> {
-		T decode(ByteBuffer buffer, int dataLength) throws Exception;
-		
-		static final ResponseDataDecoder<byte[]> defaultDecoder = (bb, l) -> {
-			byte[] data = new byte[l];
-			bb.get(data);
-			return data;
-		};
-	}
-	
-	
-	public static enum QType {
-		A(1, (bb, l) -> {
-			return InetAddress.getByAddress(ResponseDataDecoder.defaultDecoder.decode(bb, l));
-		}),
-		NS(2),
-		MD(3),
-		MF(4),
-		CNAME(5, (bb, l) -> readLabelSequenceFromDNSPacket(bb)),
-		SOA(6),
-		MB(7),
-		MG(8),
-		MR(9),
-		NULL(10),
-		WSK(11),
-		PTR(12),
-		HINFO(13),
-		MX(14),
-		TXT(15),
-		AXFR(252),
-		MAILB(253),
-		MAILA(254),
-		ALL(255),
-		UNDEFINED(null);
-		
-		private final Integer value;
-		private final ResponseDataDecoder<?> decoder;
-
-		private QType(Integer v, ResponseDataDecoder<?> d) {
-			value = v;
-			decoder = d;
-		}
-		private QType(Integer v) {
-			this(v, ResponseDataDecoder.defaultDecoder);
-		}
-		
-		private static QType getFromValue(int v) {
-			for (QType ev : values())
-				if (ev.value != null && v == ev.value) return ev;
-				
-			return UNDEFINED;
-		}
-		
-	}
-	
-	public static enum DNSClass {
-		IN(1),
-		CS(2),
-		CH(3),
-		HS(4),
-		UNDEFINED(null);
-		
-		private final Integer value;
-		
-		private DNSClass(Integer v) {
-			value = v;
-		}
-		
-		private static DNSClass getFromValue(int v) {
-			for (DNSClass ev : values())
-				if (ev.value != null && v == ev.value) return ev;
-			return UNDEFINED;
-		}
-	}
-	
-	
-	
-	
-	
-	
-	public static class Query {
-		private String qName;
-		private QType qType;
-		private DNSClass qClass;
-		
-		public Query(String n, QType t, DNSClass c) {
-			setName(n);
-			setType(t);
-			setDNSClass(c);
-		}
-		
-		private Query() { };
-		
-		public String getName() { return qName; }
-		public QType getType() { return qType; }
-		public DNSClass getDNSClass() { return qClass; }
-		
-		public void setName(String n) {
-			if (n == null || n.trim().isEmpty()) throw new IllegalArgumentException("name ne peut être null ou vide");
-			qName = n;
-		}
-		
-		public void setType(QType t) {
-			if (t == null) throw new IllegalArgumentException("QType ne peut être null");
-			if (t == QType.UNDEFINED) throw new IllegalArgumentException("QType ne peut être UNDEFINED");
-			qType = t;
-		}
-		
-		public void setDNSClass(DNSClass c) {
-			if (c == null) throw new IllegalArgumentException("DNSClass ne peut être null");
-			if (c == DNSClass.UNDEFINED) throw new IllegalArgumentException("DNSClass ne peut être UNDEFINED");
-			qClass = c;
-		}
-	}
-	
-	
-	
-	
-	
-	public static class ResourceRecord {
-		private String rName;
-		private QType rType;
-		private DNSClass rClass;
-		private long ttl; // unsigned int
-		private byte[] rData;
-		private Object decodedData;
-		
-		public ResourceRecord(String n, QType t, DNSClass c, long ttl, byte[] d) {
-			setName(n);
-			setType(t);
-			setDNSClass(c);
-			setTTL(ttl);
-			setData(d);
-		}
-		
-		private ResourceRecord() { }
-		
-		public String getName() { return rName; }
-		public QType getType() { return rType; }
-		public DNSClass getDNSClass() { return rClass; }
-		public long getTTL() { return ttl; }
-		public byte[] getData() { return Arrays.copyOf(rData, rData.length); }
-		public Object getDecodedData() { return decodedData; }
-		
-		public void setName(String n) {
-			if (n == null || n.trim().isEmpty()) throw new IllegalArgumentException("name ne peut être null ou vide");
-			rName = n.trim();
-		}
-		
-		public void setType(QType t) {
-			if (t == null) throw new IllegalArgumentException("QType ne peut être null");
-			if (t == QType.UNDEFINED) throw new IllegalArgumentException("QType ne peut être UNDEFINED");
-			rType = t;
-		}
-		
-		public void setDNSClass(DNSClass c) {
-			if (c == null) throw new IllegalArgumentException("DNSClass ne peut être null");
-			if (c == DNSClass.UNDEFINED) throw new IllegalArgumentException("DNSClass ne peut être UNDEFINED");
-			rClass = c;
-		}
-		
-		public void setTTL(long t) {
-			if (t < 0 || t > 0xffffffff) throw new IllegalArgumentException("TTL doit être entre 0 et (2^32)-1 inclus.");
-			ttl = t;
-		}
-		
-		public void setData(byte[] d) {
-			rData = Arrays.copyOf(d, d.length);
-		}
-		
-	}
-	
-	
-	
-	
 	
 	public class BadDNSResponseException extends Exception {
 		private static final long serialVersionUID = 1L;
@@ -641,7 +449,7 @@ public class DNSPacket {
 		ByteBuffer bb = ByteBuffer.allocate(512);
 		for (String label : labels) {
 			byte[] chars = label.getBytes();
-			if (chars.length == 0) throw new IllegalArgumentException("un des label de domainName est vide");
+			if (chars.length == 0) continue;
 			if (chars.length > 63) throw new IllegalArgumentException("un des label de domainName est trop grand (> 63 octet)");
 			bb.put((byte)(chars.length & 0x3f));
 			for (byte c : chars)
@@ -692,7 +500,16 @@ public class DNSPacket {
 		if (finalPosition != 0)
 			buffer.position(finalPosition);
 		
-		return ret.substring(0, ret.length()-1);
+		return ret.substring(0, Math.max(ret.length()-1, 0));
+	}
+	
+	
+	
+	
+	public static String readCharacterStringFromDNSPacket(ByteBuffer buffer) {
+		byte[] bytes = new byte[buffer.get() & 0xff];
+		buffer.get(bytes);
+		return new String(bytes);
 	}
 	
 	

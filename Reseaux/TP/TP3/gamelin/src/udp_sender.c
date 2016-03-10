@@ -3,16 +3,15 @@
 #endif
 
 #ifdef __WIN32__ /* si vous êtes sous Windows */
-#include <windows.h>
-#include <winsock.h>
-
+  #include <windows.h>
+  #include <winsock.h>
 #else
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netdb.h> /* gethostbyname */
-#include <linux/limits.h> /* const PATH_MAX */
-#include <string.h>
+  #include <sys/socket.h>
+  #include <netinet/in.h>
+  #include <arpa/inet.h>
+  #include <netdb.h> /* gethostbyname */
+  #include <linux/limits.h> /* const PATH_MAX */
+  #include <string.h>
 #endif
 
 #include <stdio.h>
@@ -91,7 +90,6 @@ void send_packet(udp_packet* packet, int size, char* message) {
     struct sockaddr_in receiver_st;
 
     receiver_st = *(packet->receiver);
-    printf("%s\n", message);
     sendto_check = sendto(packet->sockfd, message, size, 0, (struct sockaddr *)&receiver_st, (socklen_t) sizeof(receiver_st) );
     assert_message((sendto_check != -1), "sendto() error ");
 }

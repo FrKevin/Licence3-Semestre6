@@ -94,10 +94,25 @@ Abort.
 (* partie 3 *)
 
 Lemma exemple134 (A B C : Prop) : (A /\ B -> C) <-> (A -> B -> C).
-Abort.
+Proof.
+split.
+intros abc a b.
+apply abc.
+split.
+exact a.
+exact b.
+intros abc ab.
+apply abc.
+destruct ab as [a b].
+exact a.
+destruct ab as [a b].
+exact b.
+Qed.
+
 
 Lemma exemple135 (A B C : Prop) : (C -> A) \/ (C -> B) -> (C -> A \/ B).
-Abort.
+Proof.
+intros cacb c.
 
 Lemma exemple_136 (X : Type) (A B : X -> Prop) :
   ((forall x, A x) \/ (forall x, B x)) -> forall x, A x \/ B x.

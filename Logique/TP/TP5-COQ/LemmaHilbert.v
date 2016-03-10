@@ -82,8 +82,117 @@ apply np.
 exact p.
 Qed.
 
+Lemma exo6 (P : Prop) : 
+  ~ ~ P -> P.
+Proof.
+intros p.
+apply bottom_c.
+intros pf.
+apply p.
+exact pf.
+Qed.
+
+Lemma exo7 (P : Prop) : 
+  P -> ~ ~ P.
+Proof.
+intros p.
+apply bottom_c.
+intros p'''.
+apply p'''.
+intro p''.
+apply p''.
+exact p.
+Qed.
+
+Lemma exo8 (P Q R : Prop) : 
+  (P -> (Q -> R)) -> (P /\ Q -> R).
+Proof.
+intros pqr.
+intros p_qr.
+apply pqr.
+- apply p_qr.
+- apply p_qr.
+Qed.
+
+Lemma exo9 (P Q R : Prop) : 
+  (P /\ Q -> R) -> (P -> (Q -> R)).
+Proof.
+intros pqr.
+intros p.
+intros q.
+apply pqr.
+split.
+- exact p.
+- exact q.
+Qed.
+
+Lemma exo10 (P : Prop) : 
+  P /\ ~ P -> False.
+Proof.
+intros pp'.
+destruct pp' as [p p'].
+destruct p'.
+exact p.
+Qed.
+
+Lemma exo11 (P : Prop) : 
+  False -> P /\ ~ P.
+Proof.
+intros f.
+split.
+- destruct f.
+- destruct f.
+Qed.
 
 
+Lemma exo12 (P Q : Prop) : 
+  P \/ Q <-> ~ ( ~ P /\ ~ Q).
+Proof.
+split.
+- intros p0q.
+  intros p'_q'.
+  destruct p'_q' as [p' q'].
+  destruct p'.
+  destruct p0q.
+  exact H.
+  destruct q'.
+  exact H.
+- intros p'_q''.
+  apply bottom_c.
+  intro p0q.
+  apply p'_q''.
+  split.
+  + intros p.
+    apply p0q.
+    left.
+    exact p.
+  + intros q.
+    apply p0q.
+    right.
+    exact q.
+Qed.
+  
+Lemma exemple134 (A B C : Prop) : (A /\ B -> C) <-> (A -> B -> C).
+Proof.
+split.
+  intros ab.
+  intros ab'.
+  intros ab''.
+  apply ab.
+  split.
+  exact ab'.
+  exact ab''.
+  intros abc.
+  intros abc'.
+  apply abc.
+  destruct abc'.
+  exact H.
+  destruct abc'.
+  exact H0.
+Qed.
 
 
-
+Lemma exemple135 (A B C : Prop) : (C -> A) \/ (C -> B) -> (C -> A \/ B).
+Proof.
+intros ab.
+  

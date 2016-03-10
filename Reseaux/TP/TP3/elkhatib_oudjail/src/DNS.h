@@ -1,10 +1,10 @@
 #ifndef __DNS_H__
 #define __DNS_H__
 
-#include "core.h"
+#include "Core.h"
 
 /* ----------- HEADER ------------------- */
-#define HEADER_LENGHT 96
+#define HEADER_LENGTH 96
 
 #define HEADER_LENGTH_ID 16
 #define HEADER_LENGTH_QR 1
@@ -25,10 +25,10 @@
 
 
 typedef enum {
-  QUERY = 0,
-  IQUERY = 1,
-  STATUS = 2
-} OPCODE_RESPONSE;
+  QUERY,
+  IQUERY,
+  STATUS
+} opcode_t;
 
 typedef enum {
   NO_ERROR_CONDITION,
@@ -37,15 +37,23 @@ typedef enum {
   NAME_ERROR,
   NOT_IMPLEMENTED,
   REFUSED
-} RCODE_RESPONSE;
+} rcode_t;
 
 
-extern byte_t packet_header[HEADER_LENGHT];
+typedef byte_t header_t[HEADER_LENGTH];
 
-extern id_t id;
+/*
+QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
+           +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+           |                    QDCOUNT                    |
+           +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+           |                    ANCOUNT                    |
+           +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+           |                    NSCOUNT                    |
+           +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+           |                    ARCOUNT
 
-
-
+*/
 /* QUESTION */
 /* A construire */
 
