@@ -14,6 +14,7 @@ import java.util.function.Function;
 
 import rsx.tp3.BitArray;
 import rsx.tp3.Main;
+import rsx.tp3.dns.QType.ResponseDataDecoder;
 
 /**
  * Implémentation du protocole DNS basé sur la RFC1035.
@@ -153,6 +154,7 @@ public class DNSPacket {
 				rr.decodedData = rr.rType.decoder.decode(buff, dataSize);
 			} catch (Exception e) {
 				new RuntimeException("Erreur lors du décodage des données d'un ResourceRecord", e).printStackTrace();
+				try { rr.decodedData = ResponseDataDecoder.defaultDecoder.decode(buff, dataSize); } catch (Exception e1) { }
 			}
 			
 			buff.position(posToSave);

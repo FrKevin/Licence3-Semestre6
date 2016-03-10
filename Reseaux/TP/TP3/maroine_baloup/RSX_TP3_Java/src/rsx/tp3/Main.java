@@ -34,7 +34,7 @@ public class Main {
 	
 	
 	
-	
+
 	public static String bytesToHexaString(byte[] bytes) {
 		String rep = "";
 		
@@ -42,6 +42,18 @@ public class Main {
 			if (b >= 0 && b < 16)
 				rep += "0";
 			rep += Integer.toHexString(b&0xff)+" ";
+		}
+		
+		
+		return rep;
+	}
+	public static String bytesToBinaryString(byte[] bytes) {
+		String rep = "";
+		
+		for (byte b : bytes) {
+			if (b >= 0 && b < 16)
+				rep += "0";
+			rep += Integer.toBinaryString(b&0xff)+" ";
 		}
 		
 		
