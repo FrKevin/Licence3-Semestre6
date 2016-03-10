@@ -159,6 +159,17 @@ split.
   destruct q'.
   exact H.
 - intros p'_q''.
-  left.
-  destruct p'_q''.
-  de
+  apply bottom_c.
+  intro p0q.
+  apply p'_q''.
+  split.
+  + intros p.
+    apply p0q.
+    left.
+    exact p.
+  + intros q.
+    apply p0q.
+    right.
+    exact q.
+Qed.
+    
