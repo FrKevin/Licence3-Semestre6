@@ -161,4 +161,4 @@ split.
 - intros p'_q''.
   left.
   destruct p'_q''.
-  de
+  
