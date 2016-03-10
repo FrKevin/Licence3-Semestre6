@@ -1,7 +1,8 @@
 package rsx.tp3;
 
-import java.net.DatagramSocket;
 import java.net.InetAddress;
+
+import rsx.tp3.dns.DNSPacket;
 
 public class Main {
 	
@@ -14,20 +15,13 @@ public class Main {
 	
 	
 	
+	
 	public static void main(String[] args) throws Exception {
-		System.out.println("---------- Requête : ----------");
-		DNSPacket query = DNSPacket.createSimpleQuery("www.google.fr");
+		System.out.println("InetAddress.getByName() (résolution DNS de Java)");
+		System.out.println(InetAddress.getByName("www.lifl.fr"));
 		
-		query.displayData();
-		
-		DatagramSocket socket = new DatagramSocket();
-		query.send(socket, InetAddress.getByName("8.8.8.8"), 53);
-		
-		DNSPacket response = query.waitForDNSResponse(socket);
-		
-		System.out.println("\n\n\n---------- Réponse : ----------\n");
-		
-		response.displayData();
+		System.out.println("DNSPacket.getAddressFromHostName() (notre résolution DNS, il se peut que la connexion vers le serveur DNS ne se fasse pas)");
+		System.out.println(DNSPacket.getAddressFromHostName("www.lifl.fr", "8.8.8.8", true));
 		
 	}
 	
