@@ -4,7 +4,7 @@
 #include "Core.h"
 
 /* ----------- HEADER ------------------- */
-#define HEADER_LENGHT 96
+#define HEADER_LENGTH 96
 
 #define HEADER_LENGTH_ID 16
 #define HEADER_LENGTH_QR 1
@@ -40,8 +40,20 @@ typedef enum {
 } rcode_t;
 
 
-extern byte_t packet_header[HEADER_LENGHT];
+typedef byte_t header_t[HEADER_LENGTH];
 
+/*
+QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
+           +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+           |                    QDCOUNT                    |
+           +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+           |                    ANCOUNT                    |
+           +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+           |                    NSCOUNT                    |
+           +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+           |                    ARCOUNT
+
+*/
 /* QUESTION */
 /* A construire */
 
