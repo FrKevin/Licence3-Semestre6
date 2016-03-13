@@ -6,7 +6,7 @@
 
 #include "common.h"
 #include "question.h"
-#include "packet.h"
+#include "dns_packet.h"
 
 
 

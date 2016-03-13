@@ -4,8 +4,8 @@
     \date 2016
     \brief Définie un paquet DNS
 */
-#ifndef _packet_H_
-#define _packet_H_
+#ifndef _dns_packet_H_
+#define _dns_packet_H_
 
 /*!
     \enum type_of_request
