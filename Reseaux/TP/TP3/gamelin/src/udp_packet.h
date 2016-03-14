@@ -38,9 +38,9 @@ typedef struct udp_packet_st {
 extern void initialize_udp_packet(udp_packet* packet, char* hostname, int port);
 
 /*!
-\brief Send UDP packet
-\param packet The udp_packet structure
-\param message The message to send
+    \brief Send UDP packet
+    \param packet The udp_packet structure
+    \param message The message to send
 */
 extern void send_packet(udp_packet* packet, int size, char* message);
 
@@ -49,7 +49,7 @@ extern void send_packet(udp_packet* packet, int size, char* message);
   \param packet The udp_packet structure
   \param message The message to send
 */
-extern void receive_packet(udp_packet* packet, char buffer[], int sizeof_buffer);
+extern int receive_packet(udp_packet* packet, char buffer[], int sizeof_buffer);
 
 /*!
     \brief close socket

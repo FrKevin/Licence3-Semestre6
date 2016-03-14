@@ -100,7 +100,7 @@ void initialize_sockaddr_in(udp_packet* packet, short sin_family, int port, long
      send_verbose_message("Your message has been sent.");
  }
 
- void receive_packet(udp_packet* packet, char buffer[], int sizeof_buffer){
+ int receive_packet(udp_packet* packet, char buffer[], int sizeof_buffer){
      int length = sizeof(struct sockaddr_in);
      int n, i;
 
@@ -116,6 +116,8 @@ void initialize_sockaddr_in(udp_packet* packet, short sin_family, int port, long
              printf("\n");
          }
      }
+     printf("\n");
+     return n;
  }
 
 void close_socket(udp_packet* packet) {

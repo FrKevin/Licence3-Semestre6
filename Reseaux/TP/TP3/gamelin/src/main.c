@@ -25,10 +25,12 @@ void usage(void) {
 
 int main(int argc, char **argv) {
     udp_packet udp_packet;
-    dns_packet dns_packet;
+    dns_packet dns_packet_send;
+    dns_packet dns_packet_receive;
 
     char buffer[16384];
     int offset = 0;
+    int receive_size;
     char c;
 
     verbose = 0;
@@ -50,19 +52,21 @@ int main(int argc, char **argv) {
 
     initialize_udp_packet(&udp_packet, "212.27.40.241", 53);
 
-    create_query(&dns_packet, "www.google.fr");
+    create_query(&dns_packet_send, "www.google.fr");
 
-    display_packet(&dns_packet);
+    display_packet(&dns_packet_send);
 
-    offset = convert_dns_query_to_char(&dns_packet, buffer);
+    offset = convert_dns_packet_to_char(&dns_packet_send, buffer);
 
     display_packet_to_format((char *) buffer, offset, 16);
     printf("\n");
     display_packet_to_format((char *) buffer, offset, 2);
 
     send_packet(&udp_packet, offset, (char *) buffer);
+
     memset(&buffer[0], 0, 16384);
-    receive_packet(&udp_packet, buffer, offset*2);
+    receive_size = receive_packet(&udp_packet, buffer, offset*2);
+    convert_char_to_dns_packet(buffer, receive_size, &dns_packet_receive);
 
     close_socket(&udp_packet);
 

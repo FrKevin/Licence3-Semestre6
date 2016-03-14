@@ -96,6 +96,9 @@ struct st_dns_packet {
             Response code - this 4 bit field is set as part of
             responses.
     */
+    int nunber_of_question; /*!< an unsigned 16 bit integer specifying the number of
+            entries in the question section.
+    */
     unsigned int an_count; /*!< an unsigned 16 bit integer specifying the number of
             resource records in the answer section.
     */
@@ -131,8 +134,17 @@ extern void display_packet_to_format(char* dns_query, int sizeof_query, int is_b
 
 /*!
     \brief Create a byte array width an query
+    \param packet The DNS packet
+    \param buffer The result of the methode
 */
-extern int convert_dns_query_to_char(dns_packet* packet, char buffer[16384]);
+extern int convert_dns_packet_to_char(dns_packet* packet, char buffer[16384]);
 
+/*!
+    \brief Create a DNS query width the answer
+    \param buffer The DNS answer
+    \param sizeof_buffer The size of the buffer
+    \param packet The result of the methode
+*/
+extern void convert_char_to_dns_packet(char buffer[], int sizeof_buffer, dns_packet* packet);
 
 #endif

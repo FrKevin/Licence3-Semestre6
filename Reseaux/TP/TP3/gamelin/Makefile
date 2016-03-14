@@ -17,8 +17,10 @@ EXEC	= dns_linux
 all: $(EXEC)
 	rm -rf $(OBJ)/ || true
 	mkdir $(OBJ)
-	mv -f $(OBJS_SENDER) $(OBJ)
-	mv -f $(OBJS_RECEIVER) $(OBJ)
+	mv -f $(OBJS) $(OBJ)
+
+dns_linux: $(OBJS)
+		$(CC) ${CFLAGS} $(OBJS) -o $@
 
 dns_windows:$(OBJS)
 	$(CC) ${CFLAGS} $(OBJS) -o $@ -lws2_32

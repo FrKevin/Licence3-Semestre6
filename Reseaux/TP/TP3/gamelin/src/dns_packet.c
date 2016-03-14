@@ -93,7 +93,7 @@ void display_packet_to_format(char* dns_query, int sizeof_query, int is_binary){
     printf("\n");
 }
 
-int  convert_dns_query_to_char(dns_packet* packet, char buffer[16384]){
+int  convert_dns_packet_to_char(dns_packet* packet, char buffer[16384]){
     int index_of_buffer = 0;
     int i=0, j = 0, offset = 0;
     unsigned char buffer_byte[8] ={0,0,0,0,0,0,0,0};
@@ -176,4 +176,81 @@ int  convert_dns_query_to_char(dns_packet* packet, char buffer[16384]){
     send_verbose_message("");
 
     return index_of_buffer;
+}
+
+char* convert_label_to_char(int n, char buffer[], int offset){
+    char* name;
+    int i = 0;
+
+    name = malloc (n*sizeof(char));
+    assert_message( name != NULL, "malloc error.");
+
+    for(i = 0; i< n; i++){
+        name[i] = (char)buffer[offset+i];
+    }
+    name[n] = '\0';
+    return name;
+}
+
+void convert_char_to_dns_packet(char buffer[], int sizeof_buffer, dns_packet* packet){
+    int flag = 0;
+    int index = 0;
+    int i = 0;
+    unsigned char buffer_byte[8] ={0,0,0,0,0,0,0,0};
+    char domaine_name[PATH_MAX];
+    char** tmp;
+
+    /* The id of answer */
+    packet->id[0] = buffer[index++];
+    packet->id[1] = buffer[index++];
+
+    memset(&buffer_byte[0], 0, sizeof(buffer_byte));
+    flag = buffer[index++] & 0xFF;
+    int_to_byte(flag, buffer_byte);
+    packet->is_answer = buffer_byte[0];
+    /* op_code: buffer_byte[1] buffer_byte[2] buffer_byte[3] buffer_byte[4] */
+    packet->op_code = QUERY;
+
+    packet->authoritative_answer =  buffer_byte[5];
+    packet->truncated = buffer_byte[6];
+    packet->recursion_desired  = buffer_byte[7];
+
+    memset(&buffer_byte[0], 0, sizeof(buffer_byte));
+    flag = buffer[index++] & 0xFF;
+    packet->recursion_available = buffer_byte[0];
+    packet->reserved[0] = 0;
+    packet->reserved[1] = 0;
+    packet->reserved[2] = 0;
+
+    /* TODO */
+    packet->r_code = NO_ERROR;
+
+    flag = ( buffer[index++] & 0xffff) << 8;
+    flag += buffer[index++] & 0xffff;
+    packet->nunber_of_question = flag;
+
+    flag = ( buffer[index++] & 0xffff) << 8;
+    flag += buffer[index++] & 0xffff;
+    packet->an_count = flag;
+
+    flag = ( buffer[index++] & 0xffff) << 8;
+    flag += buffer[index++] & 0xffff;
+    packet->ns_count = flag;
+
+    flag = ( buffer[index++] & 0xffff) << 8;
+    flag += buffer[index++] & 0xffff;
+    packet->ar_count = flag;
+
+
+    tmp = (char**)malloc(3*sizeof(char*));
+    assert_message( tmp!= NULL, "malloc error");
+
+    for( i = 0; i < 3; i++){
+        flag = buffer[index++] & 0xFF;
+        tmp[i] = convert_label_to_char(flag, buffer, index);
+        index += flag;
+    }
+    snprintf(domaine_name, PATH_MAX, "%s.%s.%s", tmp[0], tmp[1], tmp[2]);
+
+    printf("domaine_name %s \n", domaine_name);
 }
