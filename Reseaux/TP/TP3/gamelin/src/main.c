@@ -7,7 +7,6 @@
 #include "common.h"
 #include "dns_packet.h"
 #include "udp_packet.h"
-#include "udp_receiver.h"
 
 
 /*
@@ -15,9 +14,9 @@
  */
 void usage(void) {
     #ifdef __WIN32__
-        printf("Usage: windows_receiver.exe [-hv]\n");
+        printf("Usage: dns_windows.exe [-hv]\n");
     #else
-        printf("Usage: receiver [-hv]\n");
+        printf("Usage: dns_linux [-hv]\n");
     #endif
     printf("   -h   print this message\n");
     printf("   -v   print additional diagnostic information\n");
@@ -25,9 +24,11 @@ void usage(void) {
 }
 
 int main(int argc, char **argv) {
-    udp_packet udp_receiver;
+    udp_packet udp_packet;
+    dns_packet dns_packet;
 
     char buffer[16384];
+    int offset = 0;
     char c;
 
     verbose = 0;
@@ -45,14 +46,25 @@ int main(int argc, char **argv) {
                 usage();
         }
     }
-
     memset(&buffer[0], 0, 16384);
 
-    initialize_receiver(&udp_receiver, 53);
+    initialize_udp_packet(&udp_packet, "212.27.40.241", 53);
 
-    receive_packet(&udp_receiver, buffer, 6);
+    create_query(&dns_packet, "www.google.fr");
 
-    close_socket(&udp_receiver);
+    display_packet(&dns_packet);
+
+    offset = convert_dns_query_to_char(&dns_packet, buffer);
+
+    display_packet_to_format((char *) buffer, offset, 16);
+    printf("\n");
+    display_packet_to_format((char *) buffer, offset, 2);
+
+    send_packet(&udp_packet, offset, (char *) buffer);
+    memset(&buffer[0], 0, 16384);
+    receive_packet(&udp_packet, buffer, offset*2);
+
+    close_socket(&udp_packet);
 
     exit(EXIT_SUCCESS);
 }

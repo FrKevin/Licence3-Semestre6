@@ -73,6 +73,51 @@ void initialize_sockaddr_in(udp_packet* packet, short sin_family, int port, long
     packet->receiver = &receiver_st;
 }
 
+ void initialize_udp_packet(udp_packet* packet, char* hostname, int port){
+     send_verbose_message("");
+
+     initialize_socket(packet);
+     send_verbose_message("The socket is initialize.");
+
+     initialize_hostname(packet, hostname);
+     send_verbose_message("The hostname is initialize.");
+
+     initialize_sockaddr_in(packet, AF_INET, port, -1);
+     send_verbose_message("The receiver of dns packet is initialize.");
+
+     send_verbose_message("The UDP packet is initialize.");
+     send_verbose_message("");
+ }
+
+ void send_packet(udp_packet* packet, int size, char* message) {
+     int sendto_check;
+     struct sockaddr_in receiver_st;
+
+     receiver_st = *(packet->receiver);
+     sendto_check = sendto(packet->sockfd, message, size, 0, (struct sockaddr *)&receiver_st, (socklen_t) sizeof(receiver_st) );
+     assert_message((sendto_check != -1), "sendto() error ");
+
+     send_verbose_message("Your message has been sent.");
+ }
+
+ void receive_packet(udp_packet* packet, char buffer[], int sizeof_buffer){
+     int length = sizeof(struct sockaddr_in);
+     int n, i;
+
+     printf("Enter receive_packet() \n");
+
+     if( ( n = recvfrom(packet->sockfd, buffer, sizeof_buffer, 0, (SOCKADDR *)&(packet->receiver), &length ) ) < 0) {
+         assert_message(0 ,"error receive: ");
+     }
+     printf("READ DATA: \n");
+     for(i=0; i< n; i++){
+         printf("%02x ",  buffer[i]);
+         if ( (i+1) % 16 == 0 ) {
+             printf("\n");
+         }
+     }
+ }
+
 void close_socket(udp_packet* packet) {
     #ifdef __WIN32__
         WSACleanup();

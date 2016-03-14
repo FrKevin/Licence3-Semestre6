@@ -8,6 +8,10 @@
 #define _udp_packet_H_
 
 
+#ifdef __WIN32__
+    typedef int socklen_t;
+#endif
+
 /*!
     \def h_addr
     \brief This is a synonym for h_addr_list[0]; in other words, it is the first host address. (compatibility)
@@ -30,27 +34,22 @@ typedef struct udp_packet_st {
    struct sockaddr_in *receiver; /*!< The structure represent the receiver */
 } udp_packet;
 
-/*!
-    \brief initialize_socket for udp_packet
-    \brief packet The UDP packet
-*/
-extern void initialize_socket(udp_packet* packet);
+
+extern void initialize_udp_packet(udp_packet* packet, char* hostname, int port);
 
 /*!
-    \brief initialize hostname for udp_packet
-    \param packet The UDP packet
-    \brief hostname The receiver hostname
+\brief Send UDP packet
+\param packet The udp_packet structure
+\param message The message to send
 */
-extern void initialize_hostname(udp_packet* packet, char* hostname);
+extern void send_packet(udp_packet* packet, int size, char* message);
 
 /*!
-    \brief initialize sockaddr_in for udp_packet
-    \param packet The UDP packet
-    \param hostname The receiver hostname
-    \param sin_family address family, must be AF_INET
-    \param addr The addresse of receiver, use -1 is unknown
+  \brief receive UDP packet
+  \param packet The udp_packet structure
+  \param message The message to send
 */
-extern void initialize_sockaddr_in(udp_packet* packet, short sin_family, int port, long addr);
+extern void receive_packet(udp_packet* packet, char buffer[], int sizeof_buffer);
 
 /*!
     \brief close socket
