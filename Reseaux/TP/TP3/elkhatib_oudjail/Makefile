@@ -7,11 +7,11 @@ NOM2=Oudjail
 
 CC      = gcc
 CFLAGS  = -g
-CFLAGS += -Wall -Werror -ansi -pedantic
+CFLAGS += -Wall -Werror -std=c99 -pedantic
 CFLAGS += -D_XOPEN_SOURCE=500
 LDFLAGS = -g
-SRCS    = Core.c DNS.c DNSSolver.c DNSMake.c UDPReceive.c
-OBJS    = Core.o DNS.o DNSSolver.o DNSMake.o UDPReceive.o
+SRCS    = Core.c DNS.c DNSQuestion.c DNSHeader.c UDPReceive.c
+OBJS    = Core.o DNS.o DNSQuestion.o DNSHeader.o UDPReceive.o
 EXEC    = DNSSolver
 
 # main entries
