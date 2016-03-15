@@ -2,17 +2,59 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __WIN32__
+    #include <windows.h>
+#endif
+
 #include "common.h"
+
+#ifdef __WIN32__
+    /*
+    Value for color
+    0: noir
+    1: bleu foncé
+    2: vert
+    3: bleu-gris
+    4: marron
+    5: pourpre
+    6: kaki
+    7: gris clair
+    8: gris
+    9: bleu
+    10: vert fluo
+    11: turquoise
+    12: rouge
+    13: rose fluo
+    14: jaune fluo
+    15: blanc
+    */
+    void set_color(int t, int f) {
+        HANDLE H=GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(H,f*16+t);
+    }
+#endif
+
 
 void assert_message(int cond, char* message){
     if(cond == 0 ){
-      #ifdef WIN32
-        printf("%s\n", message);
-      #endif
-      #ifdef UNIX
+      #ifdef __WIN32__
+        printf("%s: code error: %i\n", message, errno_windows);
+      #else
         perror(message);
       #endif
       exit(EXIT_FAILURE);
+    }
+}
+
+void send_verbose_message(char* message){
+    if(verbose == 1){
+        #ifdef __WIN32__
+            set_color( 2, 0);
+            printf("%s\n", message);
+            set_color(7, 0);
+        #else
+            printf(ANSI_COLOR_BOLDGREEN "%s"NORM"\n", message);
+        #endif
     }
 }
 
@@ -33,6 +75,7 @@ unsigned char toByte(unsigned char bits[]) {
   }
   return b;
 }
+
 #ifdef __WIN32__
   char *strdup (const char *s) {
       char *d = malloc (strlen (s) + 1);   /* Space for length plus nul */
