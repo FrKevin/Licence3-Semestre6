@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="E:/Dev/GitRepositery/Licence3-Semestre6/Logique/TP/TP4/ressource/logicline/lib/java-cup-11a.jar"/>
-	<classpathentry kind="lib" path="E:/Dev/GitRepositery/Licence3-Semestre6/Logique/TP/TP4/ressource/logicline/lib/java-cup-11b-runtime.jar"/>
-	<classpathentry kind="lib" path="E:/Dev/GitRepositery/Licence3-Semestre6/Logique/TP/TP4/ressource/logicline/lib/java-cup-11b.jar"/>
-	<classpathentry kind="lib" path="E:/Dev/GitRepositery/Licence3-Semestre6/Logique/TP/TP4/ressource/logicline/lib/jflex-1.6.0.jar"/>
+	<classpathentry kind="lib" path="/root/Dev/GitRepository/Licence3-Semestre6/Logique/TP/TP4/ressource/logicline/lib/java-cup-11a.jar"/>
+	<classpathentry kind="lib" path="/root/Dev/GitRepository/Licence3-Semestre6/Logique/TP/TP4/ressource/logicline/lib/java-cup-11b-runtime.jar"/>
+	<classpathentry kind="lib" path="/root/Dev/GitRepository/Licence3-Semestre6/Logique/TP/TP4/ressource/logicline/lib/java-cup-11b.jar"/>
+	<classpathentry kind="lib" path="/root/Dev/GitRepository/Licence3-Semestre6/Logique/TP/TP4/ressource/logicline/lib/jflex-1.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
