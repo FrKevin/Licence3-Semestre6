@@ -12,7 +12,7 @@ public class Non extends Formule{
 
 	@Override
 	public String toString() {
-		return "("+ formule + ")";
+		return "-("+ formule + ")";
 	}
 
 	@Override
