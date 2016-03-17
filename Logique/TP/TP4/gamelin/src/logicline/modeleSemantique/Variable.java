@@ -36,13 +36,12 @@ public class Variable extends Formule{
 
 	@Override
 	protected Formule supprImplications() {
-		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 
 	@Override
 	protected Formule negation() {
-		return null;
+		return new Non(this);
 	}
 
 }
