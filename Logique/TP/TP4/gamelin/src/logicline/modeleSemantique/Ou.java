@@ -27,14 +27,25 @@ public class Ou extends Formule{
 
 	@Override
 	public Formule substitue(Substitution s) {
-		// TODO Auto-generated method stub
-		return null;
+		fd = this.fd.substitue(s);
+		fg = this.fg.substitue(s);
+		return this;
 	}
 
 	@Override
 	public boolean valeur() throws VariableLibreException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	protected Formule supprImplications() {
+		return this;
+	}
+
+	@Override
+	protected Formule negation() {
+		return new Et(new Non(fg), new Non(fd));
 	}
 
 }

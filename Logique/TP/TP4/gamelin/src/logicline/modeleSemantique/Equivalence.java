@@ -26,15 +26,26 @@ public class Equivalence extends Formule{
 	}
 
 	@Override
-	public Formule substitue(Substitution s) {
-		// TODO Auto-generated method stub
-		return null;
+	public Formule substitue(Substitution s) {	
+		fg = fg.substitue(s);
+		fd = fd.substitue(s);
+		return this;
 	}
 
 	@Override
 	public boolean valeur() throws VariableLibreException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	protected Formule supprImplications() {
+		return new Et(new Ou(new Non(fg), fd), new Ou(fg, new Non(fd)));
+	}
+
+	@Override
+	protected Formule negation() {
+		return new Non(supprImplications());
 	}
 
 }

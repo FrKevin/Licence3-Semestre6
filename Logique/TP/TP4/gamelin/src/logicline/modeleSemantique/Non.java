@@ -24,13 +24,24 @@ public class Non extends Formule{
 
 	@Override
 	public Formule substitue(Substitution s) {
-		return null;
+		formule = formule.substitue(s);
+		return this;
 	}
 
 	@Override
 	public boolean valeur() throws VariableLibreException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	protected Formule supprImplications() {
+		return this;
+	}
+
+	@Override
+	protected Formule negation() {
+		return this;
 	}
 
 }

@@ -1,5 +1,6 @@
 package logicline.modeleSemantique;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Constante extends Formule{
@@ -21,8 +22,9 @@ public class Constante extends Formule{
 
 	@Override
 	public Set<String> variablesLibres() {
-		// TODO Auto-generated method stub
-		return null;
+		HashSet<String> set = new HashSet<>();
+		set.add(Boolean.toString(b));
+		return set;
 	}
 
 	@Override
@@ -35,6 +37,16 @@ public class Constante extends Formule{
 	public boolean valeur() throws VariableLibreException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	protected Formule negation() {
+		return new Constante(!b);
+	}
+
+	@Override
+	protected Formule supprImplications() {
+		return this;
 	}
 
 }

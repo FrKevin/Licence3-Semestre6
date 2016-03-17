@@ -34,4 +34,15 @@ public class Variable extends Formule{
 		return false;
 	}
 
+	@Override
+	protected Formule supprImplications() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected Formule negation() {
+		return null;
+	}
+
 }

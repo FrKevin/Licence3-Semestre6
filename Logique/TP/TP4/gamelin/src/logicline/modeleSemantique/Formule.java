@@ -7,15 +7,15 @@ public abstract class Formule {
 
 	//retourne une représentation ASCII de la formule logique
 	public abstract String toString();
-
+	
 	//supprime toutes les implications de la formule
-	protected Formule supprImplications() { return this; }
+	protected abstract Formule supprImplications();
 
 	//déplace les non à l'intérieur des formules
 	protected Formule entrerNegations() { return this; }
 
 	//Retourne la formule représentant la négation de this
-	protected Formule negation() { return new Non(this); }
+	protected abstract Formule negation();
 
 	//Retourne vrai si la formule contient un Et
 	protected boolean contientEt() { return false; }
