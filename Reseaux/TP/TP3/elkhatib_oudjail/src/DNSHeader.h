@@ -40,7 +40,12 @@ typedef enum {
 } rcode_t;
 
 
+
+
 typedef byte_t header_t[HEADER_LENGTH];
+
+header_t DNSH_construct();
+header_t DNSH_construct_with_bytes(byte_t bytes);
 
 /* Setteur */
 extern void DNSH_set_id(header_t headp, id_t id);
@@ -77,5 +82,6 @@ extern qdcount_t DNSH_get_qdcount(header_t headp);
 extern ancount_t DNSH_get_ancount(header_t headp);
 extern nscount_t DNSH_get_nscount(header_t headp);
 extern arcount_t DNSH_get_arcount(header_t headp);
+
 
 #endif
