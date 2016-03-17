@@ -52,4 +52,9 @@ public class Equivalence extends Formule{
 	protected Formule entrerNegations() {
 		return this;
 	}
+
+	@Override
+	protected boolean contientEt() {
+		return fg.contientEt() || fd.contientEt();
+	}
 }

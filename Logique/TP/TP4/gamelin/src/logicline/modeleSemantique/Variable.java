@@ -24,8 +24,7 @@ public class Variable extends Formule{
 
 	@Override
 	public Formule substitue(Substitution s) {
-		// TODO Auto-generated method stub
-		return null;
+		return s.get(name);
 	}
 
 	@Override
@@ -47,5 +46,11 @@ public class Variable extends Formule{
 	@Override
 	protected Formule entrerNegations() {
 		return this;
+	}
+
+	@Override
+	protected boolean contientEt() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

@@ -29,8 +29,7 @@ public class Constante extends Formule{
 
 	@Override
 	public Formule substitue(Substitution s) {
-		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 
 	@Override
@@ -52,5 +51,10 @@ public class Constante extends Formule{
 	@Override
 	protected Formule entrerNegations() {
 		return this;
+	}
+
+	@Override
+	protected boolean contientEt() {
+		return false;
 	}
 }

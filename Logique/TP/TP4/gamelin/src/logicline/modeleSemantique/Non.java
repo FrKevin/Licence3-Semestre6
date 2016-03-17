@@ -49,4 +49,10 @@ public class Non extends Formule{
 		return formule.negation();
 	}
 
+	@Override
+	protected boolean contientEt() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

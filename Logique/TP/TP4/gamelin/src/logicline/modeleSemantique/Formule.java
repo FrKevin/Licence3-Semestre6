@@ -18,7 +18,7 @@ public abstract class Formule {
 	protected abstract Formule negation();
 
 	//Retourne vrai si la formule contient un Et
-	protected boolean contientEt() { return false; }
+	protected abstract boolean contientEt();
 
 	//Retourne une formule équivalente à OU(this, d)
 	protected Formule ougauche(Formule d) { return d.oudroite(this); }

@@ -52,4 +52,10 @@ public class Ou extends Formule{
 	protected Formule entrerNegations() {
 		return this;
 	}
+
+	@Override
+	protected boolean contientEt() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
