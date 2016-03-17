@@ -1,9 +1,11 @@
 var searchData=
 [
-  ['tp_203_3a_20reseaux',['TP 3: Reseaux',['../index.html',1,'']]],
-  ['tc',['tc',['../packet_8h.html#a1aa8b57414a2fcefa2fa67136db9595a',1,'packet.h']]],
-  ['tobyte',['toByte',['../common_8h.html#ac97472ba5af1ca5948066370496f4f60',1,'common.c']]],
-  ['txt',['TXT',['../question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da523681f1477727482b38d5181ecb35d4',1,'question.h']]],
-  ['type',['type',['../structst__question.html#a3ab7f36d0244ba7f663e35c08bc8f6be',1,'st_question::type()'],['../question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2d',1,'type():&#160;question.h']]],
-  ['type_5fof_5frequest',['type_of_request',['../packet_8h.html#ab3c41df4e6e6eca61577a7c7bafd9844',1,'type_of_request():&#160;packet.h'],['../packet_8h.html#af19b65738ec2415f6039359222971afc',1,'type_of_request():&#160;packet.h']]]
+  ['r_5fcode',['r_code',['../structst__dns__packet.html#a014c888210152a8a325b7073127d4076',1,'st_dns_packet']]],
+  ['receive_5fpacket',['receive_packet',['../udp__packet_8h.html#aa191e64d83ff62e9b886076ae42fec5a',1,'udp_packet.c']]],
+  ['receiver',['receiver',['../structudp__packet__st.html#ae83f61d2c1fa96988e55e9a0e51b74c9',1,'udp_packet_st']]],
+  ['recursion_5favailable',['recursion_available',['../structst__dns__packet.html#ac4aa755642ccaee13a1bb5be76533de8',1,'st_dns_packet']]],
+  ['recursion_5fdesired',['recursion_desired',['../structst__dns__packet.html#a49205aabdb66ed29ef436206e886ca27',1,'st_dns_packet']]],
+  ['refused',['REFUSED',['../dns__packet_8h.html#a34bd9665f6e0b6a727ac11fd81e85fd0a4cc93652b776dfc22249c270bd7af724',1,'dns_packet.h']]],
+  ['reserved',['reserved',['../structst__dns__packet.html#a643362c42bc79de62b2be9142828cfd4',1,'st_dns_packet']]],
+  ['response_5fcode',['response_code',['../dns__packet_8h.html#a34bd9665f6e0b6a727ac11fd81e85fd0',1,'response_code():&#160;dns_packet.h'],['../dns__packet_8h.html#a1d61b0de0b588d01fddea2144992cae8',1,'response_code():&#160;dns_packet.h']]]
 ];

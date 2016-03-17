@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['name',['name',['../structst__question.html#a5ac083a645d964373f022d03df4849c8',1,'st_question']]],
-  ['ns_5fcount',['ns_count',['../packet_8h.html#aa5fe57f86c5881d52cdb30d2986286ad',1,'packet.h']]]
+  ['id',['id',['../structst__dns__packet.html#a47b6d7fe86ff80f85f0237ef0160cfdf',1,'st_dns_packet']]],
+  ['is_5fanswer',['is_answer',['../structst__dns__packet.html#aef99894362c7266c13e9595278b9e55b',1,'st_dns_packet']]]
 ];

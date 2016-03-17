@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['q_5ftypes',['q_types',['../question_8h.html#a3730bccf3b24dc3d3c00fa5e93fd27da',1,'question.h']]],
-  ['question',['question',['../question_8h.html#a823a1a4706df0da86ecf311d9bcba0ef',1,'question.h']]]
+  ['dns_5fpacket',['dns_packet',['../dns__packet_8h.html#abbc3c5781ce5637e7523f2be5c60946f',1,'dns_packet.h']]]
 ];

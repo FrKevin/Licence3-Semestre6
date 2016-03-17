@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.10"/>
-<title>TP3 Réseaux: question.h File Reference</title>
+<title>TP3 Reseaux: src/question.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">TP3 Réseaux
+   <div id="projectname">TP3 Reseaux
    </div>
   </td>
  </tr>
@@ -38,7 +38,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -61,7 +61,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>Globals</span></a></li>
+      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 <!-- window showing the filter options -->
@@ -78,10 +78,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li>  </ul>
+</div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
@@ -97,7 +101,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p><a href="question_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Data Structures</h2></td></tr>
+Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structst__question.html">st_question</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A representation of question.  <a href="structst__question.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -124,57 +128,37 @@ typedef struct <a class="el" href="structst__question.html">st_question</a>&#160
 Enumerations</h2></td></tr>
 <tr class="memitem:a7aead736a07eaf25623ad7bfa1f0ee2d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2d">type</a> { <br />
 &#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da42a4ade1acd55a49164099104990e09f">A</a> = 1, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da1904356e8ec34146e03f386bcb0da805">NS</a> = 2, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da800ab8d25820e3e9fe503340561b0ca6">MD</a> = 3, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da45ff147f3ab637d3fbf9d352393c7d2d">MF</a> = 4, 
+<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da1904356e8ec34146e03f386bcb0da805">NS</a> = 2, 
+<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da800ab8d25820e3e9fe503340561b0ca6">MD</a> = 3, 
+<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da45ff147f3ab637d3fbf9d352393c7d2d">MF</a> = 4, 
 <br />
 &#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2dade67086c13588ac1596ff17f43a62d81">CNAME</a> = 5, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da3185b2efaf12ead0575f39c341ef0db6">SOA</a> = 6, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2daedcf941b892d2e9278c234994a3e9bd6">MB</a> = 7, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da57df81bb36667bc510b4fe1bc9f8b066">MG</a> = 8, 
+<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da3185b2efaf12ead0575f39c341ef0db6">SOA</a> = 6, 
+<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2daedcf941b892d2e9278c234994a3e9bd6">MB</a> = 7, 
+<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da57df81bb36667bc510b4fe1bc9f8b066">MG</a> = 8, 
 <br />
 &#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da72e220e7a1804705bd074f8cdd5093c4">MR</a> = 9, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2dac157bdf0b85a40d2619cbc8bc1ae5fe2">NONE</a> = 10, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da86ca967a6ab897ff945e860b7fc9b0b8">WKS</a> = 11, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da38a41f9694772ab2b72cdacbe74654b0">PTR</a> = 12, 
+<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2dac157bdf0b85a40d2619cbc8bc1ae5fe2">NONE</a> = 10, 
+<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da86ca967a6ab897ff945e860b7fc9b0b8">WKS</a> = 11, 
+<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da38a41f9694772ab2b72cdacbe74654b0">PTR</a> = 12, 
 <br />
 &#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2dada22192cdba23c0c5b1499993ebc881d">HINFO</a> = 13, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2daa9f00970caa3c9e9f68820bef0e2f842">MINFO</a> = 14, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da355dc38ddfab08ae95e93a3948d22b90">MX</a> = 15, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da523681f1477727482b38d5181ecb35d4">TXT</a> = 16, 
+<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2daa9f00970caa3c9e9f68820bef0e2f842">MINFO</a> = 14, 
+<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da355dc38ddfab08ae95e93a3948d22b90">MX</a> = 15, 
+<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da523681f1477727482b38d5181ecb35d4">TXT</a> = 16, 
 <br />
 &#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da5482453c98d18f2e0464f945d36faa4d">AXFR</a> = 252, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2dac359af0f900988db1fa3c5e6c1b2a76f">MAILB</a> = 253, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da143195a080ac46107a1240fcdafa6a46">MAILA</a> = 254, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2dab1d5eac4b1dca480c8056eaea7663b7a">ALL</a> = 255
+<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2dac359af0f900988db1fa3c5e6c1b2a76f">MAILB</a> = 253, 
+<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da143195a080ac46107a1240fcdafa6a46">MAILA</a> = 254, 
+<a class="el" href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2dab1d5eac4b1dca480c8056eaea7663b7a">ALL</a> = 255
 <br />
  }<tr class="memdesc:a7aead736a07eaf25623ad7bfa1f0ee2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">TYPE fields are used in resource records. Note that these types are a subset of QTYPEs.  <a href="question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2d">More...</a><br /></td></tr>
 <tr class="separator:a7aead736a07eaf25623ad7bfa1f0ee2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </td></tr>
-<tr class="memitem:a06fc87d81c62e9abb8790b6e5713c55b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <br />
-&#160;&#160;<a class="el" href="question_8h.html#a06fc87d81c62e9abb8790b6e5713c55bac86ee0d9d7ed3e7b4fdbf486fa6c0ebb">IN</a> = 1, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a06fc87d81c62e9abb8790b6e5713c55ba8d7e99c73cd5a10adaaf4c9f9a520368">CS</a> = 2, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a06fc87d81c62e9abb8790b6e5713c55ba1ee0bf89c5d1032317d13a2e022793c8">CH</a> = 3, 
-<br />
-&#160;&#160;<a class="el" href="question_8h.html#a06fc87d81c62e9abb8790b6e5713c55ba55a055409207a12d5937b243fd508bde">HS</a> = 4
-<br />
+<tr class="memitem:a06fc87d81c62e9abb8790b6e5713c55b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="question_8h.html#a06fc87d81c62e9abb8790b6e5713c55bac86ee0d9d7ed3e7b4fdbf486fa6c0ebb">@0::IN</a> = 1, 
+<a class="el" href="question_8h.html#a06fc87d81c62e9abb8790b6e5713c55ba8d7e99c73cd5a10adaaf4c9f9a520368">@0::CS</a> = 2, 
+<a class="el" href="question_8h.html#a06fc87d81c62e9abb8790b6e5713c55ba1ee0bf89c5d1032317d13a2e022793c8">@0::CH</a> = 3, 
+<a class="el" href="question_8h.html#a06fc87d81c62e9abb8790b6e5713c55ba55a055409207a12d5937b243fd508bde">@0::HS</a> = 4
  }<tr class="memdesc:a06fc87d81c62e9abb8790b6e5713c55b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an enum class fields appear in resource records.  <a href="question_8h.html#a06fc87d81c62e9abb8790b6e5713c55b">More...</a><br /></td></tr>
 <tr class="separator:a06fc87d81c62e9abb8790b6e5713c55b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </td></tr>
@@ -206,6 +190,13 @@ Functions</h2></td></tr>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="question_8h.html#ac70f27aebd169a0ace31729dac920b9a">get_index_question</a> ()</td></tr>
 <tr class="memdesc:ac70f27aebd169a0ace31729dac920b9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a size of questions. <br /></td></tr>
 <tr class="separator:ac70f27aebd169a0ace31729dac920b9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4480037b419da4d51e5a04aebc1d2ead"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="question_8h.html#a4480037b419da4d51e5a04aebc1d2ead">display_question</a> (int index)</td></tr>
+<tr class="memdesc:a4480037b419da4d51e5a04aebc1d2ead"><td class="mdescLeft">&#160;</td><td class="mdescRight">display One questions  <a href="#a4480037b419da4d51e5a04aebc1d2ead">More...</a><br /></td></tr>
+<tr class="separator:a4480037b419da4d51e5a04aebc1d2ead"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21baafa27b3e93163573549aa58bc3a2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a21baafa27b3e93163573549aa58bc3a2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="question_8h.html#a21baafa27b3e93163573549aa58bc3a2">display_questions</a> ()</td></tr>
+<tr class="memdesc:a21baafa27b3e93163573549aa58bc3a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">display all questions <br /></td></tr>
+<tr class="separator:a21baafa27b3e93163573549aa58bc3a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Define a question in DNS packet. </p>
@@ -361,6 +352,30 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
     <tr><td class="paramname">name</td><td>A name for question </td></tr>
     <tr><td class="paramname">type</td><td>A type for question </td></tr>
     <tr><td class="paramname">class</td><td>A class for question </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a4480037b419da4d51e5a04aebc1d2ead"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void display_question </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>display One questions </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>the index to array </td></tr>
   </table>
   </dd>
 </dl>
