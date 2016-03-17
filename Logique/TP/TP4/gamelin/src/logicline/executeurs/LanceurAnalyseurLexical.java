@@ -14,10 +14,9 @@ import java_cup.runtime.*;
 public class LanceurAnalyseurLexical {
 
     public static void main(String[] args) 
-    throws Exception 
-    {
+    throws Exception  {
 		if (args.length > 1)
-            System.out.println("Attention: un seul fichier pris en compte");
+			System.out.println("Attention: un seul fichier pris en compte");
 		new LanceurAnalyseurLexical().run(args);
     }
 

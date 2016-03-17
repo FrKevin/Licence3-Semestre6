@@ -20,19 +20,16 @@ public class Clause {
 	}
 
 	//retourne une chaine représentant la clause
-	public String toString()
-	{
+	public String toString() {
 		Iterator it = litteraux.entrySet().iterator();
 		String s = "(";
-		if (litteraux.size() > 0)
-		{
+		if (litteraux.size() > 0) {
 			Map.Entry pairs = (Map.Entry)it.next();
 			if ((Boolean)pairs.getValue())
 				s += (String)pairs.getKey();
 			else
 				s += "¬" + (String)pairs.getKey();
-			while(it.hasNext())
-			{
+			while(it.hasNext()) {
 				pairs = (Map.Entry)it.next();
 				if ((Boolean)pairs.getValue())
 					s += " ∨ " + (String)pairs.getKey(); 

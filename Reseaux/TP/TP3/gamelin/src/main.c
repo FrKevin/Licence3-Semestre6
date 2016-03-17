@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
     }
     memset(&buffer[0], 0, 16384);
 
-    initialize_udp_packet(&udp_packet, "212.27.40.241", 53);
+    initialize_udp_packet(&udp_packet, "193.49.255.15", 53);
 
     create_query(&dns_packet_send, "www.google.fr");
 

@@ -7,6 +7,10 @@
 #ifndef _dns_packet_H_
 #define _dns_packet_H_
 
+#if !defined(PATH_MAX)
+  #define PATH_MAX        4096
+#endif
+
 /*!
     \enum type_of_request
     \brief Enum of type of request

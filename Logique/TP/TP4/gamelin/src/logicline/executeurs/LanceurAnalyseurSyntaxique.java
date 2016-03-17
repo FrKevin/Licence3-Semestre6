@@ -14,8 +14,7 @@ import java_cup.runtime.*;
 public class LanceurAnalyseurSyntaxique 
 {
     public static void main(String[] args) 
-    throws Exception 
-    {
+    throws Exception  {
 		if (args.length > 1)
             System.out.println("Attention: un seul fichier pris en compte");
 		new LanceurAnalyseurSyntaxique().run(args);
