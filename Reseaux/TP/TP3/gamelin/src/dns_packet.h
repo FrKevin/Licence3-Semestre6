@@ -1,13 +1,17 @@
 /*!
-    \file packet.h
+    \file dns_packet.h
     \author Kevin Gamelin
     \date 2016
-    \brief Définie un paquet DNS
+    \brief Define DNS packet
 */
 #ifndef _dns_packet_H_
 #define _dns_packet_H_
 
 #if !defined(PATH_MAX)
+  /*!
+    \def PATH_MAX
+    \brief  compatibility for windows
+  */
   #define PATH_MAX        4096
 #endif
 
@@ -57,6 +61,7 @@ enum response_code {
 /*! \brief Create a  response_code type */
 typedef enum response_code response_code;
 
+/*! \brief Create struct dns_packet */
 struct st_dns_packet {
     unsigned char id[2]; /*!< A 16 bit identifier assigned by the program that
             generates any kind of query.  This identifier is copied
@@ -120,6 +125,7 @@ typedef struct st_dns_packet dns_packet;
 /*!
     \brief Crate a simple query
     \param packet The DNS packet
+    \param hostname The domaine name
 */
 extern void create_query(dns_packet* packet, char* hostname);
 
@@ -131,7 +137,8 @@ extern void display_packet(dns_packet* packet);
 
 /*!
   \brief display the packet
-  \param packet The DNS packet
+  \param dns_query The DNS packet
+  \param sizeof_query The size of query
   \param is_binary The format: 1 for binary, other for hexadeximal
 */
 extern void display_packet_to_format(char* dns_query, int sizeof_query, int is_binary);

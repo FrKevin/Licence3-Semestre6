@@ -72,7 +72,7 @@ void display_packet_to_format(char* dns_query, int sizeof_query, int is_binary){
     if ( is_binary == 1 ) {
         printf("(binary format)\n");
     } else {
-        printf("(hexadecimal format)\n");
+        printf("(binary format)\n");
     }
 
     for (i = 0; i < sizeof_query; i++) {
