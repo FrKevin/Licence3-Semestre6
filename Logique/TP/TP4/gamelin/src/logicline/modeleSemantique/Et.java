@@ -1,8 +1,6 @@
 package logicline.modeleSemantique;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Et extends Formule{
@@ -16,7 +14,7 @@ public class Et extends Formule{
 	
 	@Override
 	public String toString() {
-		return "("+ fg +"∧  ("+ fd +")";
+		return "("+ fg +") ∧  ("+ fd +")";
 	}
 
 	@Override

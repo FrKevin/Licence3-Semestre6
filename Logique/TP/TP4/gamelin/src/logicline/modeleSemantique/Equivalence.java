@@ -14,7 +14,7 @@ public class Equivalence extends Formule{
 	
 	@Override
 	public String toString() {
-		return "("+ fg +") ⇔ ("+ fd +")";
+		return "("+ fg +") ⇔  ("+ fd +")";
 	}
 
 	@Override

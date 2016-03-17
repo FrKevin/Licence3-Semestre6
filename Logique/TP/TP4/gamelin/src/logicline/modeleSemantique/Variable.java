@@ -1,5 +1,6 @@
 package logicline.modeleSemantique;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Variable extends Formule{
@@ -11,13 +12,14 @@ public class Variable extends Formule{
 	
 	@Override
 	public String toString() {
-		return "id";
+		return name;
 	}
 
 	@Override
 	public Set<String> variablesLibres() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<String> result = new HashSet<>();
+		result.add(name);
+		return result;
 	}
 
 	@Override
