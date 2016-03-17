@@ -274,7 +274,6 @@ interpreteC env (App e e') = (fst ft ++ fst r, snd r)
 
 
 
-
 -- Etape 20 : A ameliorer
 main :: IO ()
 main = do putStr "minilang> "

@@ -34,10 +34,11 @@ public class Et extends Formule{
 	
 	@Override
 	public boolean valeur() throws VariableLibreException {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub, it's madness
 		return false;
 	}
 
+	
 	@Override
 	protected Formule supprImplications() {
 		return this;
