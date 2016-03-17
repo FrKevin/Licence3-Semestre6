@@ -48,5 +48,9 @@ public class Constante extends Formule{
 	protected Formule supprImplications() {
 		return this;
 	}
-
+	
+	@Override
+	protected Formule entrerNegations() {
+		return this;
+	}
 }
