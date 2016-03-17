@@ -44,4 +44,9 @@ public class Non extends Formule{
 		return this;
 	}
 
+	@Override
+	protected Formule entrerNegations() {
+		return formule.negation();
+	}
+
 }

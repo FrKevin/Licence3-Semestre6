@@ -12,7 +12,7 @@ public abstract class Formule {
 	protected abstract Formule supprImplications();
 
 	//déplace les non à l'intérieur des formules
-	protected Formule entrerNegations() { return this; }
+	protected abstract Formule entrerNegations();
 
 	//Retourne la formule représentant la négation de this
 	protected abstract Formule negation();

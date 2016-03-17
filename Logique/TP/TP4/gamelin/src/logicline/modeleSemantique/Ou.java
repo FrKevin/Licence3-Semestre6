@@ -47,5 +47,9 @@ public class Ou extends Formule{
 	protected Formule negation() {
 		return new Et(new Non(fg), new Non(fd));
 	}
-
+	
+	@Override
+	protected Formule entrerNegations() {
+		return this;
+	}
 }

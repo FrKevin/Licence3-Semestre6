@@ -43,5 +43,9 @@ public class Variable extends Formule{
 	protected Formule negation() {
 		return new Non(this);
 	}
-
+	
+	@Override
+	protected Formule entrerNegations() {
+		return this;
+	}
 }

@@ -47,5 +47,9 @@ public class Equivalence extends Formule{
 	protected Formule negation() {
 		return new Non(supprImplications());
 	}
-
+	
+	@Override
+	protected Formule entrerNegations() {
+		return this;
+	}
 }
