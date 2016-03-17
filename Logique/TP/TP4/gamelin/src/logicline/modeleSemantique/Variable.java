@@ -24,7 +24,8 @@ public class Variable extends Formule{
 
 	@Override
 	public Formule substitue(Substitution s) {
-		return s.get(name);
+		Formule sub = s.get(name);
+		return sub == null ? this : sub;
 	}
 
 	@Override
@@ -50,7 +51,6 @@ public class Variable extends Formule{
 
 	@Override
 	protected boolean contientEt() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }

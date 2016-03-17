@@ -55,7 +55,6 @@ public class Ou extends Formule{
 
 	@Override
 	protected boolean contientEt() {
-		// TODO Auto-generated method stub
-		return false;
+		return fg.contientEt() || fd.contientEt();
 	}
 }

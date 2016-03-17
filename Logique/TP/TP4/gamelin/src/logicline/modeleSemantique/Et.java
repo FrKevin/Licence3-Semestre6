@@ -55,8 +55,7 @@ public class Et extends Formule{
 
 	@Override
 	protected boolean contientEt() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }
