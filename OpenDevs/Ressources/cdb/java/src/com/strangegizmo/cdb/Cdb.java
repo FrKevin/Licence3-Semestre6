@@ -104,8 +104,10 @@ public class Cdb {
 					| ((table[offset++] & 0xff) <<  8)
 					| ((table[offset++] & 0xff) << 16)
 					| ((table[offset++] & 0xff) << 24);
-
+				
+										    
 				slotTable_[i << 1] = pos;
+	
 				slotTable_[(i << 1) + 1] = len;
 			}
 		} catch (IOException ignored) {
@@ -138,19 +140,13 @@ public class Cdb {
 
 		/* Add each byte to the hash value. */
 		for (int i = 0; i < key.length; i++ ) {
-			System.out.println("key size: "+ key.length);
 //			h = ((h << 5) + h) ^ key[i];
 			long l = h << 5;
 			h += (l & 0x00000000ffffffffL);
-			System.out.println("h1 = "+ h);
 			h = (h & 0x00000000ffffffffL);
-			System.out.println("h2 = "+ h);
 			int k = key[i];
 			k = (k + 0x100) & 0xff;
-			System.out.println("k = "+ k);
 			h = h ^ k;
-			System.out.println(2^2);
-			System.out.println("h3 = "+ h);
 		}
 
 		/* Return the hash value. */
@@ -179,30 +175,44 @@ public class Cdb {
 		return findnext(key);
 	}
 
-	/**
-	 * Finds the next record stored under the given key.
-	 *
-	 * @param key The key to search for.
-	 * @return The next record store under the given key, or
-	 *  <code>null</code> if no record with that key could be found.
-	 */
-	public final synchronized byte[] findnext(byte[] key) {
-		/* There are no keys if we could not read the slot table. */
-		if (slotTable_ == null)
-			return null;
-
-		/* Locate the hash entry if we have not yet done so. */
-		if (loop_ == 0) {
+	public int readUnsignedByteModulate(){
+		int h = 0;
+		try {
+			int a = file_.readUnsignedByte();
+			h = a
+					| (file_.readUnsignedByte() <<  8)
+					| (file_.readUnsignedByte() << 16)
+					| (file_.readUnsignedByte() << 24);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return h;
+	}
+	
+	public boolean searchMatching(byte[] k, byte[] key){
+		for (int i = 0; i < k.length; i++) {
+			if (k[i] != key[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean ifActionForLoopEqualZero(byte[] key){
+		if(loop_ == 0){
 			/* Get the hash value for the key. */
 			int u = hash(key);
-
+			
 			/* Unpack the information for this record. */
 			int slot = u & 255;
+			
 			hslots_ = slotTable_[(slot << 1) + 1];
 			if (hslots_ == 0)
-				return null;
+				return false;
+			int tmp = slot << 1;
 			hpos_ = slotTable_[slot << 1];
-
+		
 			/* Store the hash value. */
 			khash_ = u;
 
@@ -212,22 +222,26 @@ public class Cdb {
 			u <<= 3;
 			kpos_ = hpos_ + u;
 		}
-
-		/* Search all of the hash slots for this key. */
+		return true;
+	}
+	
+	public final synchronized byte[] findnext(byte[] key) {
+		if (slotTable_ == null)
+			return null;
+		if(!ifActionForLoopEqualZero(key)){
+			return null;
+		}
 		try {
 			while (loop_ < hslots_) {
 				/* Read the entry for this key from the hash slot. */
+				System.out.println("before postion = "+ file_.getFilePointer());
+				System.out.println("kpos_  = "+ kpos_);
 				file_.seek(kpos_);
+				System.out.println("after postion = "+ file_.getFilePointer());
+				int h = readUnsignedByteModulate();
 
-				int h = file_.readUnsignedByte()
-					| (file_.readUnsignedByte() <<  8)
-					| (file_.readUnsignedByte() << 16)
-					| (file_.readUnsignedByte() << 24);
-
-				int pos = file_.readUnsignedByte()
-					| (file_.readUnsignedByte() <<  8)
-					| (file_.readUnsignedByte() << 16)
-					| (file_.readUnsignedByte() << 24);
+				int pos = readUnsignedByteModulate();
+				
 				if (pos == 0)
 					return null;
 
@@ -239,55 +253,34 @@ public class Cdb {
 				kpos_ += 8;
 				if (kpos_ == (hpos_ + (hslots_ << 3)))
 					kpos_ = hpos_;
-
+				
 				/* Ignore this entry if the hash values do not match. */
-				if (h != khash_)
-					continue;
-
-				/* Get the length of the key and data in this hash slot
-				 * entry. */
-				file_.seek(pos);
-
-				int klen = file_.readUnsignedByte()
-					| (file_.readUnsignedByte() <<  8)
-					| (file_.readUnsignedByte() << 16)
-					| (file_.readUnsignedByte() << 24);
-				if (klen != key.length)
-					continue;
-
-				int dlen = file_.readUnsignedByte()
-					| (file_.readUnsignedByte() <<  8)
-					| (file_.readUnsignedByte() << 16)
-					| (file_.readUnsignedByte() << 24);
-
-				/* Read the key stored in this entry and compare it to
-				 * the key we were given. */
-				boolean match = true;
-				byte[] k = new byte[klen];
-				file_.readFully(k);
-				for (int i = 0; i < k.length; i++) {
-					if (k[i] != key[i]) {
-						match = false;
-						break;
+				if (h == khash_){
+					/* Get the length of the key and data in this hash slot
+					 * entry. */
+					file_.seek(pos);
+					
+					int klen = readUnsignedByteModulate();
+					if(klen == key.length){
+						int dlen = readUnsignedByteModulate();
+						
+						byte[] k = new byte[klen];
+						file_.readFully(k);
+						
+						if(searchMatching(k, key) ){
+							byte[] d = new byte[dlen];
+							file_.readFully(d);
+							return d;
+						}
 					}
-				}
-
-				/* No match; check the next slot. */
-				if (!match)
-					continue;
-
-				/* The keys match, return the data. */
-				byte[] d = new byte[dlen];
-				file_.readFully(d);
-				return d;
+				}	
 			}
 		} catch (IOException ignored) {
 			return null;
 		}
-
-		/* No more data values for this key. */
 		return null;
 	}
+
 
 
 	/**
