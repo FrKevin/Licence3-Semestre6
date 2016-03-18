@@ -194,8 +194,6 @@ type ErrValB   = Either MsgErreur ValeurB
 
 instance Show ValeurB where
    show (VFonctionB _)          = "lambda "
-                      -- ^ ou "VFonctionA _", ou "<fun>" ou toute
-                      --   autre représentation des fonctions
    show (VLitteralB (Entier n)) = show n
    show (VLitteralB (Bool n))   = show n
 
@@ -257,8 +255,6 @@ type OutValC = (Trace, ValeurC)
 
 instance Show ValeurC where
    show (VFonctionC _)          = "lambda "
-                      -- ^ ou "VFonctionA _", ou "<fun>" ou toute
-                      --   autre représentation des fonctions
    show (VLitteralC (Entier n)) = show n
    show (VLitteralC (Bool n))   = show n
 
@@ -268,12 +264,32 @@ interpreteC _ (Lit l)      = ("", VLitteralC l)
 interpreteC env (Lam n e)  = ("", VFonctionC (\v -> interpreteC ((n, v):env) e))
 interpreteC env (Var x)    = ("", fromJust (lookup x env))
 interpreteC env (App e e') = (fst ft ++ fst r, snd r)
-  where ft = case interpreteC env e of (_, VLitteralC _)  -> undefined
+  where ft = case interpreteC env e of (_, VLitteralC _)   -> undefined
                                        (t', VFonctionC f') -> (t' ++ ".", f')
         r = snd ft (snd (interpreteC env e'))
 
+-- Etape 27
+pingC :: ValeurC
+pingC = VFonctionC (\x -> ("p", x))
 
+envC :: Environnement ValeurC
+envC = [("ping", pingC)]
 
+-- Etape 28
+data ValeurM m = VLitteralM Litteral
+               | VFonctionM (ValeurM m -> m (ValeurM m))
+
+data SimpleM v = S v
+              deriving Show
+
+instance Show (ValeurM m) where
+  show (VFonctionM _) = "lambda"
+  show (VLitteralM (Entier n)) = show n
+  show (VLitteralM (Bool n))   = show n
+
+-- Etape 29
+-- interpreteSimpleM :: Environnement (ValeurM SimpleM) -> Expression -> SimpleM (ValeurM SimpleM)
+-- interpreteSimpleM
 
 -- Etape 20 : A ameliorer
 main :: IO ()
