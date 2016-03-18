@@ -18,19 +18,31 @@ data Litteral = Entier Integer
               deriving (Show,Eq)
 
 
+-- question 1
 espacesP :: Parser ()
 espacesP = zeroOuPlus (car ' ') >>= \_ -> return ()
 
+-- question 2
 nomP :: Parser Nom
 nomP = unOuPlus (carCond isLower) >>= \x -> espacesP >>= \_ -> return x
 
+-- question 3
 varP :: Parser Expression
 varP = nomP >>= \x -> return (Var x)
 
+-- question 4
 applique :: [Expression] -> Expression
 applique [e] = e
 applique t = App (applique ti) tl
              where ti = init t
                    tl = last t
+
+-- question 5
+exprP :: Parser Expression
+exprP = varP
+
+exprsP :: Parser Expression
+exprsP = unOuPlus exprP >>= \x -> return (applique x)
+
 
                    

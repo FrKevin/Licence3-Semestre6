@@ -72,7 +72,7 @@ void display_packet_to_format(char* dns_query, int sizeof_query, int is_binary){
     if ( is_binary == 1 ) {
         printf("(binary format)\n");
     } else {
-        printf("(hexadecimal format)\n");
+        printf("(binary format)\n");
     }
 
     for (i = 0; i < sizeof_query; i++) {
@@ -178,18 +178,40 @@ int  convert_dns_packet_to_char(dns_packet* packet, char buffer[16384]){
     return index_of_buffer;
 }
 
-char* convert_label_to_char(int n, char buffer[], int offset){
-    char* name;
-    int i = 0;
+/*!
+    \brief convert all label of domaine name to char[]
+    \param n the number of characters
+    \param buffer the DNS query
+    \param offset_buffer the index of begin domaine name
+    \param domaine name the buffer of the domaine name
+    \param domaine name the buffer of the domaine name
+    \param offset_domaine_name_buffer the index of begin domaine name
 
-    name = malloc (n*sizeof(char));
-    assert_message( name != NULL, "malloc error.");
-
+    \return the offset of domaine_name
+*/
+int convert_label_to_char(int n, char buffer[], int offset_buffer, char domaine_name[], int offset_domaine_name_buffer){
+    int i;
     for(i = 0; i< n; i++){
-        name[i] = (char)buffer[offset+i];
+        domaine_name[offset_domaine_name_buffer++] = (char)buffer[offset_buffer+i];
     }
-    name[n] = '\0';
-    return name;
+    domaine_name[offset_domaine_name_buffer++] = '.';
+    return offset_domaine_name_buffer;
+}
+
+/*!
+ \brief get length of the domaine name
+ \param buffer the DNS query
+ \param offset the index of begin domaine name
+*/
+int sizeof_domaine_name(char buffer[], int offset){
+    int n;
+    int length = 0;
+    while( (buffer[offset] & 0xFF) != 0 ){
+        n = buffer[offset++] & 0xFF;
+        offset += n;
+        length++;
+    }
+    return length;
 }
 
 void convert_char_to_dns_packet(char buffer[], int sizeof_buffer, dns_packet* packet){
@@ -198,7 +220,8 @@ void convert_char_to_dns_packet(char buffer[], int sizeof_buffer, dns_packet* pa
     int i = 0;
     unsigned char buffer_byte[8] ={0,0,0,0,0,0,0,0};
     char domaine_name[PATH_MAX];
-    char** tmp;
+    int length_of_domaine_name = 0;
+    int offset_domaine_name_buffer = 0;
 
     /* The id of answer */
     packet->id[0] = buffer[index++];
@@ -240,17 +263,14 @@ void convert_char_to_dns_packet(char buffer[], int sizeof_buffer, dns_packet* pa
     flag = ( buffer[index++] & 0xffff) << 8;
     flag += buffer[index++] & 0xffff;
     packet->ar_count = flag;
-
-
-    tmp = (char**)malloc(3*sizeof(char*));
-    assert_message( tmp!= NULL, "malloc error");
-
-    for( i = 0; i < 3; i++){
+    
+    length_of_domaine_name = sizeof_domaine_name(buffer, index);
+    for( i = 0; i < length_of_domaine_name; i++){
         flag = buffer[index++] & 0xFF;
-        tmp[i] = convert_label_to_char(flag, buffer, index);
+        offset_domaine_name_buffer = convert_label_to_char(flag, buffer, index, domaine_name, offset_domaine_name_buffer);
         index += flag;
     }
-    snprintf(domaine_name, PATH_MAX, "%s.%s.%s", tmp[0], tmp[1], tmp[2]);
 
+    domaine_name[offset_domaine_name_buffer-1] = '\0';
     printf("domaine_name %s \n", domaine_name);
 }

@@ -287,6 +287,7 @@ instance Show (ValeurM m) where
   show (VLitteralM (Entier n)) = show n
   show (VLitteralM (Bool n))   = show n
 
+
 -- Etape 29
 -- interpreteSimpleM :: Environnement (ValeurM SimpleM) -> Expression -> SimpleM (ValeurM SimpleM)
 -- interpreteSimpleM

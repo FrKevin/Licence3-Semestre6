@@ -34,12 +34,15 @@ typedef struct udp_packet_st {
    struct sockaddr_in *receiver; /*!< The structure represent the receiver */
 } udp_packet;
 
-
+/*!
+    \brief Create a structure in order to send an udp packet
+*/
 extern void initialize_udp_packet(udp_packet* packet, char* hostname, int port);
 
 /*!
     \brief Send UDP packet
     \param packet The udp_packet structure
+    \param size The length of the message
     \param message The message to send
 */
 extern void send_packet(udp_packet* packet, int size, char* message);
@@ -47,9 +50,10 @@ extern void send_packet(udp_packet* packet, int size, char* message);
 /*!
   \brief receive UDP packet
   \param packet The udp_packet structure
-  \param message The message to send
+  \param buffer The buffer
+  \param length_message The length of the message
 */
-extern int receive_packet(udp_packet* packet, char buffer[], int sizeof_buffer);
+extern int receive_packet(udp_packet* packet, char buffer[], int length_message);
 
 /*!
     \brief close socket

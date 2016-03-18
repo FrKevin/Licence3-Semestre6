@@ -50,6 +50,7 @@ extern void DNSQ_set_qtype(question_t *question, qtype_t qtype) {
 extern void DNSQ_set_qclass(question_t *question, qclass_t qclass) {
   question->qclass = qclass;
 }
+
 /* Utilisation statique */
 extern void DNSQ_begin_and_len_question_at(const question_t *question, size_t at, size_t *begin, size_t *len) {
   int noctet;
@@ -70,8 +71,10 @@ extern void DNSQ_begin_and_len_question_at(const question_t *question, size_t at
   *begin = i + 1;
   *len = ArrayList_get_elm(question->qname, i);
 }
+
+
 /* Refactor */
-extern char *DNSQ_get_question_at(const question_t *question, size_t at) {
+extern char *DNSQ_get_question_at(const question_t *question, size_t at) { /* Optimiser */
   int noctet;
   size_t i = 0;
   size_t ibuff = 0;
@@ -106,10 +109,17 @@ extern qtype_t *DNSQ_get_qtype(const question_t *question) {
   return question->qtype;
 }
 
+
 extern qclass_t *DNSQ_get_qclass(const question_t *question) {
   return question->qclass;
 }
 
-byte_t DNSQ_to_bytes(const question_t *question) {
-
+// Tequilla -> Heneiken -> PasLeTempsNiaiser
+extern byte_t *DNSQ_construct_bytes(const question_t *question) {
+  int len = (question->qname).size;
+  byte_t *result = (byte_t*) malloc(len * sizeof(byte_t));
+  for (int i=0; i < len; ++i) {
+    result[i] = ArrayList_get_elm(question->qname, i);
+  }
+  return result;
 }
