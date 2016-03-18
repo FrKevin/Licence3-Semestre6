@@ -95,10 +95,15 @@ Lire dans un fichier Binaire:
 file := FileStream fileNamed: '/home/l3/gamelin/Documents/Licence3-Semestre6/OpenDevs/Ressources/example/basefile.cdb'.
 file binary.
  
+ 
 data := ByteArray new: 100000.
-size := file readInto:  data startingAt: 1  count: 100000.
+/* Remplie de taille count le buffer(ici data) ayant pour offset 1 */
+size := file readInto:  data startingAt: 1  count: 100000. 
 size. 
 
+
+#(111 110 101) => ByteArray
+#(111 110 101) asByteArray asString. => convertie un ByteArray en une chaine de caractère
 
 Notion avancé :
   Customisation de classe :
