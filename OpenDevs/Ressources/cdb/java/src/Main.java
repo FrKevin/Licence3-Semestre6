@@ -15,7 +15,7 @@ public class Main {
         maker.finish();
     }catch (Exception e) {e.printStackTrace();}*/
     
-	try{
+	/*try{
         Enumeration em = Cdb.elements("ressources/basefile.cdb");
         while(em.hasMoreElements())
         {
@@ -26,5 +26,15 @@ public class Main {
     }catch (Exception e) { e.printStackTrace(); }
 	
 	
-}
 	}
+	*/
+		Cdb cdb;
+		try {
+			cdb = new Cdb("ressources/basefile.cdb");
+			System.out.println(new String( cdb.find("one".getBytes()) ));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+}

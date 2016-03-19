@@ -148,8 +148,7 @@ extern void send_verbose_message(char* message);
     \brief
         Convert integer to binary
     \param value the integer value
-    \param str the buffer
-    \param radix the base
+    \param buffer_byte the result
 */
 extern void int_to_byte(unsigned int value, unsigned char buffer_byte[8]);
 

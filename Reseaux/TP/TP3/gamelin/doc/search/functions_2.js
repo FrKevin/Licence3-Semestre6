@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['get_5fbytes_5fquery',['get_bytes_query',['../packet_8h.html#ae45e523b209d41f742cbdb31b89266ac',1,'packet.c']]],
-  ['get_5fclass',['get_class',['../question_8h.html#a46164e4b706e2b432899400353e4b107',1,'question.c']]],
-  ['get_5findex_5fquestion',['get_index_question',['../question_8h.html#ac70f27aebd169a0ace31729dac920b9a',1,'question.c']]],
-  ['get_5fname',['get_name',['../question_8h.html#a94ca1136572a2addbea36c6d08928efd',1,'question.c']]],
-  ['get_5ftype',['get_type',['../question_8h.html#aab74af781227446b7829cf111fd44843',1,'question.c']]]
+  ['display_5fpacket',['display_packet',['../dns__packet_8h.html#a0019f2ca76a7920c2c71e282dfe9d7c9',1,'dns_packet.c']]],
+  ['display_5fpacket_5fto_5fformat',['display_packet_to_format',['../dns__packet_8h.html#a824cbca7b572b580380c198823f786b0',1,'dns_packet.c']]],
+  ['display_5fquestion',['display_question',['../question_8h.html#a4480037b419da4d51e5a04aebc1d2ead',1,'question.c']]],
+  ['display_5fquestions',['display_questions',['../question_8h.html#a21baafa27b3e93163573549aa58bc3a2',1,'question.c']]]
 ];

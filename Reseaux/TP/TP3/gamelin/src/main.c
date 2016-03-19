@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
     }
     memset(&buffer[0], 0, 16384);
 
-    initialize_udp_packet(&udp_packet, "193.49.255.15", 53);
+    initialize_udp_packet(&udp_packet, "193.49.225.90", 53);
 
     create_query(&dns_packet_send, "www.google.fr");
 
@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
     send_packet(&udp_packet, offset, (char *) buffer);
 
     memset(&buffer[0], 0, 16384);
-    receive_size = receive_packet(&udp_packet, buffer, offset*2);
+    receive_size = receive_packet(&udp_packet, buffer, offset*10);
     convert_char_to_dns_packet(buffer, receive_size, &dns_packet_receive);
 
     close_socket(&udp_packet);

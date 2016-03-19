@@ -1,10 +1,9 @@
 var searchData=
 [
-  ['name',['name',['../structst__question.html#a5ac083a645d964373f022d03df4849c8',1,'st_question']]],
-  ['name_5ferror',['NAME_ERROR',['../packet_8h.html#a34bd9665f6e0b6a727ac11fd81e85fd0a28f3d49101d0d9e766d6b5ae7f944f36',1,'packet.h']]],
-  ['no_5ferror',['NO_ERROR',['../packet_8h.html#a34bd9665f6e0b6a727ac11fd81e85fd0abf350750d0d4fabd8954c0f1e9bbae94',1,'packet.h']]],
-  ['none',['NONE',['../question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2dac157bdf0b85a40d2619cbc8bc1ae5fe2',1,'question.h']]],
-  ['not_5fimplemented',['NOT_IMPLEMENTED',['../packet_8h.html#a34bd9665f6e0b6a727ac11fd81e85fd0a12bcc9d9958a22b983e65f77f3faf90b',1,'packet.h']]],
-  ['ns',['NS',['../question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da1904356e8ec34146e03f386bcb0da805',1,'question.h']]],
-  ['ns_5fcount',['ns_count',['../packet_8h.html#aa5fe57f86c5881d52cdb30d2986286ad',1,'packet.h']]]
+  ['id',['id',['../structst__dns__packet.html#a47b6d7fe86ff80f85f0237ef0160cfdf',1,'st_dns_packet']]],
+  ['in',['IN',['../question_8h.html#a06fc87d81c62e9abb8790b6e5713c55bac86ee0d9d7ed3e7b4fdbf486fa6c0ebb',1,'question.h']]],
+  ['initialize_5fudp_5fpacket',['initialize_udp_packet',['../udp__packet_8h.html#a0a3ffba2281bc91e7e8971ae5e6151ad',1,'udp_packet.c']]],
+  ['int_5fto_5fbyte',['int_to_byte',['../common_8h.html#a5fdc8e936b22ea7236d82969255264bd',1,'common.c']]],
+  ['iquery',['IQUERY',['../dns__packet_8h.html#ab3c41df4e6e6eca61577a7c7bafd9844a3e59cf48226b657de54036c17b889322',1,'dns_packet.h']]],
+  ['is_5fanswer',['is_answer',['../structst__dns__packet.html#aef99894362c7266c13e9595278b9e55b',1,'st_dns_packet']]]
 ];

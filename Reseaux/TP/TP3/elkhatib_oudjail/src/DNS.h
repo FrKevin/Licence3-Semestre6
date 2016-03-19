@@ -8,11 +8,21 @@
 typedef struct {
   header_t header;
   question_t question;
+  answer_t answer;
+
 } dnspacket_t;
 
 
-extern byte_t DNS_to_bytes(const dnspacket_t *dnspacket);
+extern dnspacket_t *DNS_construct(); // On sens bas le couille
+
+extern void DNS_construct_with_bytes(const byte_t *bytes);
+
+extern byte_t *DNS_construct_bytes(const dnspacket_t *dnspacket);
 
 extern void DNS_display(const dnspacket_t *dnspacket);
+
+
+
+
 
 #endif

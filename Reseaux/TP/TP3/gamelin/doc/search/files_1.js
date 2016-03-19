@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['packet_2eh',['packet.h',['../packet_8h.html',1,'']]]
+  ['dns_5fpacket_2eh',['dns_packet.h',['../dns__packet_8h.html',1,'']]]
 ];
