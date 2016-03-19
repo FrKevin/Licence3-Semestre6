@@ -18,7 +18,7 @@ public class Query {
 	public DNSClass getDNSClass() { return qClass; }
 	
 	public void setName(String n) {
-		if (n == null || n.trim().isEmpty()) throw new IllegalArgumentException("name ne peut être null ou vide");
+		if (n == null) throw new IllegalArgumentException("name ne peut être null ou vide");
 		qName = n;
 	}
 	
