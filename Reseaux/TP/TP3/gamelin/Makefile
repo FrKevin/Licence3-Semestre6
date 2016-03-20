@@ -5,29 +5,32 @@ OBJ = ./bin
 TP=3
 NOM1=Gamelin
 
-CC      = gcc
-CFLAGS  = -g
-CFLAGS += -Wall -Werror -ansi -pedantic
-CFLAGS += -D_XOPEN_SOURCE=500
-LDFLAGS = -g
-SRCS    = common.c question.c packet.c main.c
-OBJS    = common.o question.o packet.o main.o
-EXEC    = DNS_Solveur
+CC		= gcc
+CFLAGS	= -g
+CFLAGS	+= -Wall -Werror -ansi -pedantic
+CFLAGS	+= -D_XOPEN_SOURCE=500
+LDFLAGS	= -g
+OBJS	= common.o question.o dns_packet.o udp_packet.o main.o
+EXEC	= dns_linux
 
 # main entries
 all: $(EXEC)
-		 rm -rf $(OBJ)/ || true
-		 mkdir $(OBJ)
-		 mv -f $(OBJS) $(OBJ)
+	rm -rf $(OBJ)/ || true
+	mkdir $(OBJ)
+	mv -f $(OBJS) $(OBJ)
 
-DNS_Solveur: $(OBJS)
-	$(CC) ${CFLAGS} $(OBJS) -o $@
+dns_linux: $(OBJS)
+		$(CC) ${CFLAGS} $(OBJS) -o $@
+
+dns_windows:$(OBJS)
+	$(CC) ${CFLAGS} $(OBJS) -o $@ -lws2_32
 
 # gcc -MM generated dependencies
 common.o: common.c
 question.o: question.c common.h
-packet.o: packet.c question.h
-main.o: main.c common.h packet.h
+dns_packet.o: dns_packet.c question.h
+udp_packet.o: udp_packet.c common.h
+main.o: main.c common.h dns_packet.h udp_packet.h
 
 # misc
 .PHONY: clean realclean

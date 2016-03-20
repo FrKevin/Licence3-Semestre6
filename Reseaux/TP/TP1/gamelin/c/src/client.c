@@ -8,10 +8,9 @@
 
 #else
     #include <sys/socket.h>
-    #include <netinet/in.h>
-    #include <arpa/inet.h>
     #include <netdb.h> /* gethostbyname */
     #include <linux/limits.h> /* const PATH_MAX */
+    #include <string.h>
 #endif
 
 #include <stdio.h>
@@ -20,6 +19,7 @@
 #include <unistd.h> /* close */
 #define HOSTNAME "224.0.0.1"
 #define PORT 7654
+#define h_addr h_addr_list[0] /* for backward compatibility */
 #define closesocket(s) close(s)
 typedef int MYSOCKET;
 typedef struct sockaddr_in SOCKADDR_IN;
@@ -65,11 +65,9 @@ void end(int sock_fd) {
 */
 int main(int argc, char **argv) {
     MYSOCKET sock;
-    char buffer[PATH_MAX];
     struct hostent *hostinfo = NULL;
     SOCKADDR_IN to;
     int tosize = sizeof(to);
-    int n_octet = 0;
 
     printf("begin inti()\n");
     init(&sock);
@@ -93,14 +91,13 @@ int main(int argc, char **argv) {
         }
         to.sin_addr.s_addr = tmp_windows;
     #else
-        print_error( inet_aton(HOSTNAME , &to.sin_addr) == 0, "inet_aton() failed\n");
+      memcpy(&to.sin_addr,hostinfo->h_addr,hostinfo->h_length);
     #endif
 
 
     printf("en cours d'envoie du message.\n");
     if(sendto(sock, argv[1], strlen(argv[1]), 0, (SOCKADDR *)&to, tosize) < 0) {
         perror("sendto()");
-        exit(errno);
     }
 
     printf("Envoi ok\n");

@@ -5,29 +5,70 @@
 #include <sys/types.h>
 
 #include "common.h"
-#include "packet.h"
+#include "dns_packet.h"
+#include "udp_packet.h"
+
+
+/*
+ * usage - print a help message
+ */
+void usage(void) {
+    #ifdef __WIN32__
+        printf("Usage: dns_windows.exe [-hv]\n");
+    #else
+        printf("Usage: dns_linux [-hv]\n");
+    #endif
+    printf("   -h   print this message\n");
+    printf("   -v   print additional diagnostic information\n");
+    exit(EXIT_FAILURE);
+}
 
 int main(int argc, char **argv) {
-    char buffer[8] ={ 0,0,0,0,0,0,0,0};
+    udp_packet udp_packet;
+    dns_packet dns_packet_send;
+    dns_packet dns_packet_receive;
 
-    init();
-    set_op_code(IQUERY);
-    printf("op_code= %u\n", op_code);
-    itoa(255,buffer,2);
-    printf("buffer = %s\n", buffer);
-    printf("buffer 0e: %c\n", buffer[0]);
-    if( buffer[1] == 0){
-        printf("asaa \n");
+    char buffer[16384];
+    int offset = 0;
+    int receive_size;
+    char c;
+
+    verbose = 0;
+
+    /* Parse the command line */
+    while ((c = getopt(argc, argv, "hv")) != EOF) {
+        switch (c) {
+            case 'h':              /* print help message */
+                usage();
+            break;
+            case 'v':              /* emit additional diagnostic info */
+                verbose = 1;
+            break;
+            default:
+                usage();
+        }
     }
-    printf("buffer 11e: %u\n", buffer[1]);
-    printf("buffer 2e: %c\n", buffer[2]);
-    printf("buffer 22e: %u\n", buffer[2]);
-    printf("buffer 3e: %c\n", buffer[3]);
+    memset(&buffer[0], 0, 16384);
 
-    printf("buffer 4e: %cssss\n", buffer[4]);
-    printf("buffer 5e: %c\n", buffer[5]);
-    printf("buffer 6e: %c\n", buffer[6]);
-    printf("buffer 7e: %c\n", buffer[7]);
+    initialize_udp_packet(&udp_packet, "193.49.225.90", 53);
+
+    create_query(&dns_packet_send, "www.google.fr");
+
+    display_packet(&dns_packet_send);
+
+    offset = convert_dns_packet_to_char(&dns_packet_send, buffer);
+
+    display_packet_to_format((char *) buffer, offset, 16);
+    printf("\n");
+    display_packet_to_format((char *) buffer, offset, 2);
+
+    send_packet(&udp_packet, offset, (char *) buffer);
+
+    memset(&buffer[0], 0, 16384);
+    receive_size = receive_packet(&udp_packet, buffer, offset*10);
+    convert_char_to_dns_packet(buffer, receive_size, &dns_packet_receive);
+
+    close_socket(&udp_packet);
 
     exit(EXIT_SUCCESS);
 }
