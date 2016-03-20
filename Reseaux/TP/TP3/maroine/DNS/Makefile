@@ -1,10 +1,10 @@
 ### Modèle pour vos Makefile
 
 ## Compilateur C et éditeur de liens
-CC      = gcc
+CC      = gcc -lm
 
 ## Options pour la compilation du C
-CFLAGS  = -Wall
+CFLAGS  = 
 #  Spécifie la version de la norme POSIX à respecter
 CFLAGS += -D_XOPEN_SOURCE=500
 #  Active les informations de débogage
@@ -18,7 +18,7 @@ LDFLAGS  = -g
 %.o: %.c %.h
 	${CC} ${CFLAGS} -c $<
 
-all: emission
+all: dns
 
-emission: emission.o
-	${CC} -o $@ $^
+dns: dns.o
+	${CC} -o $@ $^ -lm
