@@ -39,10 +39,43 @@ applique t = App (applique ti) tl
 
 -- question 5
 exprP :: Parser Expression
-exprP = varP
+exprP = varP ||| lambdaP ||| exprParentheseeP
 
 exprsP :: Parser Expression
 exprsP = unOuPlus exprP >>= \x -> return (applique x)
 
+--question 6
+lambdaP :: Parser Expression
+lambdaP = car '\\' >>=
+          \_ -> espacesP >>=
+          \_ -> varP >>=
+          \x -> espacesP >>=
+          \_ -> car '-' >>=
+          \_ -> car '>' >>=
+          \_ -> espacesP >>=
+          \_ -> exprsP >>=
+          \expr -> return (Lam (get x) expr)
+   where get (Var xx) = xx
+         get _ = error ""
 
-                   
+-- question 8
+exprParentheseeP :: Parser Expression
+exprParentheseeP = car '(' >>=
+          \_ -> exprsP >>=
+          \e -> car ')' >>=
+          \_ -> return e
+
+-- Question 9
+chiffre :: Parser Char
+chiffre = carCond isDigit
+
+nombre :: Parser String
+nombre = unOuPlus chiffre
+
+entier :: Parser Integer
+entier = nombre >>=
+         \n -> return (read n)
+
+nombreP :: Parser Expression
+nombreP = entier >>=
+          \e -> return (Lit (Entier e))
