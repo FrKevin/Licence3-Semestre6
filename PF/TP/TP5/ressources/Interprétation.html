@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <!-- saved from url=(0063)http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp-interprete.html -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta charset="utf-8">
+
 <title>Interprétation</title>
 
 <link href="./Interprétation_files/feuille.css" rel="stylesheet" type="text/css">
 <meta name="viewport" content="initial-scale=1.0">
-</head>
+<script type="text/javascript" src="chrome-extension://bfbmjmiodbnnpllbbbfblcplfjjepjdn/js/injected.js"></script></head>
 <body class="monocol">
 <nav><a href="http://cristal.univ-lille.fr/~hym">recherche</a> – <a href="http://www.fil.univ-lille1.fr/~hym/">~</a>/<a href="http://www.fil.univ-lille1.fr/~hym/e">enseignements</a></nav>
 <header>
@@ -126,13 +126,13 @@ unOuPlus p <span class="fu">=</span> <span class="kw">do</span> r <span class="o
 <ol type="1">
 <li><p>Définissez un analyseur syntaxique <code class="sourceCode haskell"><span class="ot">espacesP ::</span> <span class="dt">Parser</span> ()</code> qui consomme tous les espaces au début de la chaîne à analyser, et retourne toujours <code class="sourceCode haskell">()</code> pour ignorer ces espaces.</p>
 <p>Par exemple&nbsp;:</p>
-<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> parse espacesP <span class="st">""</span>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> runParser espacesP <span class="st">""</span>
 <span class="dt">Just</span> ((),<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse espacesP <span class="st">" "</span>
+ghci<span class="fu">&gt;</span> runParser espacesP <span class="st">" "</span>
 <span class="dt">Just</span> ((),<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse espacesP <span class="st">"     "</span>
+ghci<span class="fu">&gt;</span> runParser espacesP <span class="st">"     "</span>
 <span class="dt">Just</span> ((),<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse espacesP <span class="st">"  a "</span>
+ghci<span class="fu">&gt;</span> runParser espacesP <span class="st">"  a "</span>
 <span class="dt">Just</span> ((),<span class="st">"a "</span>)</code></pre></div></li>
 </ol>
 <p>Commençons par analyser les expressions les plus simples possibles&nbsp;: les variables. Pour simplifier, nous considérerons que les noms de variables sont juste des suites de lettres minuscules (sans accent).</p>
@@ -140,29 +140,29 @@ ghci<span class="fu">&gt;</span> parse espacesP <span class="st">"  a "</span>
 <li><p>Définissez un analyseur syntaxique <code class="sourceCode haskell"><span class="ot">nomP ::</span> <span class="dt">Parser</span> <span class="dt">Nom</span></code> qui analyse le premier nom apparaissant dans la chaîne.</p>
 <p>Pour traiter correctement les espaces dans la suite, ce parseur consommera aussi tous les espaces qui suivent le nom (il utilisera pour cela <code class="sourceCode haskell">espacesP</code>). Mais il échouera si la chaîne commence par des espaces (quand on combinera deux analyseurs, le premier se chargera de consommer les espaces du milieu).</p>
 <p>Par exemple&nbsp;:</p>
-<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> parse nomP <span class="st">""</span>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> runParser nomP <span class="st">""</span>
 <span class="dt">Nothing</span>
-ghci<span class="fu">&gt;</span> parse nomP <span class="st">"abc"</span>
+ghci<span class="fu">&gt;</span> runParser nomP <span class="st">"abc"</span>
 <span class="dt">Just</span> (<span class="st">"abc"</span>,<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse nomP <span class="st">"abc def"</span>
+ghci<span class="fu">&gt;</span> runParser nomP <span class="st">"abc def"</span>
 <span class="dt">Just</span> (<span class="st">"abc"</span>,<span class="st">"def"</span>)
-ghci<span class="fu">&gt;</span> parse nomP <span class="st">"abc    "</span>
+ghci<span class="fu">&gt;</span> runParser nomP <span class="st">"abc    "</span>
 <span class="dt">Just</span> (<span class="st">"abc"</span>,<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse nomP <span class="st">"abc   def"</span>
+ghci<span class="fu">&gt;</span> runParser nomP <span class="st">"abc   def"</span>
 <span class="dt">Just</span> (<span class="st">"abc"</span>,<span class="st">"def"</span>)
-ghci<span class="fu">&gt;</span> parse nomP <span class="st">" abc"</span>
+ghci<span class="fu">&gt;</span> runParser nomP <span class="st">" abc"</span>
 <span class="dt">Nothing</span></code></pre></div></li>
 <li><p>Définissez un analyseur syntaxique <code class="sourceCode haskell"><span class="ot">varP ::</span> <span class="dt">Parser</span> <span class="dt">Expression</span></code>.</p>
 <p>Par exemple&nbsp;:</p>
-<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> parse varP <span class="st">""</span>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> runParser varP <span class="st">""</span>
 <span class="dt">Nothing</span>
-ghci<span class="fu">&gt;</span> parse varP <span class="st">"abc"</span>
+ghci<span class="fu">&gt;</span> runParser varP <span class="st">"abc"</span>
 <span class="dt">Just</span> (<span class="dt">Var</span> <span class="st">"abc"</span>,<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse varP <span class="st">"abc def"</span>
+ghci<span class="fu">&gt;</span> runParser varP <span class="st">"abc def"</span>
 <span class="dt">Just</span> (<span class="dt">Var</span> <span class="st">"abc"</span>,<span class="st">"def"</span>)
-ghci<span class="fu">&gt;</span> parse varP <span class="st">"abc    "</span>
+ghci<span class="fu">&gt;</span> runParser varP <span class="st">"abc    "</span>
 <span class="dt">Just</span> (<span class="dt">Var</span> <span class="st">"abc"</span>,<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse varP <span class="st">" abc"</span>
+ghci<span class="fu">&gt;</span> runParser varP <span class="st">" abc"</span>
 <span class="dt">Nothing</span></code></pre></div></li>
 <li>Définissez une fonction <code class="sourceCode haskell"><span class="ot">applique ::</span> [<span class="dt">Expression</span>] <span class="ot">-&gt;</span> <span class="dt">Expression</span></code> telle que&nbsp;:
 <ul>
@@ -179,61 +179,61 @@ ghci<span class="fu">&gt;</span> parse varP <span class="st">" abc"</span>
 <li><code class="sourceCode haskell">exprsP</code> parse une suite de une ou plusieurs expressions (chacune parsées par <code class="sourceCode haskell">exprP</code>) et les combine en une expression par la fonction <code class="sourceCode haskell">applique</code><a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/tp-interprete.html#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>.</li>
 </ul>
 <p>Par exemple&nbsp;:</p>
-<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> parse exprsP <span class="st">""</span>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> runParser exprsP <span class="st">""</span>
 <span class="dt">Nothing</span>
-ghci<span class="fu">&gt;</span> parse exprsP <span class="st">"a"</span>
+ghci<span class="fu">&gt;</span> runParser exprsP <span class="st">"a"</span>
 <span class="dt">Just</span> (<span class="dt">Var</span> <span class="st">"a"</span>,<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse exprsP <span class="st">"a    "</span>
+ghci<span class="fu">&gt;</span> runParser exprsP <span class="st">"a    "</span>
 <span class="dt">Just</span> (<span class="dt">Var</span> <span class="st">"a"</span>,<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse exprsP <span class="st">"a b"</span>
+ghci<span class="fu">&gt;</span> runParser exprsP <span class="st">"a b"</span>
 <span class="dt">Just</span> (<span class="dt">App</span> (<span class="dt">Var</span> <span class="st">"a"</span>) (<span class="dt">Var</span> <span class="st">"b"</span>),<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse exprsP <span class="st">"a b c"</span>
+ghci<span class="fu">&gt;</span> runParser exprsP <span class="st">"a b c"</span>
 <span class="dt">Just</span> (<span class="dt">App</span> (<span class="dt">App</span> (<span class="dt">Var</span> <span class="st">"a"</span>) (<span class="dt">Var</span> <span class="st">"b"</span>)) (<span class="dt">Var</span> <span class="st">"c"</span>),<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse exprsP <span class="st">"a b c d"</span>
+ghci<span class="fu">&gt;</span> runParser exprsP <span class="st">"a b c d"</span>
 <span class="dt">Just</span> (<span class="dt">App</span> (<span class="dt">App</span> (<span class="dt">App</span> (<span class="dt">Var</span> <span class="st">"a"</span>) (<span class="dt">Var</span> <span class="st">"b"</span>)) (<span class="dt">Var</span> <span class="st">"c"</span>)) (<span class="dt">Var</span> <span class="st">"d"</span>),<span class="st">""</span>)</code></pre></div></li>
 <li><p>Définissez un analyseur syntaxique <code class="sourceCode haskell"><span class="ot">lambdaP ::</span> <span class="dt">Parser</span> <span class="dt">Expression</span></code> qui reconnaisse une λ-expression utilisant la syntaxe suivante inspirée de Haskell&nbsp;: <code class="sourceCode haskell">\ x <span class="ot">-&gt;</span> e</code> où <code class="sourceCode haskell">e</code> sera parsé par <code class="sourceCode haskell">exprsP</code>.</p>
 <p>Par exemple&nbsp;:</p>
-<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> parse lambdaP <span class="st">"\\ x -&gt; x"</span>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> runParser lambdaP <span class="st">"\\ x -&gt; x"</span>
 <span class="dt">Just</span> (<span class="dt">Lam</span> <span class="st">"x"</span> (<span class="dt">Var</span> <span class="st">"x"</span>),<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse lambdaP <span class="st">"\\ x -&gt; x x"</span>
+ghci<span class="fu">&gt;</span> runParser lambdaP <span class="st">"\\ x -&gt; x x"</span>
 <span class="dt">Just</span> (<span class="dt">Lam</span> <span class="st">"x"</span> (<span class="dt">App</span> (<span class="dt">Var</span> <span class="st">"x"</span>) (<span class="dt">Var</span> <span class="st">"x"</span>)),<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse lambdaP <span class="st">"\\ x -&gt; x x  "</span>
+ghci<span class="fu">&gt;</span> runParser lambdaP <span class="st">"\\ x -&gt; x x  "</span>
 <span class="dt">Just</span> (<span class="dt">Lam</span> <span class="st">"x"</span> (<span class="dt">App</span> (<span class="dt">Var</span> <span class="st">"x"</span>) (<span class="dt">Var</span> <span class="st">"x"</span>)),<span class="st">""</span>)</code></pre></div>
 <p>Notez en particulier que le caractère <code>\</code> s’écrit littéralement <code class="sourceCode haskell"><span class="ch">'\\'</span></code> en Haskell, car il sert d’échappement.</p>
 <p>Vous pourrez bien entendu étendre la syntaxe pour utiliser aussi une autre notation, par exemple pour parser aussi <code class="sourceCode haskell"><span class="st">"λx → x"</span></code>, etc., si vous le voulez.</p></li>
 <li><p>Étendez la définition de <code class="sourceCode haskell">exprP</code> pour que</p>
-<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> parse exprP <span class="st">"\\x -&gt; x"</span>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> runParser exprP <span class="st">"\\x -&gt; x"</span>
 <span class="dt">Just</span> (<span class="dt">Lam</span> <span class="st">"x"</span> (<span class="dt">Var</span> <span class="st">"x"</span>),<span class="st">""</span>)</code></pre></div></li>
 <li><p>Définissez un analyseur syntaxique <code class="sourceCode haskell"><span class="ot">exprParentheseeP ::</span> <span class="dt">Parser</span> <span class="dt">Expression</span></code> tel que&nbsp;:</p>
-<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> parse exprParentheseeP <span class="st">"()"</span>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> runParser exprParentheseeP <span class="st">"()"</span>
 <span class="dt">Nothing</span>
-ghci<span class="fu">&gt;</span> parse exprParentheseeP <span class="st">"(x)"</span>
+ghci<span class="fu">&gt;</span> runParser exprParentheseeP <span class="st">"(x)"</span>
 <span class="dt">Just</span> (<span class="dt">Var</span> <span class="st">"x"</span>,<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse exprParentheseeP <span class="st">"(x y)"</span>
+ghci<span class="fu">&gt;</span> runParser exprParentheseeP <span class="st">"(x y)"</span>
 <span class="dt">Just</span> (<span class="dt">App</span> (<span class="dt">Var</span> <span class="st">"x"</span>) (<span class="dt">Var</span> <span class="st">"y"</span>),<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse exprParentheseeP <span class="st">"(\\x -&gt; x)"</span>
+ghci<span class="fu">&gt;</span> runParser exprParentheseeP <span class="st">"(\\x -&gt; x)"</span>
 <span class="dt">Just</span> (<span class="dt">Lam</span> <span class="st">"x"</span> (<span class="dt">Var</span> <span class="st">"x"</span>),<span class="st">""</span>)</code></pre></div>
 <p>Étendez <code class="sourceCode haskell">exprP</code> pour que les expressions parenthésées soient acceptées comme des expressions. Ainsi, vous aurez&nbsp;:</p>
-<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> parse exprP <span class="st">"(\\x -&gt; x) y"</span>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> runParser exprP <span class="st">"(\\x -&gt; x) y"</span>
 <span class="dt">Just</span> (<span class="dt">Lam</span> <span class="st">"x"</span> (<span class="dt">Var</span> <span class="st">"x"</span>),<span class="st">"y"</span>)
-ghci<span class="fu">&gt;</span> parse exprsP <span class="st">"(\\x -&gt; x) y"</span>
+ghci<span class="fu">&gt;</span> runParser exprsP <span class="st">"(\\x -&gt; x) y"</span>
 <span class="dt">Just</span> (<span class="dt">App</span> (<span class="dt">Lam</span> <span class="st">"x"</span> (<span class="dt">Var</span> <span class="st">"x"</span>)) (<span class="dt">Var</span> <span class="st">"y"</span>),<span class="st">""</span>)
 
-ghci<span class="fu">&gt;</span> parse exprP <span class="st">"\\x -&gt; x y"</span>
+ghci<span class="fu">&gt;</span> runParser exprP <span class="st">"\\x -&gt; x y"</span>
 <span class="dt">Just</span> (<span class="dt">Lam</span> <span class="st">"x"</span> (<span class="dt">App</span> (<span class="dt">Var</span> <span class="st">"x"</span>) (<span class="dt">Var</span> <span class="st">"y"</span>)),<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse exprsP <span class="st">"\\x -&gt; x y"</span>
+ghci<span class="fu">&gt;</span> runParser exprsP <span class="st">"\\x -&gt; x y"</span>
 <span class="dt">Just</span> (<span class="dt">Lam</span> <span class="st">"x"</span> (<span class="dt">App</span> (<span class="dt">Var</span> <span class="st">"x"</span>) (<span class="dt">Var</span> <span class="st">"y"</span>)),<span class="st">""</span>)</code></pre></div></li>
 <li><p>Définissez un analyseur syntaxique <code class="sourceCode haskell"><span class="ot">nombreP ::</span> <span class="dt">Parser</span> <span class="dt">Expression</span></code>&nbsp;:</p>
-<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> parse nombreP <span class="st">"123"</span>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> runParser nombreP <span class="st">"123"</span>
 <span class="dt">Just</span> (<span class="dt">Lit</span> (<span class="dt">Entier</span> <span class="dv">123</span>),<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse nombreP <span class="st">"  123"</span>
+ghci<span class="fu">&gt;</span> runParser nombreP <span class="st">"  123"</span>
 <span class="dt">Nothing</span>
-ghci<span class="fu">&gt;</span> parse nombreP <span class="st">"123  "</span>
+ghci<span class="fu">&gt;</span> runParser nombreP <span class="st">"123  "</span>
 <span class="dt">Just</span> (<span class="dt">Lit</span> (<span class="dt">Entier</span> <span class="dv">123</span>),<span class="st">""</span>)</code></pre></div></li>
 <li><p>Définissez un analyseur syntaxique <code class="sourceCode haskell"><span class="ot">booleenP ::</span> <span class="dt">Parser</span> <span class="dt">Expression</span></code>&nbsp;:</p>
-<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> parse booleenP <span class="st">"True"</span>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">ghci<span class="fu">&gt;</span> runParser booleenP <span class="st">"True"</span>
 <span class="dt">Just</span> (<span class="dt">Lit</span> (<span class="dt">Bool</span> <span class="dt">True</span>),<span class="st">""</span>)
-ghci<span class="fu">&gt;</span> parse booleenP <span class="st">"False"</span>
+ghci<span class="fu">&gt;</span> runParser booleenP <span class="st">"False"</span>
 <span class="dt">Just</span> (<span class="dt">Lit</span> (<span class="dt">Bool</span> <span class="dt">False</span>),<span class="st">""</span>)</code></pre></div>
 <p>Ajoutez les nombres et les booléens à <code class="sourceCode haskell">exprP</code>.</p></li>
 <li><p>Peaufinez le tout en définissant un analyseur syntaxique <code class="sourceCode haskell"><span class="ot">expressionP ::</span> <span class="dt">Parser</span> <span class="dt">Expression</span></code> correspondant à <code class="sourceCode haskell">exprsP</code> éventuellement précédé d’espaces.</p></li>
@@ -655,6 +655,21 @@ envM <span class="fu">=</span> [ (<span class="st">"add"</span>,   injecte (<spa
        , (<span class="st">"non"</span>,   injecte not) ]</code></pre></div>
 <p>etc., définissez un interprète monadique avec toutes les primitives qui vous intéressent et faites-en une version interactive.</p></li>
 </ol>
+<h3 id="pousse-café-un-interprète-parallèle">Pousse-café&nbsp;: un interprète parallèle</h3>
+<p>Pour torturer un peu votre interprète en lui donnant du fil à retordre, nous allons écrire des expressions un peu longues à évaluer.</p>
+<ol start="39" type="1">
+<li><p>Analysez <a href="http://www.fil.univ-lille1.fr/~hym/e/pf/tdtp/fibonacci.interp"><code>fibonacci.interp</code></a> pour comprendre comment cette expression est l’implémentation naïve de Fibonacci. Vous devriez y retrouver&nbsp;:</p>
+<ul>
+<li>le <a href="https://fr.wikipedia.org/wiki/Lambda-calcul#Combinateur_de_point_fixe">combinateur de point fixe de Curry</a></li>
+<li>beaucoup de fonctions <code class="sourceCode haskell">\lazy <span class="ot">-&gt;</span> <span class="fu">...</span></code> qui seront finalement appliquées à <code class="sourceCode haskell"><span class="dv">0</span></code>&nbsp;: comme l’interprète est strict, il est important d’explicitement bloquer l’évaluation de certaines sous-expressions en en faisant des fonctions et en contrôlant à quel moment elles seront évaluées en les appliquant à une valeur quelconque.</li>
+</ul>
+<p>Que se passerait-il sans les <code class="sourceCode haskell">\lazy <span class="ot">-&gt;</span> <span class="fu">...</span></code>&nbsp;?</p></li>
+<li><p>Ajoutez à votre interprète des primitives <code>if</code> (similaire à <code class="sourceCode haskell">ifthenelseA</code>) et <code>infst</code> (correspondant à <code class="sourceCode haskell">(<span class="fu">&lt;</span>)</code> en Haskell).</p>
+<p>En compilant votre interprète avec l’option <code>-O2</code> (meilleur niveau d’optimisation), mesurez avec <code>time</code> la durée d’exécution du calcul de Fibonacci et trouvez un nombre qui demande une dizaine de secondes à évaluer sur votre machine.</p></li>
+<li><p>En ajoutant <code class="sourceCode haskell">par</code> et <code class="sourceCode haskell">pseq</code> dans votre interprète, rendez votre interprète parallèle et évaluez le gain de temps en fonction du nombre du processeurs que vous lui consacrez. Vous lancerez donc&nbsp;:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">./Interprete</span> +RTS -N2 -s <span class="kw">&lt;</span> fibonacci.interp</code></pre></div>
+<p>si vous voulez exécuter votre interprète en utilisant deux cœurs.</p></li>
+</ol>
 <hr>
 <p>Références ayant inspiré cet énoncé&nbsp;:</p>
 <ul>
@@ -686,4 +701,4 @@ ghci<span class="fu">&gt;</span> <span class="fu">:</span>kind <span class="dt">
 </div>
 <footer></footer>
 
-</body></html>
+</body><iframe allowtransparency="true" frameborder="0" id="abs-top-frame" src="./Interprétation_files/top.html" style="position: fixed !important; z-index: 2147483647 !important; overflow: hidden !important; top: 0px !important; left: 0px !important; right: 0px !important; width: 0px !important; height: 0px !important; max-height: none !important; min-height: 0px !important; margin: 0px auto !important; padding: 0px !important; border: 0px !important; display: none !important; background-color: transparent !important;"></iframe></html>
