@@ -1,7 +1,10 @@
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 module Interprete where
 import Parser
 import Data.Char
 import Data.Maybe
+import Control.Monad
 
 type Nom = String
 
@@ -282,6 +285,9 @@ data ValeurM m = VLitteralM Litteral
 data SimpleM v = S v
               deriving Show
 
+getVSM :: SimpleM (ValeurM SimpleM) -> ValeurM SimpleM
+getVSM (S r) = r
+
 instance Show (ValeurM m) where
   show (VFonctionM _) = "lambda"
   show (VLitteralM (Entier n)) = show n
@@ -289,12 +295,147 @@ instance Show (ValeurM m) where
 
 
 -- Etape 29
--- interpreteSimpleM :: Environnement (ValeurM SimpleM) -> Expression -> SimpleM (ValeurM SimpleM)
--- interpreteSimpleM
+interpreteSimpleM :: Environnement (ValeurM SimpleM) -> Expression -> SimpleM (ValeurM SimpleM)
+interpreteSimpleM _ (Lit l)      = S (VLitteralM l)
+interpreteSimpleM env (Lam n e)  = S (VFonctionM (\v -> interpreteSimpleM ((n, v):env) e))
+interpreteSimpleM env (Var x)    = S (fromJust (lookup x env))
+interpreteSimpleM env (App e e') = f (getVSM (interpreteSimpleM env e'))
+    where f = case interpreteSimpleM env e of (S (VLitteralM _)) -> error ""
+                                              (S (VFonctionM r)) -> r
 
--- Etape 20 : A ameliorer
+
+-- Etape 30
+instance Monad SimpleM where
+    return      = S
+    (S v) >>= f = f v
+
+-- Note GHC 7.10
+
+instance Applicative SimpleM where
+    pure  = return
+    (<*>) = ap
+
+instance Functor SimpleM where
+    fmap  = liftM
+
+
+appM :: ValeurM m -> ValeurM m -> m (ValeurM m)
+appM (VFonctionM fct) = fct
+appM _                = undefined
+
+interpreteM :: Monad m => Environnement (ValeurM m) -> Expression -> m (ValeurM m)
+interpreteM _ (Lit l)      = return (VLitteralM l)
+interpreteM env (Lam n e)  = return (VFonctionM (\v -> interpreteM ((n, v):env) e))
+interpreteM env (Var x)    = return (fromJust (lookup x env))
+interpreteM env (App e e') = do  r <- interpreteM env e'
+                                 f <- interpreteM env e
+                                 appM f r
+
+-- Etape 31
+type InterpreteM m = Environnement (ValeurM m) -> Expression -> m (ValeurM m)
+
+interpreteS :: InterpreteM SimpleM
+interpreteS = interpreteM
+
+-- Etape 32
+data TraceM v = T (Trace, v)
+              deriving Show
+
+instance Monad TraceM where
+    return x         = T ("", x)
+    (T (t, v)) >>= f = T (t ++ t', v')
+      where (T (t', v')) = f v
+
+-- Note GHC 7.10
+
+instance Applicative TraceM where
+    pure  = return
+    (<*>) = ap
+
+instance Functor TraceM where
+    fmap  = liftM
+
+interpreteMT :: InterpreteM TraceM
+interpreteMT = interpreteM
+
+pingM :: ValeurM TraceM
+pingM = VFonctionM (\v -> T ("p", v))
+
+-- Etape 33
+interpreteMT' :: InterpreteM TraceM
+interpreteMT' env (App e e') = do p  <- interpreteMT' env e'
+                                  f  <- interpreteMT' env e
+                                  f' <- T (".", f)
+                                  appM f' p
+interpreteMT' env l          = interpreteMT env l -- Application partielle impossible
+
+-- Etape 34
+data ErreurM v = Succes v
+               | Erreur String
+               deriving Show
+
+instance Monad ErreurM where
+   return             = Succes
+   fail               = Erreur
+   (Succes v) >>= f   = f v
+   (Erreur e) >>= _   = Erreur e
+
+-- Note GHC 7.10
+
+instance Applicative ErreurM where
+   pure  = return
+   (<*>) = ap
+
+instance Functor ErreurM where
+   fmap  = liftM
+
+-- Etape 35 (Priorité au variable)
+interpreteE :: InterpreteM ErreurM
+interpreteE _ (Lit l)      = return (VLitteralM l)
+interpreteE env (Lam n e)  = return (VFonctionM (\v -> interpreteE ((n, v):env) e))
+interpreteE env (Var x)    = maybe (fail (messErrVarNonDef x)) return (lookup x env)
+interpreteE env (App e e') = do p  <- interpreteE env e'
+                                f  <- interpreteE env e
+                                case f of (VFonctionM fct) -> fct p
+                                          (VLitteralM l)   -> fail (messErrAppLitLeft l)
+
+-- Etape 36
+class Monad m => Injectable m t where
+  injecte :: t -> ValeurM m
+
+instance Monad m => Injectable m Bool where
+    injecte = VLitteralM . Bool
+
+instance Monad m => Injectable m Integer where
+    injecte = VLitteralM . Entier
+
+-- Etape 37
+instance (Monad m, Injectable m t) => Injectable m (Bool -> t) where
+    injecte f = VFonctionM (\ (VLitteralM (Bool b)) -> return (injecte (f b)))
+
+instance (Monad m, Injectable m t) => Injectable m (Integer -> t) where
+    injecte f = VFonctionM (\ (VLitteralM (Entier b)) -> return (injecte (f b)))
+
+-- Etape 38 - 40
+envM :: Monad m => Environnement (ValeurM m)
+envM = [ ("add",   injecte ((+) :: Integer -> Integer -> Integer))
+       , ("soust", injecte ((-) :: Integer -> Integer -> Integer))
+       , ("mult",  injecte ((*) :: Integer -> Integer -> Integer))
+       , ("quot",  injecte (quot :: Integer -> Integer -> Integer))
+       , ("et",    injecte (&&))
+       , ("ou",    injecte (||))
+       , ("non",   injecte not)
+       , ("infst", injecte ((<) :: Bool -> Bool -> Bool))]
+
+
+-- Etape 39
+-- A reflechir
+
+-- Etape 40
+
+
 main :: IO ()
 main = do putStr "minilang> "
           cmd <- getLine
-          print (interpreteA envA (ras cmd))
+          print (interpreteE envM (ras cmd))
           main
