@@ -434,7 +434,7 @@ envM = [ ("add",   injecte ((+) :: Integer -> Integer -> Integer))
 -- ce qui veut dire qu'il execute les finctions que lorsqu'il en a réellement besoin.
 
 
--- Etape 40
+-- Etape 40 (fait partiellement), Etape 41 (Non fait `per` et `seq`)
 
 
 main :: IO ()

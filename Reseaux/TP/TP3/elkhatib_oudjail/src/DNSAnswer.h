@@ -9,6 +9,7 @@ typedef uint16_t rdlength_t;
 
 
 typedef struct {
+  header_t header;
   ArrayList *name;
   type_t type;
   class_t class;
@@ -20,8 +21,8 @@ typedef struct {
 
 // Constructeur cascade ....
 
-extern answer_t *DNSA_construct();
-extern answer_t *DNSA_construct_with_bytes(const byte_t *bytes, size_t nbytes);
+extern answer_t *DNSA_construct(const header_t header);
+extern answer_t *DNSA_construct_with_bytes(const header_t header, const byte_t *bytes, size_t nbytes);
 extern byte_t *DNSA_toconstruct_bytes(const answer_t *answer, size_t *sizbuf);
 
 extern void DNSA_destruct(answer_t *answer);
@@ -35,9 +36,6 @@ extern type_t DNSA_get_type(const answer_t *answer);
 extern class_t DNSA_get_class(const answer_t *answer);
 extern ttl_t DNSA_get_ttl(const answer_t *answer);
 extern rdlength_t DNSA_get_rdlength(const answer_t *answer);
-
-
-
 
 extern void DNSA_destruct(answer_t *answer);
 

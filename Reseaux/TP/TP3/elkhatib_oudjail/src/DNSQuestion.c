@@ -32,6 +32,20 @@ extern void DNSQ_destruct(question_t *question) {
   free(question);
 }
 
+
+extern byte_t *DNSQ_toconstruct_bytes(const question_t *question, int *bufsize) {
+  size_t i;
+  int len = (question->qname)->size + 4;
+  byte_t *result = (byte_t*) malloc(len * sizeof(byte_t));
+  for (i=0; i < len - 4; ++i) {
+    result[i] = ArrayList_get_elm(question->qname, i);
+  }
+  insert_uint16(result, i++, construct->qtype);
+  insert_uint16(result, ++i, construct->qclass);
+  *bufsize = len;
+  return result;
+}
+
 extern void DNSQ_transform_question(const char *question, byte_t *buff, int lenq) {
   byte_t noctet = 0;
   size_t pos_noctet = 0;
@@ -128,13 +142,4 @@ extern qtype_t *DNSQ_get_qtype(const question_t *question) {
 
 extern qclass_t *DNSQ_get_qclass(const question_t *question) {
   return question->qclass;
-}
-
-extern byte_t *DNSQ_construct_bytes(const question_t *question) {
-  int len = (question->qname)->size;
-  byte_t *result = (byte_t*) malloc(len * sizeof(byte_t));
-  for (int i=0; i < len; ++i) {
-    result[i] = ArrayList_get_elm(question->qname, i);
-  }
-  return result;
 }

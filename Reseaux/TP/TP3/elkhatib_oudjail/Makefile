@@ -10,9 +10,9 @@ CFLAGS  = -g
 CFLAGS += -Wall -Werror -std=c99 -pedantic
 CFLAGS += -D_XOPEN_SOURCE=500
 LDFLAGS = -g
-SRCS    = Core.c DNS.c DNSQuestion.c DNSHeader.c UDPReceive.c
-OBJS    = Core.o DNS.o DNSQuestion.o DNSHeader.o UDPReceive.o
-EXEC    = DNSSolver
+SRCS    = Core.c DNSHeader.c
+OBJS    = Core.o DNSHeader.o 
+EXEC    = TestDNSHeader
 
 # main entries
 all: $(EXEC)
@@ -20,11 +20,13 @@ all: $(EXEC)
 		 mkdir $(OBJ)
 		 mv -f $(OBJS) $(OBJ)
 
-DNSSolver: $(OBJS)
+$(EXEC): $(OBJS)
 	$(CC) ${CFLAGS} $(OBJS) -o $@
 
 # gcc -MM generated dependencies
-Core.o: Core.c
+main.o: main.c Core.h DNSHeader.h
+Core.o: Core.c Core.h
+DNSHeader.o: DNSHeader.c DNSHeader.h Core.h
 
 # misc
 .PHONY: clean realclean
@@ -37,3 +39,5 @@ realclean: clean
 
 archive: clean realclean
 	zip -r TP${TP}_${NOM1}_${NOM2}.zip *
+
+

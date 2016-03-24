@@ -1,5 +1,6 @@
-#include "DNSHEADER.h"
+#include "DNSHeader.h"
 #include "DNS.h"
+
 
 /* Explain the reasonnement */
 #define SHIFT_QR 8 - HEADER_LENGTH_QR  /* 7 */
@@ -20,8 +21,20 @@ static void insert_inf_uint8(header_t headp, size_t index, byte_t n, int nshift)
   headp[index] |= n << nshift;
 }
 
-/* --------------------------------- Setteur -----------------------------------------------*/
+extern header_t DNSH_construct() {
+  header_t construct;
+}
 
+extern header_t DNSH_construct_with_bytes(byte_t bytes) {
+
+}
+
+extern header_t DNSH_construct() {
+  header_t construct;
+  DNSH_init(construct);
+  return construct;
+}
+/* --------------------------------- Setteur -----------------------------------------------*/
 /* To facilitate reading, the numbers are written in hexadecimal form */
 extern void DNSH_init(header_t headp) {
   int i;
@@ -30,6 +43,8 @@ extern void DNSH_init(header_t headp) {
   }
 }
 
+
+/*
 extern void DNSH_set_id(header_t headp, id_t id) {
   insert_uint16(headp, 0, id);
 }
@@ -50,9 +65,13 @@ extern void DNSH_set_tc(header_t headp, bool tc) {
   insert_inf_uint8(headp, 2, tc, SHIFT_TC);
 
 }
+
+*/
 /* A tester si peut etre remplacer par la methode avec 0 en shift */
+
+/*
 extern void DNSH_set_rd(header_t headp, bool rd) {
-  /* packet_header[2] |= (byte_t) rd; */
+  // packet_header[2] |= (byte_t) rd;
   insert_inf_uint8(headp, 2, rd, 0);
 }
 
@@ -83,8 +102,9 @@ extern void DNSH_set_nscount(header_t headp, nscount_t nscount) {
 extern void DNSH_set_arcount(header_t headp, arcount_t arcount) {
   insert_uint16(headp, 10, arcount);
 }
-
+*/
 /* --------------------------------- Getteur -----------------------------------------------*/
+/*
 static uint16_t extract_uint16(header_t headp, int index) {
   uint16_t result = 0xffff;
   result &= headp[index] << 8;
@@ -157,3 +177,4 @@ extern nscount_t DNSH_get_nscount(header_t headp) {
 extern arcount_t DNSH_get_arcount(header_t headp) {
   return extract_uint16(headp, 10);
 }
+*/

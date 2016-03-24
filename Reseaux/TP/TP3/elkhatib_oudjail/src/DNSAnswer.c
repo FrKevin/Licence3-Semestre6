@@ -3,9 +3,11 @@
 #include "lib/ArrayList.h"
 
 
-extern answer_t *DNSA_construct() {
+extern answer_t *DNSA_construct(const header_t header) {
   answer_t *result;
   result = (answer_t*) malloc(sizeof(answer_t));
+
+  result->header = header;
   result->name = ArrayList_construct();
   result->type = 0;
   result->class = 0;
@@ -15,7 +17,7 @@ extern answer_t *DNSA_construct() {
 }
 
 extern answer_t *DNSA_construct_with_bytes(const byte_t *bytes, size_t nbytes) {
-
+  
 }
 extern byte_t *DNSA_toconstruct_bytes(const answer_t *answer, size_t *sizbuf) {
 
