@@ -15,10 +15,10 @@ typedef struct {
 
 
 
-extern question_t DNSQ_construct(const header_t header);
-extern question_t DNSQ_construct_with_bytes(const header_t header, const byte_t bytes);
+extern question_t *DNSQ_construct(const header_t header);
+extern question_t *DNSQ_construct_with_bytes(const header_t header, const byte_t *bytes);
 
-extern byte_t *DNSQ_construct_bytes(const question_t *question);
+extern byte_t *DNSQ_toconstruct_bytes(const question_t *question);
 
 
 extern void DNSQ_destruct(question_t *question);

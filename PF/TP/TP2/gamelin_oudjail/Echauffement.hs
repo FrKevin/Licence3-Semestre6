@@ -1,10 +1,10 @@
-module Main where
+module Echauffement where
 
 -- Fonction qui prend une liste et qui permet construire une autre liste contenant un element sur deux
 alterne :: [a]  -> [a]
 alterne [] = []
 alterne [e] = [e]
-alterne (x1 : _ : xs) = x1 : (alterne xs)
+alterne (x1 : _ : xs) = x1 : alterne xs
 
 -- Fonction qui permet d'appliquer une autre fonction à deux parametre avec les elements de 2 listes
 -- Les resultats sont stockes dans une liste qui sera retourné
@@ -12,7 +12,7 @@ combine :: (a -> b -> c) -> [a] -> [b] -> [c]
 combine _ [] [] = []
 combine _ [] (_ : _) = []
 combine _ (_ : _) [] = []
-combine fct (x1 : xs1) (x2 : xs2) = (fct x1 x2) : (combine fct xs1 xs2)
+combine fct (x1 : xs1) (x2 : xs2) = fct x1 x2 : combine fct xs1 xs2
 
 main :: IO ()
 main = do

@@ -1,19 +1,35 @@
 #include "DNSQuestion.h"
 #include "lib/ArrayList.h"
+#include "Core.h"
 
-extern question_t DNSQ_construct(const header_t header) {
-  question_t construct;
-  construct.header = header;
-  construct.qname = ArrayList_construct();
-  construct.qtype = 0;
-  construct.qclass = 0;
+
+extern question_t *DNSQ_construct(const header_t header) {
+  question_t *construct;
+  construct = (question_t*) malloc(sizeof(question_t));
+  construct->header = header;
+  construct->qname = ArrayList_construct();
+  construct->qtype = 0;
+  construct->qclass = 0;
+  return construct;
+}
+
+extern question_t *DNSQ_construct_with_bytes(const header_t header, const byte_t *bytes, size_t begin, size_t nbytes) {
+  size_t i = begin, nquestion = 0;
+  qdcount_t qdcount = DNSH_get_qdcount(header);
+  question_t construct = DNSQ_construct(header);
+  while (nquestion < qdcount && i < nbytes) {
+    ArrayList_add_elm(construct->qname, bytes[i]);
+    nquestion = bytes[i] == 0 ? nquestion + 1 : nquestion;
+    ++i;
+  }
+  assert_message(nquestion == qdcount, "Le nombre de question ajouté n'est pas conforme au champs qdcount");
+  return construct;
 }
 
 extern void DNSQ_destruct(question_t *question) {
-  question->header = header;
-  ArrayList_construct(question->qname);
-  question->qtype = 0;
-  question->qclass = 0;
+  question->header = NULL;
+  ArrayList_destruct(question->qname);
+  free(question);
 }
 
 extern void DNSQ_transform_question(const char *question, byte_t *buff, int lenq) {
@@ -114,9 +130,8 @@ extern qclass_t *DNSQ_get_qclass(const question_t *question) {
   return question->qclass;
 }
 
-// Tequilla -> Heneiken -> PasLeTempsNiaiser
 extern byte_t *DNSQ_construct_bytes(const question_t *question) {
-  int len = (question->qname).size;
+  int len = (question->qname)->size;
   byte_t *result = (byte_t*) malloc(len * sizeof(byte_t));
   for (int i=0; i < len; ++i) {
     result[i] = ArrayList_get_elm(question->qname, i);

@@ -1,4 +1,4 @@
-module Main where
+module DragonOrdre where
 import Graphics.Gloss
 
 -- Fonction qui permet de calculer le point au centre de celui qui sont passes en parametre
@@ -8,8 +8,8 @@ pointAintercaler (xA, yA) (xB, yB) = ((xA + xB)/2 + (yB - yA)/2, (
 -- Fonction alternative qui permet de calculer la courbe du dragon
 dragonOrdre :: Point -> Point -> Int -> Path
 dragonOrdre pA pB 0 = [pA, pB]
-dragonOrdre pA pB n = let pC = (pointAintercaler pA pB) in
-              (dragonOrdre pA pC (n-1)) ++ (dragonOrdre pB pC (n-1))
+dragonOrdre pA pB n = let pC = pointAintercaler pA pB in
+              dragonOrdre pA pC (n-1) ++ dragonOrdre pB pC (n-1)
 
 
 main :: IO ()

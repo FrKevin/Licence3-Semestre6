@@ -51,6 +51,15 @@ int ArrayList_add_elm(ArrayList **list, elm_t elm)
   return 1;
 }
 
+int ArrayList_add_all(ArrayList **list, elm_t[] elms, size_t nelms)
+{
+  size_t i;
+  for (i = 0; i < nelms; ++i) {
+    ArrayList_add_elm(list, elms[i]);
+  }
+  return 1;
+}
+
 
 
 int ArrayList_remove_elm(ArrayList *list, int index)

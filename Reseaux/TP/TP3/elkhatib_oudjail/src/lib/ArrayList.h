@@ -17,6 +17,7 @@ ArrayList *ArrayList_construct_with_capacite(int capacite);
 void ArrayList_destruct(ArrayList *list);
 
 int ArrayList_add_elm(ArrayList **list, elm_t elm);
+int ArrayList_add_all(ArrayList **list, elm_t[] elm, size_t nelms);
 int ArrayList_remove_elm(ArrayList *list, int index);
 
 int ArrayList_contains(ArrayList *list, elm_t elm);

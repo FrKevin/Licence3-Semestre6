@@ -429,7 +429,10 @@ envM = [ ("add",   injecte ((+) :: Integer -> Integer -> Integer))
 
 
 -- Etape 39
--- A reflechir
+-- Le parametre lazy permet de forcer l'evaluation des expressions.
+-- En effet Haskell est un langage qui evalue de façon paresseuse,
+-- ce qui veut dire qu'il execute les finctions que lorsqu'il en a réellement besoin.
+
 
 -- Etape 40
 
