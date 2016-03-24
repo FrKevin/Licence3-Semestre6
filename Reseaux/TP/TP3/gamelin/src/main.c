@@ -7,7 +7,7 @@
 #include "common.h"
 #include "dns_packet.h"
 #include "udp_packet.h"
-
+#include "answer.h"
 
 /*
  * usage - print a help message
@@ -27,6 +27,7 @@ int main(int argc, char **argv) {
     udp_packet udp_packet;
     dns_packet dns_packet_send;
     dns_packet dns_packet_receive;
+    answer dns_answer;
 
     char buffer[16384];
     int offset = 0;
@@ -50,10 +51,11 @@ int main(int argc, char **argv) {
     }
     memset(&buffer[0], 0, 16384);
 
-    initialize_udp_packet(&udp_packet, "193.49.225.90", 53);
+    initialize_udp_packet(&udp_packet, "8.8.8.8", 53);
 
     create_query(&dns_packet_send, "www.google.fr");
 
+    printf("*********** QUERY ***********\n");
     display_packet(&dns_packet_send);
 
     offset = convert_dns_packet_to_char(&dns_packet_send, buffer);
@@ -66,8 +68,16 @@ int main(int argc, char **argv) {
 
     memset(&buffer[0], 0, 16384);
     receive_size = receive_packet(&udp_packet, buffer, offset*10);
-    convert_char_to_dns_packet(buffer, receive_size, &dns_packet_receive);
+    convert_char_to_dns_packet(buffer, receive_size, &dns_packet_receive, &dns_answer);
+    printf("\n");
+    printf("*********** ANSWER ***********\n");
+    display_packet( &dns_packet_receive);
+    display_answer(&dns_answer);
 
+    display_packet_to_format((char *) buffer, offset, 16);
+    printf("\n");
+    display_packet_to_format((char *) buffer, offset, 2);
+    
     close_socket(&udp_packet);
 
     exit(EXIT_SUCCESS);

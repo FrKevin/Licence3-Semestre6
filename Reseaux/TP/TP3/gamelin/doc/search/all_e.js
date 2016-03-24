@@ -8,6 +8,7 @@ var searchData=
   ['set_5ftype',['set_type',['../question_8h.html#a1b880dd4b6298155855b557daf434106',1,'question.c']]],
   ['soa',['SOA',['../question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2da3185b2efaf12ead0575f39c341ef0db6',1,'question.h']]],
   ['sockfd',['sockfd',['../structudp__packet__st.html#ae3915266b5f3ef44126bd1208b5ecc76',1,'udp_packet_st']]],
+  ['st_5fanswer',['st_answer',['../structst__answer.html',1,'']]],
   ['st_5fdns_5fpacket',['st_dns_packet',['../structst__dns__packet.html',1,'']]],
   ['st_5fquestion',['st_question',['../structst__question.html',1,'']]],
   ['status',['STATUS',['../dns__packet_8h.html#ab3c41df4e6e6eca61577a7c7bafd9844ab15379688176677d49474245a6178d97',1,'dns_packet.h']]]

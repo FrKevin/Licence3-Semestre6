@@ -63,9 +63,14 @@ void display_question(int index){
     printf("\t\tClass: %i\n", get_class(index));
 }
 
-extern void display_questions(){
+void display_questions(){
     int i = 0;
     for (i = 0; i < index_question; i++) {
         display_question(i);
     }
+}
+
+void clear_question_array(){
+    index_question = 0;
+    memset(&questions[0], 0, sizeof(questions));
 }

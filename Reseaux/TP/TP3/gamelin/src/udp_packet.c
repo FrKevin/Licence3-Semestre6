@@ -102,21 +102,12 @@ void initialize_sockaddr_in(udp_packet* packet, short sin_family, int port, long
 
  int receive_packet(udp_packet* packet, char buffer[], int sizeof_buffer){
      int length = sizeof(struct sockaddr_in);
-     int n, i;
-
-     printf("Enter receive_packet() \n");
+     int n;
 
      if( ( n = recvfrom(packet->sockfd, buffer, sizeof_buffer, 0, (SOCKADDR *)&(packet->receiver), &length ) ) < 0) {
          assert_message(0 ,"error receive: ");
      }
-     printf("READ DATA: \n");
-     for(i=0; i< n; i++){
-         printf("%02x ",  buffer[i]);
-         if ( (i+1) % 16 == 0 ) {
-             printf("\n");
-         }
-     }
-     printf("\n");
+     send_verbose_message("Finish recveive the DNS packet.");
      return n;
  }
 

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['name',['name',['../structst__question.html#aeaa7e97b4cf40945b694ea729b62bd26',1,'st_question']]],
+  ['name',['name',['../structst__answer.html#ac2db8bd1e3a34d85e09627fd32a59f35',1,'st_answer::name()'],['../structst__question.html#aeaa7e97b4cf40945b694ea729b62bd26',1,'st_question::name()']]],
   ['name_5ferror',['NAME_ERROR',['../dns__packet_8h.html#a34bd9665f6e0b6a727ac11fd81e85fd0a28f3d49101d0d9e766d6b5ae7f944f36',1,'dns_packet.h']]],
   ['no_5ferror',['NO_ERROR',['../dns__packet_8h.html#a34bd9665f6e0b6a727ac11fd81e85fd0abf350750d0d4fabd8954c0f1e9bbae94',1,'dns_packet.h']]],
   ['none',['NONE',['../question_8h.html#a7aead736a07eaf25623ad7bfa1f0ee2dac157bdf0b85a40d2619cbc8bc1ae5fe2',1,'question.h']]],

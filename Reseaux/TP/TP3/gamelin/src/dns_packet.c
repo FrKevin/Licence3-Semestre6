@@ -6,6 +6,7 @@
 
 #include "common.h"
 #include "question.h"
+#include "answer.h"
 #include "dns_packet.h"
 
 
@@ -214,14 +215,59 @@ int sizeof_domaine_name(char buffer[], int offset){
     return length;
 }
 
-void convert_char_to_dns_packet(char buffer[], int sizeof_buffer, dns_packet* packet){
+/*!
+    \brief obtains domaine name
+    \param buffer the DNS query
+    \param offset the offset of begin domaine name
+    \param domaine_name the domaine_name buffer
+    \return the offset of buffer
+*/
+int get_domaine_name(char buffer[], int offset, char domaine_name[]){
+    int i;
+    int flag;
+    int offset_domaine_name_buffer = 0;
+    int length_of_domaine_name = sizeof_domaine_name(buffer, offset);
+
+    for( i = 0; i < length_of_domaine_name; i++){
+        flag = buffer[offset++] & 0xFF;
+        offset_domaine_name_buffer = convert_label_to_char(flag, buffer, offset, domaine_name, offset_domaine_name_buffer);
+        offset += flag;
+    }
+    domaine_name[offset_domaine_name_buffer-1] = '\0';
+
+    /* The domaine name terminate with 00 */
+    offset++;
+    return offset;
+}
+
+/*!
+    \brief obtains ip
+    \param buffer the DNS query
+    \param offset the offset of begin the ip address
+    \param length_of_ip it is the length of ip
+    \return the offset of buffer
+*/
+int get_ip(char buffer[],int offset, int ip[], int length_of_ip){
+    int i;
+    int offset_of_ip = 0;
+
+    for( i=0; i<=length_of_ip; i++){
+        ip[offset_of_ip++] = buffer[offset++] & 0xffff;
+    }
+    return offset;
+}
+
+void convert_char_to_dns_packet(char buffer[], int sizeof_buffer, dns_packet* packet, answer* dns_answer){
     int flag = 0;
     int index = 0;
-    int i = 0;
     unsigned char buffer_byte[8] ={0,0,0,0,0,0,0,0};
-    char domaine_name[PATH_MAX];
-    int length_of_domaine_name = 0;
-    int offset_domaine_name_buffer = 0;
+
+    /* For query */
+    static char domaine_name[PATH_MAX];
+    q_types query_type;
+    q_class query_class;
+
+    clear_question_array();
 
     /* The id of answer */
     packet->id[0] = buffer[index++];
@@ -263,14 +309,49 @@ void convert_char_to_dns_packet(char buffer[], int sizeof_buffer, dns_packet* pa
     flag = ( buffer[index++] & 0xffff) << 8;
     flag += buffer[index++] & 0xffff;
     packet->ar_count = flag;
-    
-    length_of_domaine_name = sizeof_domaine_name(buffer, index);
-    for( i = 0; i < length_of_domaine_name; i++){
-        flag = buffer[index++] & 0xFF;
-        offset_domaine_name_buffer = convert_label_to_char(flag, buffer, index, domaine_name, offset_domaine_name_buffer);
-        index += flag;
-    }
 
-    domaine_name[offset_domaine_name_buffer-1] = '\0';
-    printf("domaine_name %s \n", domaine_name);
+    /* Query */
+    memset(&domaine_name[0], 0, sizeof(domaine_name));
+    index = get_domaine_name(buffer, index, domaine_name);
+    /* Type of query */
+    query_type = ( buffer[index++] & 0xffff) << 8;
+    query_type += buffer[index++] & 0xffff;
+    /* class of query */
+    query_class = ( buffer[index++] & 0xffff) << 8;
+    query_class += buffer[index++] & 0xffff;
+    /* Finaly add question */
+    add_question(domaine_name, query_type, query_class);
+
+
+    /* The answer */
+    /* The dommaine is pointer ? */
+    memset(&buffer_byte[0], 0, sizeof(buffer_byte));
+    flag = buffer[index++] & 0xFF;
+    int_to_byte(flag, buffer_byte);
+    if(buffer_byte[0] == 1 && buffer_byte[1] == 1){
+        dns_answer->name = domaine_name;
+        index++;
+    }
+    else{
+        memset(&domaine_name[0], 0, sizeof(domaine_name));
+        index = get_domaine_name(buffer, index, domaine_name);
+        dns_answer->name = domaine_name;
+    }
+    /* The type of answer */
+    dns_answer->type = ( buffer[index++] & 0xffff) << 8;
+    dns_answer->type += ( buffer[index++] & 0xffff);
+    /* The class of answer */
+    dns_answer->class = ( buffer[index++] & 0xffff) << 8;
+    dns_answer->class += ( buffer[index++] & 0xffff);
+    /* The Time to live for answer */
+    dns_answer->ttl = ( buffer[index++] & 0xffff) << 24;
+    dns_answer->ttl += ( buffer[index++] & 0xffff) << 16;
+    dns_answer->ttl += ( buffer[index++] & 0xffff) << 8;
+    dns_answer->ttl += buffer[index++] & 0xffff;
+    /* Size of data  */
+    dns_answer->rd_length += ( buffer[index++] & 0xffff) << 8;
+    dns_answer->rd_length += buffer[index++] & 0xffff;
+    /* The IP of address name */
+    memset(&(dns_answer->rdata[0]), 0, sizeof(dns_answer->rdata));
+    index = get_ip(buffer, index, dns_answer->rdata, dns_answer->rd_length);
 }

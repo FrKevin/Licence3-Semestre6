@@ -20,6 +20,8 @@ var searchData=
   ['ansi_5fcolor_5fred',['ANSI_COLOR_RED',['../common_8h.html#a34995b955465f6bbb37c359173d50477',1,'common.h']]],
   ['ansi_5fcolor_5fwhite',['ANSI_COLOR_WHITE',['../common_8h.html#ab126a29a20ee0fe9ada8269c91edb753',1,'common.h']]],
   ['ansi_5fcolor_5fyellow',['ANSI_COLOR_YELLOW',['../common_8h.html#a5a123b382640b3aa65dd5db386002fbc',1,'common.h']]],
+  ['answer',['answer',['../answer_8h.html#a96e18493e53e3ab6d07018eb7a622bdb',1,'answer.h']]],
+  ['answer_2eh',['answer.h',['../answer_8h.html',1,'']]],
   ['ar_5fcount',['ar_count',['../structst__dns__packet.html#a77738699735674919161ca5cbef25c7a',1,'st_dns_packet']]],
   ['assert_5fmessage',['assert_message',['../common_8h.html#aafba7a5117371f327375e8f48a9b1e34',1,'common.c']]],
   ['authoritative_5fanswer',['authoritative_answer',['../structst__dns__packet.html#a2aeb56b727a42277b66b8e3dc443c522',1,'st_dns_packet']]],

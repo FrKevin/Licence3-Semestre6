@@ -7,6 +7,8 @@
 #ifndef _dns_packet_H_
 #define _dns_packet_H_
 
+#include "answer.h"
+
 #if !defined(PATH_MAX)
   /*!
     \def PATH_MAX
@@ -155,7 +157,8 @@ extern int convert_dns_packet_to_char(dns_packet* packet, char buffer[16384]);
     \param buffer The DNS answer
     \param sizeof_buffer The size of the buffer
     \param packet The result of the methode
+    \param dns_answer The DNS query answer
 */
-extern void convert_char_to_dns_packet(char buffer[], int sizeof_buffer, dns_packet* packet);
+extern void convert_char_to_dns_packet(char buffer[], int sizeof_buffer, dns_packet* packet, answer* dns_answer);
 
 #endif

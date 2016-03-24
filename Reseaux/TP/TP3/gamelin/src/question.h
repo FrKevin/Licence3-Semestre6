@@ -132,4 +132,9 @@ extern void display_question(int index);
 */
 extern void display_questions();
 
+/*!
+    \brief clear array of query
+*/
+extern void clear_question_array();
+
 #endif

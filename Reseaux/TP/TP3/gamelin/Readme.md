@@ -4,12 +4,14 @@
 
 - On Linux:
         make
-        make DNS_Solveur
+        make dns_linux
+        ./dns_linux -h/-v
         make clean/realclean
         make archive
 
 - On Windows
-        'make' windows
-        windows.exe
+        'make' dns_windows
+        dns_windows.exe
+        dns_windows.exe -v/-h
         make clean/realclean
         make archive

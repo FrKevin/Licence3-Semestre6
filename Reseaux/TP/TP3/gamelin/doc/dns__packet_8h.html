@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.10"/>
-<title>TP3 Reseaux: src/dns_packet.h File Reference</title>
+<title>TP3 Resaux: src/dns_packet.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">TP3 Reseaux
+   <div id="projectname">TP3 Resaux
    </div>
   </td>
  </tr>
@@ -86,7 +86,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
@@ -97,7 +96,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Define DNS packet.  
 <a href="#details">More...</a></p>
-
+<div class="textblock"><code>#include &quot;<a class="el" href="answer_8h_source.html">answer.h</a>&quot;</code><br />
+</div>
 <p><a href="dns__packet_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -105,13 +105,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structst__dns__packet.html">st_dns_packet</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create struct dns_packet.  <a href="structst__dns__packet.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:ae688d728e1acdfe5988c7db45d6f0166"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae688d728e1acdfe5988c7db45d6f0166"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dns__packet_8h.html#ae688d728e1acdfe5988c7db45d6f0166">PATH_MAX</a>&#160;&#160;&#160;4096</td></tr>
-<tr class="memdesc:ae688d728e1acdfe5988c7db45d6f0166"><td class="mdescLeft">&#160;</td><td class="mdescRight">compatibility for windows <br /></td></tr>
-<tr class="separator:ae688d728e1acdfe5988c7db45d6f0166"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -163,9 +156,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a4ce3275d2bdc6e15e201b50ab7876e5c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dns__packet_8h.html#a4ce3275d2bdc6e15e201b50ab7876e5c">convert_dns_packet_to_char</a> (<a class="el" href="dns__packet_8h.html#abbc3c5781ce5637e7523f2be5c60946f">dns_packet</a> *packet, char buffer[16384])</td></tr>
 <tr class="memdesc:a4ce3275d2bdc6e15e201b50ab7876e5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a byte array width an query.  <a href="#a4ce3275d2bdc6e15e201b50ab7876e5c">More...</a><br /></td></tr>
 <tr class="separator:a4ce3275d2bdc6e15e201b50ab7876e5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2f4ecaa65a96bc6e5f7d7e244cff9a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dns__packet_8h.html#ab2f4ecaa65a96bc6e5f7d7e244cff9a0">convert_char_to_dns_packet</a> (char buffer[], int sizeof_buffer, <a class="el" href="dns__packet_8h.html#abbc3c5781ce5637e7523f2be5c60946f">dns_packet</a> *packet)</td></tr>
-<tr class="memdesc:ab2f4ecaa65a96bc6e5f7d7e244cff9a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a DNS query width the answer.  <a href="#ab2f4ecaa65a96bc6e5f7d7e244cff9a0">More...</a><br /></td></tr>
-<tr class="separator:ab2f4ecaa65a96bc6e5f7d7e244cff9a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4dec6785eb6e75cdee32699ad95d482"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dns__packet_8h.html#ae4dec6785eb6e75cdee32699ad95d482">convert_char_to_dns_packet</a> (char buffer[], int sizeof_buffer, <a class="el" href="dns__packet_8h.html#abbc3c5781ce5637e7523f2be5c60946f">dns_packet</a> *packet, <a class="el" href="answer_8h.html#a96e18493e53e3ab6d07018eb7a622bdb">answer</a> *dns_answer)</td></tr>
+<tr class="memdesc:ae4dec6785eb6e75cdee32699ad95d482"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a DNS query width the answer.  <a href="#ae4dec6785eb6e75cdee32699ad95d482">More...</a><br /></td></tr>
+<tr class="separator:ae4dec6785eb6e75cdee32699ad95d482"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Define DNS packet. </p>
@@ -232,7 +225,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="ab2f4ecaa65a96bc6e5f7d7e244cff9a0"></a>
+<a class="anchor" id="ae4dec6785eb6e75cdee32699ad95d482"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -252,7 +245,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="dns__packet_8h.html#abbc3c5781ce5637e7523f2be5c60946f">dns_packet</a> *&#160;</td>
-          <td class="paramname"><em>packet</em>&#160;</td>
+          <td class="paramname"><em>packet</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="answer_8h.html#a96e18493e53e3ab6d07018eb7a622bdb">answer</a> *&#160;</td>
+          <td class="paramname"><em>dns_answer</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -268,6 +267,7 @@ Functions</h2></td></tr>
     <tr><td class="paramname">buffer</td><td>The DNS answer </td></tr>
     <tr><td class="paramname">sizeof_buffer</td><td>The size of the buffer </td></tr>
     <tr><td class="paramname">packet</td><td>The result of the methode </td></tr>
+    <tr><td class="paramname">dns_answer</td><td>The DNS query answer </td></tr>
   </table>
   </dd>
 </dl>
