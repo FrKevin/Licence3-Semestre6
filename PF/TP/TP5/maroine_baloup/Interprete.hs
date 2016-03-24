@@ -4,6 +4,7 @@ import Parser
 import Data.Char
 import Data.Maybe
 import System.Exit
+import Control.Monad
 
 
 type Nom = String
@@ -102,7 +103,7 @@ expressionP =    espacesP >>= \_
 ras :: String -> Expression
 ras s = verif (runParser expressionP s)
         where verif Nothing = error "Erreur d'analyse syntaxique"
-              verif c@(Just (r,_)) | not (complet c)  = error "Erreur d’analyse syntaxique : le parsing n'est pas terminé"
+              verif c@(Just (r,_)) | not (complet c)  = error "Erreur d'analyse syntaxique : le parsing n'est pas terminé"
                                    | otherwise        = r
 
 
@@ -130,6 +131,25 @@ interpreteA env (Lam x y) = VFonctionA (\v -> interpreteA ((x, v):env) y)
 interpreteA env (App x y) = vFonctionAOrError (interpreteA env x) (interpreteA env y)
         where vFonctionAOrError (VFonctionA f) = f
               vFonctionAOrError e = error ("Erreur d'interprétation : lambda expression attendu, \"" ++ (show e) ++ "\" lu")
+
+
+-- la "trace d'exécution" qui suit a pour but de comprendre pourquoi l'interprétation de
+-- l'expression "(\\x -> x x)(\\x -> x x)" boucle indéfiniment.
+-- en haskell de base, l'exécution de ce bout de code provoque une erreur : (\x -> x x)
+
+-- interpreteA [] (App (Lam "x" (App (Var "x") (Var "x"))) (Lam "x" (App (Var "x") (Var "x"))))
+--  -- interpreteA [] (Lam "x" (App (Var "x") (Var "x")))
+--      -- return VFonctionA (\v -> interpreteA [("x", v)] (App (Var "x") (Var "x")))
+--  -- interpreteA [] (Lam "x" (App (Var "x") (Var "x")))
+--      -- return VFonctionA (\v -> interpreteA [("x", v)] (App (Var "x") (Var "x")))
+--  -- (\v -> interpreteA [("x", v)] (App (Var "x") (Var "x"))) (\v -> interpreteA [("x", v)] (App (Var "x") (Var "x")))
+--  |   -- interpreteA [("x", (\v -> interpreteA [("x", v)] (App (Var "x") (Var "x"))))] (App (Var "x") (Var "x"))
+--  |       -- interpreteA [("x", (\v -> interpreteA [("x", v)] (App (Var "x") (Var "x"))))] (Var "x")
+--  |           -- return VFonctionA (\v -> interpreteA [("x", v)] (App (Var "x") (Var "x")))
+--  |       -- interpreteA [("x", (\v -> interpreteA [("x", v)] (App (Var "x") (Var "x"))))] (Var "x")
+--  |           -- return VFonctionA (\v -> interpreteA [("x", v)] (App (Var "x") (Var "x")))
+--  |------ -- (\v -> interpreteA [("x", v)] (App (Var "x") (Var "x"))) (\v -> interpreteA [("x", v)] (App (Var "x") (Var "x")))
+-- On a ici une boucle récursive, ce qui explique la boucle infini lors de l'interprétation de l'expression
 
 
 -- question 16
@@ -211,20 +231,152 @@ interpreteB env (Var x)   = case lookup x env of
                                     Just v  -> Right v
 interpreteB env (Lam x y) = Right (VFonctionB (\v -> interpreteB ((x, v):env) y))
 interpreteB env (App x y) = case interpreteB env x of
-                                    e@(Left _) -> e
+                                    e@(Left _)           -> e
                                     Right (VFonctionB f) -> case (interpreteB env y) of
                                                                     e@(Left _) -> e
                                                                     Right v    -> f v
-                                    Right e -> Left ("Erreur d'interprétation : fonction attendu, mais " ++ (show e) ++ " trouvé")
+                                    Right e              -> Left ("Erreur d'interprétation : fonction attendu, mais " ++ (show e) ++ " trouvé")
+
+
+-- question 23
+addB :: ValeurB
+addB = VFonctionB f
+       where f (VLitteralB (Entier x)) = Right (VFonctionB g)
+                    where g (VLitteralB (Entier y)) = Right (VLitteralB (Entier (x + y)))
+                          g e                       = Left ("Erreur d'interprétation (addB) : nombre entier attendu en deuxième paramètre, mais " ++ (show e) ++ " trouvé")
+             f e = Left ("Erreur d'interprétation (addB) : nombre entier attendu en premier paramètre, mais " ++ (show e) ++ " trouvé")
+
+
+-- question 24
+quotB :: ValeurB
+quotB = VFonctionB f
+       where f (VLitteralB (Entier x)) = Right (VFonctionB g)
+                    where g (VLitteralB (Entier 0)) = Left ("Erreur d'interprétation (quotB) : division par 0 impossible")
+                          g (VLitteralB (Entier y)) = Right (VLitteralB (Entier (x `quot` y)))
+                          g e                       = Left ("Erreur d'interprétation (quotB) : nombre entier attendu en deuxième paramètre, mais " ++ (show e) ++ " trouvé")
+             f e = Left ("Erreur d'interprétation (quotB) : nombre entier attendu en premier paramètre, mais " ++ (show e) ++ " trouvé")
 
 
 
 
+-- interprète traçant
+
+
+data ValeurC = VLitteralC Litteral
+             | VFonctionC (ValeurC -> OutValC)
+
+type Trace   = String
+type OutValC = (Trace, ValeurC)
+
+-- question 25
+instance Show ValeurC where
+    show (VFonctionC _)          = "lambda"
+    show (VLitteralC (Entier n)) = show n
+    show (VLitteralC (Bool n))   = show n
+
+
+-- question 26
+interpreteC :: Environnement ValeurC -> Expression -> OutValC
+interpreteC _   (Lit x)   = ("", VLitteralC x)
+interpreteC env (Var x)   = ("", fromJust (lookup x env))
+interpreteC env (Lam x y) = ("", VFonctionC (\v -> interpreteC ((x, v):env) y))
+interpreteC env (App x y) = case interpreteC env x of
+                                    (t, (VFonctionC f)) -> ((t++"."++(fst application)), snd application)
+                                                            where application = f (snd (interpreteC env y))
+                                    e                   -> error ("Erreur d'interprétation : fonction attendu, mais " ++ (show e) ++ " trouvé")
+
+-- question 27
+pingC :: ValeurC
+pingC = VFonctionC (\x -> ("p", x))
 
 
 
 
+-- Interprète monadique
+data ValeurM m = VLitteralM Litteral
+               | VFonctionM (ValeurM m -> m (ValeurM m))
 
+-- question 28
+instance Show (ValeurM m) where
+    show (VFonctionM _)          = "lambda"
+    show (VLitteralM (Entier n)) = show n
+    show (VLitteralM (Bool n))   = show n
+
+
+data SimpleM v = S v
+              deriving Show
+
+-- question 29
+interpreteSimpleM :: Environnement (ValeurM SimpleM) -> Expression -> SimpleM (ValeurM SimpleM)
+interpreteSimpleM _   (Lit x)   = S (VLitteralM x)
+interpreteSimpleM env (Var x)   = S (fromJust (lookup x env))
+interpreteSimpleM env (Lam x y) = S (VFonctionM (\v -> interpreteSimpleM ((x, v):env) y))
+interpreteSimpleM env (App x y) = vFonctionAOrError (interpreteSimpleM env x) (getVSM (interpreteSimpleM env y))
+        where vFonctionAOrError (S (VFonctionM f)) = f
+              vFonctionAOrError e = error ("Erreur d'interprétation : lambda expression attendu, \"" ++ (show e) ++ "\" lu")
+              getVSM (S v) = v
+
+instance Monad SimpleM where
+    return      = S
+    (S v) >>= f = f v
+instance Applicative SimpleM where
+    pure  = return
+    (<*>) = ap
+instance Functor SimpleM where
+    fmap  = liftM
+
+
+-- question 30
+interpreteM :: Monad m => Environnement (ValeurM m) -> Expression -> m (ValeurM m)
+interpreteM _   (Lit x)   = return (VLitteralM x)
+interpreteM env (Var x)   = return (fromJust (lookup x env))
+interpreteM env (Lam x y) = return (VFonctionM (\v -> interpreteM ((x, v):env) y))
+interpreteM env (App x y) =    (interpreteM env x) >>= \ifnc
+                            -> (interpreteM env y) >>= \ivar
+                            -> case ifnc of
+                                    (VFonctionM f) -> (f ivar)
+                                    e -> error ("Erreur d'interprétation : lambda expression attendu, \"" ++ (show e) ++ "\" lu")
+
+
+-- question 31
+type InterpreteM m = Environnement (ValeurM m) -> Expression -> m (ValeurM m)
+
+interpreteS :: InterpreteM SimpleM
+interpreteS = interpreteM
+
+
+
+data TraceM v = T (Trace, v)
+              deriving Show
+
+
+-- question 32
+instance Monad TraceM where
+    return x = T ("", x)
+    (T (t, x)) >>= f = T (t ++ tt, y)
+                       where (T (tt, y)) = f x
+instance Applicative TraceM where
+    pure  = return
+    (<*>) = ap
+instance Functor TraceM where
+    fmap  = liftM
+
+
+interpreteMT :: InterpreteM TraceM
+interpreteMT = interpreteM
+
+pingM :: ValeurM TraceM
+pingM = VFonctionM (\v -> T ("p", v))
+
+-- question 33
+interpreteMT' :: InterpreteM TraceM
+interpreteMT' env (App x y) =    (interpreteM env y) >>= \ivar
+                              -> (interpreteM env x) >>= \ifnc
+                              -> T (".", ifnc)       >>= \ifnc'
+                              -> case ifnc' of
+                                    (VFonctionM f) -> (f ivar)
+                                    e -> error ("Erreur d'interprétation : lambda expression attendu, \"" ++ (show e) ++ "\" lu")
+interpreteMT' env x          = interpreteMT env x
 
 
 
