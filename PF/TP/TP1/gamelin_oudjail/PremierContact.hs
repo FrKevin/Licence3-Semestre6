@@ -1,4 +1,4 @@
-module Main where
+module PremierContact where
 
 -- Fonction sommeQ1, fait une somme des nombres de 1 à n
 sommeQ1 :: (Num a, Enum a) => a -> a
