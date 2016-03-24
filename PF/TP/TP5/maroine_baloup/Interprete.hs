@@ -372,23 +372,42 @@ pingM = VFonctionM (\v -> T ("p", v))
 interpreteMT' :: InterpreteM TraceM
 interpreteMT' env (App x y) =    (interpreteM env y) >>= \ivar
                               -> (interpreteM env x) >>= \ifnc
-                              -> T (".", ifnc)       >>= \ifnc'
+                              -> T (".", ifnc)       >>= \ifnc' -- le point ne s'ajoute pas à chaque application
                               -> case ifnc' of
                                     (VFonctionM f) -> (f ivar)
                                     e -> error ("Erreur d'interprétation : lambda expression attendu, \"" ++ (show e) ++ "\" lu")
-interpreteMT' env x          = interpreteMT env x
+interpreteMT' env x         = interpreteMT env x
 
 
 
 
 
+data ErreurM v = Succes v
+               | Erreur String
+               deriving Show
 
+-- question 34
+instance Monad ErreurM where
+   return             = Succes
+   fail               = Erreur
+   (Succes v) >>= f   = f v
+   (Erreur e) >>= _   = Erreur e
+instance Applicative ErreurM where
+    pure  = return
+    (<*>) = ap
+instance Functor ErreurM where
+    fmap  = liftM
 
-
-
-
-
-
+-- question 35
+interpreteE :: InterpreteM ErreurM
+interpreteE _   (Lit x)   = return (VLitteralM x)
+interpreteE env (Var x)   = maybe (fail ("Erreur d'interprétation : la variable " ++ x ++ " n'est pas défini")) return (lookup x env)
+interpreteE env (Lam x y) = return (VFonctionM (\v -> interpreteE ((x, v):env) y))
+interpreteE env (App x y) =    (interpreteE env x) >>= \ifnc
+                            -> (interpreteE env y) >>= \ivar
+                            -> case ifnc of
+                                    (VFonctionM f) -> (f ivar)
+                                    e -> fail ("Erreur d'interprétation : lambda expression attendu, \"" ++ (show e) ++ "\" lu")
 
 
 
