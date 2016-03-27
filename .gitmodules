@@ -1,6 +1,0 @@
-[submodule "PF/cours/pf"]
-	path = PF/cours/pf
-	url = http://www.fil.univ-lille1.fr/~hym/d/pf.git
-[submodule "PF/Cours/pf"]
-	path = PF/Cours/pf
-	url = http://www.fil.univ-lille1.fr/~hym/d/pf.git
