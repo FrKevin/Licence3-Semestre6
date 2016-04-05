@@ -5,6 +5,7 @@
 #include <math.h>
 #include <stdint.h>
 
+#include <stdio.h>
 
 void assert_message(int cond, char* message) {
     if (cond == 0 ) {
@@ -34,11 +35,31 @@ int MAX_VALUE(int nbit) {
   return pow(2, nbit) -1;
 }
 
-void insert_uint16(byte_t bytes[], size_t index, uint16_t n) {
-  bytes[index]     = (byte_t) (n >> 8);
-  bytes[index + 1] = (byte_t) (n & 0x00ff);
+char *Bool_to_string(bool_e b) {
+  return b ? "True" : "False";
 }
 
-void insert_inf_uint8(byte_t bytes[], size_t index, byte_t n, int nshift) {
+void insert_uint16(byte_p bytes[], size_t index, uint16_t n) {
+  bytes[index]     = (byte_p) (n >> 8);
+  bytes[index + 1] = (byte_p) (n & 0x00ff);
+}
+
+void insert_inf_uint8(byte_p bytes[], size_t index, byte_p n, int nshift) {
+  printf("insert_inf_uint8 : param, n : %u, nshift %i\n", n, nshift);
+  printf("insert_inf_uint8 : expr = n << nshift : %u\n", n << nshift);
   bytes[index] |= n << nshift;
+  printf("insert_inf_uint8 : after expr : %u\n", bytes[index]);
+}
+
+uint16_t extract_uint16(byte_p bytes[], int index) {
+  uint16_t result;
+  result = (bytes[index] << 8);
+  //printf("extract_uint16 : result after first expr : %u\n", result);
+  result |= (bytes[index + 1]);
+  //printf("extract_uint16 : result after second expr : %u\n", result);
+  return result;
+}
+
+byte_p extract_uint8(byte_p bytes[], int index, uint8_t mask, int nshift) {
+  return nshift >> (bytes[index] & mask);
 }

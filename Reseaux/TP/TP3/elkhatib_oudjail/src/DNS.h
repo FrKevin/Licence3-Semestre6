@@ -6,20 +6,20 @@
 #include "DNSQuestion.h"
 
 typedef struct {
-  header_t header;
-  question_t question;
-  answer_t answer;
+  header_a header;
+  question_s question;
+  answer_s answer;
 
-} dnspacket_t;
+} dnspacket_s;
 
 
-extern dnspacket_t *DNS_construct(); // On sens bas le couille
+extern dnspacket_s *DNS_construct(); // On sens bas le couille
 
-extern void DNS_construct_with_bytes(const byte_t *bytes);
+extern void DNS_construct_with_bytes(const byte_p *bytes);
 
-extern byte_t *DNS_construct_bytes(const dnspacket_t *dnspacket);
+extern byte_p *DNS_construct_bytes(const dnspacket_s *dnspacket);
 
-extern void DNS_display(const dnspacket_t *dnspacket);
+extern void DNS_display(const dnspacket_s *dnspacket);
 
 
 

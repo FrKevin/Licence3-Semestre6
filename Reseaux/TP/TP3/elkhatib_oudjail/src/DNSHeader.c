@@ -1,72 +1,100 @@
 #include "DNSHeader.h"
-#include "DNS.h"
+#include "Core.h"
+#include <stdlib.h>
+#include <stdio.h>
 
+/* -- Enum fct */
+char *OPCODE_to_string(opcode_e opcode) {
+  switch (opcode) {
+    case QUERY : return "QUERY";
+    case IQUERY : return "IQUERY";
+    default : return "STATUS";
+  }
+}
+
+char *RCODE_to_string(rcode_e rcode) {
+  switch (rcode) {
+    case NO_ERROR_CONDITION : return "NO_ERROR_CONDITION";
+    case FORMAT_ERROR : return "FORMAT_ERROR";
+    case SERVER_FAILURE : return "SERVER_FAILURE";
+    case NAME_ERROR : return "NAME_ERROR";
+    case NOT_IMPLEMENTED : return "NOT_IMPLEMENTED";
+    default : return "REFUSED";
+  }
+}
 
 /* Explain the reasonnement */
-#define SHIFT_QR 8 - HEADER_LENGTH_QR  /* 7 */
-#define SHIFT_Opcode SHIFT_QR - HEADER_LENGTH_Opcode /* 3 */
-#define SHIFT_AA SHIFT_Opcode - HEADER_LENGTH_AA /* 2 */
-#define SHIFT_TC SHIFT_AA - HEADER_LENGTH_TC /* 1 */
+#define SHIFT_QR 8 - HEADER_NBIT_QR  /* 7 */
+#define SHIFT_Opcode SHIFT_QR - HEADER_NBIT_Opcode /* 3 */
+#define SHIFT_AA SHIFT_Opcode - HEADER_NBIT_AA /* 2 */
+#define SHIFT_TC SHIFT_AA - HEADER_NBIT_TC /* 1 */
 
-#define SHIFT_RA 8 - HEADER_LENGTH_RA  /* 7 */
-#define SHIFT_Z SHIFT_QR - HEADER_LENGTH_Z /* 4 */
+#define SHIFT_RA 8 - HEADER_NBIT_RA  /* 7 */
+#define SHIFT_Z SHIFT_QR - HEADER_NBIT_Z /* 4 */
 
-
-static void insert_uint16(header_t headp, size_t index, uint16_t n) {
-  headp[index]     = (byte_t) (n >> 8);
-  headp[index + 1] = (byte_t) (n & 0x00ff);
-}
-
-static void insert_inf_uint8(header_t headp, size_t index, byte_t n, int nshift) {
-  headp[index] |= n << nshift;
-}
-
-extern header_t DNSH_construct() {
-  header_t construct;
-}
-
-extern header_t DNSH_construct_with_bytes(byte_t bytes) {
-
-}
-
-extern header_t DNSH_construct() {
-  header_t construct;
+/* Construct */
+header_a DNSH_construct() {
+  header_a construct = (header_a) malloc(sizeof(byte_p) * HEADER_LENGTH);
   DNSH_init(construct);
   return construct;
 }
+
+header_a DNSH_construct_with_bytes(byte_p *bytes) {
+  size_t i;
+  header_a construct = (header_a) malloc(sizeof(byte_p) * HEADER_LENGTH);
+  for (i = 0; i < HEADER_LENGTH; i++) { construct[i] = bytes[i]; }
+  return construct;
+}
+
+void DNSH_destruct(header_a headp) {
+  free(headp);
+}
+
+extern void DNSH_display(header_a headp) {
+  size_t i;
+  printf("Entete DNS :\n");
+  printf("\tID : %u\n", DNSH_get_id(headp));
+  printf("\tQR : %s\n", Bool_to_string(DNSH_get_qr(headp)));
+  printf("\tOpCode : %u\n", OPCODE_to_string(DNSH_get_opcode(headp)));
+  printf("\tAA : %s\n", Bool_to_string(DNSH_get_aa(headp)));
+  printf("\tTC : %s\n", Bool_to_string(DNSH_get_tc(headp)));
+
+  printf("\nTableau d'octets :\n");
+  for (i = 0; i < HEADER_LENGTH; i++) {
+    printf("Octet numero %i : %u\n", (int)i, headp[i]);
+  }
+}
+
 /* --------------------------------- Setteur -----------------------------------------------*/
 /* To facilitate reading, the numbers are written in hexadecimal form */
-extern void DNSH_init(header_t headp) {
+void DNSH_init(header_a headp) {
   int i;
-  for (i = 0; i < HEADER_LENGTH; ++i) {
+  for (i = 0; i < 12; ++i) {
     headp[i] = 0;
   }
 }
 
-
-/*
-extern void DNSH_set_id(header_t headp, id_t id) {
+void DNSH_set_id(header_a headp, id_p id) {
   insert_uint16(headp, 0, id);
 }
 
-extern void DNSH_set_qr(header_t headp, bool qr) {
+void DNSH_set_qr(header_a headp, bool_e qr) {
   insert_inf_uint8(headp, 2, qr, SHIFT_QR);
 }
 
-extern void DNSH_set_opcode(header_t headp, opcode_t opcode) {
+void DNSH_set_opcode(header_a headp, opcode_e opcode) {
   insert_inf_uint8(headp, 2, opcode, SHIFT_Opcode);
 }
 
-extern void DNSH_set_aa(header_t headp, bool aa) {
+void DNSH_set_aa(header_a headp, bool_e aa) {
   insert_inf_uint8(headp, 2, aa, SHIFT_AA);
 }
 
-extern void DNSH_set_tc(header_t headp, bool tc) {
+void DNSH_set_tc(header_a headp, bool_e tc) {
   insert_inf_uint8(headp, 2, tc, SHIFT_TC);
 
 }
 
-*/
 /* A tester si peut etre remplacer par la methode avec 0 en shift */
 
 /*
@@ -104,17 +132,6 @@ extern void DNSH_set_arcount(header_t headp, arcount_t arcount) {
 }
 */
 /* --------------------------------- Getteur -----------------------------------------------*/
-/*
-static uint16_t extract_uint16(header_t headp, int index) {
-  uint16_t result = 0xffff;
-  result &= headp[index] << 8;
-  result &= headp[index];
-  return result;
-}
-
-static byte_t extract_uint8(header_t headp, int index, uint8_t mask) {
-  return headp[index] & mask;
-}
 
 #define MASK_QR 128
 #define MASK_OPCODE 120
@@ -126,26 +143,27 @@ static byte_t extract_uint8(header_t headp, int index, uint8_t mask) {
 #define MASK_Z 112
 #define MASK_RCODE 15
 
-extern id_t DNSH_get_id(header_t headp) {
+id_p DNSH_get_id(header_a headp) {
   return extract_uint16(headp, 0);
 }
 
-extern bool DNSH_get_qr(header_t headp) {
-  return extract_uint8(headp, 2, MASK_QR);
+bool_e DNSH_get_qr(header_a headp) {
+  return extract_uint8(headp, 2, MASK_QR, SHIFT_QR);
 }
 
-extern opcode_t DNSH_get_opcode(header_t headp) {
-  return extract_uint8(headp, 2, MASK_OPCODE)
+opcode_e DNSH_get_opcode(header_a headp) {
+  //printf("DNSH_get_opcode, return for extract_uint8 : %u\n", extract_uint8(headp, 2, MASK_OPCODE));
+  return extract_uint8(headp, 2, MASK_OPCODE, SHIFT_Opcode);
 }
 
-extern bool DNSH_get_aa(header_t headp) {
-  return extract_uint8(headp, 2, MASK_AA)
+bool_e DNSH_get_aa(header_a headp) {
+  return extract_uint8(headp, 2, MASK_AA? SHIFT_AA);
 }
 
-extern bool DNSH_get_tc(header_t headp) {
-  return extract_uint8(headp, 2, MASK_TC)
+bool_e DNSH_get_tc(header_a headp) {
+  return extract_uint8(headp, 2, MASK_TC, SHIFT_TC);
 }
-
+/*
 extern bool DNSH_get_rd(header_t headp) {
   return extract_uint8(headp, 2, MASK_RD)
 }

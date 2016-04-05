@@ -17,7 +17,7 @@ extern answer_t *DNSA_construct(const header_t header) {
 }
 
 extern answer_t *DNSA_construct_with_bytes(const byte_t *bytes, size_t nbytes) {
-  
+
 }
 extern byte_t *DNSA_toconstruct_bytes(const answer_t *answer, size_t *sizbuf) {
 
